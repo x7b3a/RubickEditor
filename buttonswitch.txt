@@ -1,0 +1,34 @@
+     QSSWITCH(switchStr,
+                 QSCASE(cases[0],
+                 {
+                     WikiAndFixes();
+                 })
+                 QSCASE(cases[1],
+                 {
+                     ui -> text2->setText(cases[1]);
+                 })
+                 QSCASE(cases[2],
+                 {
+                     ui -> text2->setText(cases[2]);
+                 })
+                 QSCASE(cases[3],
+                 {
+                     ui -> text2->setText(cases[3]);
+                 })
+                 QSCASE(cases[4],
+                 {
+                     ui -> text2->setText(cases[4]);
+                 })
+                 QSCASE(cases[5],
+                 {
+                     ui -> text2->setText(cases[5]);
+                 })
+                 QSCASE(cases[6],
+                 {
+                     ui -> text2->setText(cases[6]);
+                 })
+                 QSDEFAULT(
+                 {
+                    ui -> text2->setText("dw error = not founded");
+                 })
+                 )

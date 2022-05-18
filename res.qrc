@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/background_top.png</file>
+        <file>images/refresh.png</file>
+        <file>images/back.png</file>
+        <file>images/rubick.png</file>
+        <file>images/rub_arcana.webp</file>
+        <file>images/Rubick_icon.webp</file>
+        <file>images/excel.png</file>
+        <file>images/change.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>images/refresh.png</file>
+    </qresource>
+</RCC>

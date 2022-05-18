@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ui_settings</class>
+ <widget class="QWidget" name="ui_settings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>374</width>
+    <height>498</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="close">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>380</y>
+     <width>151</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сохранить и выйти</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>120</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Замена точек на запятую</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Викификатор и фиксы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Изменения&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Реплики&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Звуки&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Косметика&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Units - Существа</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="comboBox_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>160</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Замена точек на запятую</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Викификатор и фиксы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Изменения&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Реплики&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Звуки&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Косметика&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Units - Существа</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="comboBox_3">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>200</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Замена точек на запятую</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Викификатор и фиксы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Изменения&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Реплики&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Звуки&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Косметика&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Units - Существа</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="comboBox_4">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>240</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Замена точек на запятую</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Викификатор и фиксы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Изменения&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Реплики&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Звуки&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Косметика&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Units - Существа</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="comboBox_5">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>280</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Замена точек на запятую</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Викификатор и фиксы</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Изменения&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Реплики&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Звуки&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раздел &quot;Косметика&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Units - Существа</string>
+    </property>
+   </item>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
