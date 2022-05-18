@@ -20,23 +20,22 @@
 #include <QSyntaxHighlighter>
 #include <string>
 #include <QRegExp>
+#include <QClipboard>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-        //загрузка фона
     QPalette palette;
     palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back.png").scaled(this->size())));
     this->setPalette(palette);
     this->setStyleSheet("background-image:url()");
-        //открытие на полную
+
     this -> showMaximized();
     this->setWindowTitle("Rubick Editor");
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
 
-        //чтение файла
     set_buttons();
 }
 
@@ -53,8 +52,6 @@ void MainWindow::on_buttochange_clicked()
    ui -> text1->setText(second);
    ui -> text2->setText(first);
 }
-
-
 
 void MainWindow::on_settings_clicked()
 {
@@ -74,6 +71,18 @@ void MainWindow::on_dota2wiki_clicked()
 {
     QString wikiurl = "https://dota2.fandom.com/ru/wiki/Dota_2_\u0412\u0438\u043a\u0438";
     QDesktopServices::openUrl(QUrl(wikiurl));
+}
+
+void MainWindow::on_buttonpaste_clicked()
+{
+    QClipboard* pcb = QApplication::clipboard();
+    ui->text1->setText(pcb->text());
+}
+
+void MainWindow::on_buttoncopy_clicked()
+{
+    QClipboard* pcb = QApplication::clipboard();
+    pcb->setText(ui->text2->toPlainText());
 }
 
 void MainWindow::button_switch(QString switchStr)
@@ -161,6 +170,33 @@ void MainWindow::Commafix()
 
 }
 
+void MainWindow::Changelogs()
+{
+    QString first = get_text();
+
+}
+
+void  MainWindow::Responses()
+{
+    QString first = get_text();
+}
+
+void  MainWindow::Sounds()
+{
+    QString first = get_text();
+}
+
+void  MainWindow::Cosmetics()
+{
+    QString first = get_text();
+}
+
+void  MainWindow::Units()
+{
+    QString first = get_text();
+}
+
+
 QString MainWindow::get_text()
 {
     QString first = ui -> text1 -> toPlainText();
@@ -208,14 +244,11 @@ QJsonDocument MainWindow::read_json(QString filename)
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
-    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-    //QTextCodec::setCodecForLocale(codec);
-
     QJsonParseError error;
         QJsonDocument Doc = QJsonDocument::fromJson(val.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError)
         {
-            qDebug() << "dw error: read json";
+            qDebug() << "dw error: read json " << filename;
              // return 0;
         }
         return Doc;
@@ -243,9 +276,9 @@ void MainWindow::label_settext(int count)
         ends = 2;
     switch (ends)
     {
-    case 1: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435";break;
-    case 2: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f";break;
-    default: break;
+        case 1: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435";break;
+        case 2: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f";break;
+        default: break;
     }
     QString text = "\u0421 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u043c \u043c\u0430\u043a\u0440\u043e\u0441\u043e\u043c \u0441\u043e\u0432\u0435\u0440\u0448\u0435\u043d\u043e ";
     text +=  + "<font color=\"red\">" + QString::number(count) +"</font>" + " " + endstring;
@@ -277,3 +310,5 @@ void MainWindow::on_button5_clicked()
     QString switchStr = ui -> button5 -> text().toUtf8();
     button_switch(switchStr);
 }
+
+

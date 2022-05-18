@@ -296,7 +296,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>5</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button4">
@@ -309,7 +309,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>4</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button3">
@@ -322,7 +322,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>3</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button2">
@@ -335,7 +335,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>2</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button1">
@@ -351,7 +351,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buttoncopy">
@@ -364,10 +364,11 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Копировать в
+буфер</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttoninsert">
+   <widget class="QPushButton" name="buttonpaste">
     <property name="geometry">
      <rect>
       <x>690</x>
@@ -377,7 +378,8 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Вставить из
+буфера</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buttochange">
