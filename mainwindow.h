@@ -35,6 +35,7 @@ private:
     QString get_text();
     QString color(QString color, QString arg);
     QString get_backtext();
+    QMap<QString, QString> map_parser(QJsonObject item, QString word);
 private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();

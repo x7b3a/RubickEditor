@@ -98,7 +98,7 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[2],//"Раздел "Изменения"
                 {
-                    ui -> text2->setText(cases[2]);break;
+                   Changelogs();break;
                 })
                 QSCASE(cases[3],//"Раздел "Реплики"
                 {
@@ -173,9 +173,67 @@ void MainWindow::Commafix()
 void MainWindow::Changelogs()
 {
     QString first = get_text();
+    QJsonObject json = read_json("dict.json").object();
+    QMap<QString, QString>::iterator i,j,k;
+    QJsonValue value = json.value(QString("Changelogs"));
+    QJsonObject item = value.toObject();
+    QString space = QJsonValue(item["Space"]).toString();
+    QString changed = " changed";
+    QString base = "base";
+  //  QMap<QString, QString> changed;
+    QMap<QString, QString> Keywords = map_parser(item,"Keywords");
+    QMap<QString, QString> Preposition = map_parser(item,"Preposition");
+    QMap<QString, QString> Attributes = map_parser(item,"Attributes");
+    QMap<QString, QString> Attributes_base = map_parser(item,"Attributes_base");
+    QMap<QString, QString> Attribute_flex = map_parser(item,"Attribute_flex");
+   // changed.insert(item.keys().at(0),item.value(item.keys().at(0)).toString());
+    QJsonArray Flex_verb = item["Flex_verb"].toArray();
+    QJsonArray Flex_adj = item["Flex_adj"].toArray();
+    QJsonObject Stats = item["Stats"].toObject();
+    QMap<QString, QString> Stats_f = map_parser(Stats, "female");
+    QMap<QString, QString> Stats_m = map_parser(Stats, "male");
+    QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
+    QMap<QString, QString> Talents = map_parser(item,"Talents");
+    QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
+    for (i = Talents_level.begin(); i != Talents_level.end(); i++)
+    {
+        first.replace(i.key() + changed,color("#ff8f45",i.value()));
+        first.replace(i.key(),color("#ff8f45",i.value()));
+    }
+    for (i = Talents.begin(); i != Talents.end(); i++)
+    {
+        first.replace(i.key(),color("#ff8f45",i.value()));
+    }
+    int count;
+    QString temp1;
+    QString temp2;
+    for (i=Keywords.begin(); i!= Keywords.end();i++)
+    {
+        for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
+        {
+            temp1 = i.key()+space+base+space+j.key();
+            qDebug() << QString::number(count<2?1:0);
+            temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
+            first.replace(temp1,color("#ff8f45",temp2));
+        }
+    }
 
+//    qDebug() << first;
+    int counted = counter(first);
+    label_settext(counted);
+     put_text(first);
 }
-
+QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
+{
+    QMap<QString, QString> array;
+    QJsonObject keywords_value = item[word].toObject();
+    foreach(const QString& key, keywords_value.keys()) {
+        QJsonValue value = keywords_value.value(key);
+        array.insert(key,value.toString());
+        //qDebug() << key << value.toString() << "key??";
+    }
+    return array;
+}
 void  MainWindow::Responses()
 {
     QString first = get_text();
@@ -228,7 +286,7 @@ void MainWindow::put_text(QString text)
     text = "<html>" + text + "</html>";
     if ((ui->reverseMode ->QCheckBox::checkState()))
     {
-        ui ->text2 ->setText(ui->text1 ->toPlainText());
+        ui -> text2 ->setText(ui->text1 ->toPlainText());
         ui -> text1 -> setText(text);
     }
     else
