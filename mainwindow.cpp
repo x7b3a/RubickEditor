@@ -21,6 +21,7 @@
 #include <string>
 #include <QRegExp>
 #include <QClipboard>
+#include <QStringList>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -180,12 +181,15 @@ void MainWindow::Changelogs()
     QString space = QJsonValue(item["Space"]).toString();
     QString changed = " changed";
     QString base = "base";
+    QString gain = "gain";
+    QString from = "from";
+    QString to = "to";
   //  QMap<QString, QString> changed;
     QMap<QString, QString> Keywords = map_parser(item,"Keywords");
     QMap<QString, QString> Preposition = map_parser(item,"Preposition");
     QMap<QString, QString> Attributes = map_parser(item,"Attributes");
     QMap<QString, QString> Attributes_base = map_parser(item,"Attributes_base");
-    QMap<QString, QString> Attribute_flex = map_parser(item,"Attribute_flex");
+    QMap<QString, QString> Attributes_flex = map_parser(item,"Attributes_flex");
    // changed.insert(item.keys().at(0),item.value(item.keys().at(0)).toString());
     QJsonArray Flex_verb = item["Flex_verb"].toArray();
     QJsonArray Flex_adj = item["Flex_adj"].toArray();
@@ -195,6 +199,8 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
     QMap<QString, QString> Talents = map_parser(item,"Talents");
     QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
+    QMap<QString, QString> Talents_changes = map_parser(item, "Talents_changes");
+    QMap<QString, QString> Keywords_small = map_parser(item,"Keywords_small");
     for (i = Talents_level.begin(); i != Talents_level.end(); i++)
     {
         first.replace(i.key() + changed,color("#ff8f45",i.value()));
@@ -216,9 +222,85 @@ void MainWindow::Changelogs()
             temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
             first.replace(temp1,color("#ff8f45",temp2));
         }
+        for (j=Attributes_flex.begin();j!=Attributes_flex.end();j++)
+        {
+            temp1 = i.key()+space+j.key()+space+gain;
+            temp2 = Attributes.value(gain)+space+j.value()+space+i.value();
+            first.replace(temp1,color("#ff8f45",temp2));
+        }
     }
+    int lastPos = 0;
+    QRegExp re;
+    int iter = 0;
+    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++)
+    {
+        for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
+        {
+             re = QRegExp ("\\d+" + space + to + space + "\\d+");
+            //re = QRegExp( "(\\d+)\\b"+space+j.key()+space+i.key()+space+to+space+"\\b(\\d+)" );
+           // QString re = "1"+space+j.key()+space+i.key()+space+to+space+"2";
+           // qDebug() << re;
+            lastPos = 0;
+            QString second = "1 to 20\n30 to 15\n1to20";
+           // second.replace(re,"123");
+            //first.replace(re,j.value() +space + i.value() + Preposition.value(from) + space +re.cap(2) + Preposition.value(to)+space + re.cap(1));
+            //qDebug() << QString::number( re.indexIn(ar, lastPos ) );
+            while( ( lastPos = re.indexIn(second, lastPos ) ) != -1 )
+            {
+                iter++;
+                lastPos += re.matchedLength();
+                 qDebug() <<"while:"<< QString::number(iter)<< re.cap( 0 ) << QString::number(lastPos);
+                 //second.replace(re.cap(0), QString::number(lastPos));
+                 lastPos = re.indexIn(second, lastPos );
+                qDebug() <<second;
+                 /*qDebug() << j.value() +space + i.value() +space + Preposition.value(from) + space +"re.cap(2)" + Preposition.value(to)+space + "re.cap(1)";
+                first.replace(re ,j.value() +space + i.value() +space +Preposition.value(from) + space +"re.cap(2)" + Preposition.value(to)+space + "re.cap(1)");*/
+             //   lastPos = 0;
+            }
+
+        }
+    }
+   /* QString str = "23 to 30\n45 to 325\nqwer23to24";
+    QRegExp re("([0-9]+) to ([0-9]+)");
+    int lastPos = 0;
+    str.replace(re, re.cap(2)+ "to"+ re.cap(1));
+     qDebug() << str;
+    while( ( lastPos = re.indexIn( str, lastPos ) ) != -1 ) {
+        lastPos += re.matchedLength();
+        qDebug() << re.cap( 0 ) << ":" << re.cap( 1 ) << ":" << re.cap(2);
+
+        qDebug() << str;
+    }*/
+
 
 //    qDebug() << first;
+   /* static const char* const TEXT =
+        "#include <QRegExp>\n"
+        "#include <QStringList>\n"
+        "#include <QDebug>\n"
+        "\n"
+        "int main() {\n"
+            "QRegExp re( \"#include <([^>]+)>\" );\n"
+            "int lastPos = 0;\n"
+            "while( ( lastPos = re.indexIn( TEXT, lastPos ) ) != -1 ) {\n"
+                "lastPos += re.matchedLength();\n"
+                "qDebug() << re.cap( 0 );\n"
+            "}\n"
+            "return 0;\n"
+        "}";
+
+
+
+        QRegExp req( "#include <([^>]+)>" );
+
+        int lastPosq = 0;
+        while( ( lastPosq = req.indexIn( TEXT, lastPosq ) ) != -1 ) {
+            lastPosq += req.matchedLength();
+            qDebug() << req.cap( 0 ) << ":" << req.cap( 1 );
+        }*/
+        qDebug() << "end??";
+
+
     int counted = counter(first);
     label_settext(counted);
      put_text(first);
