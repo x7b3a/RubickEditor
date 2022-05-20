@@ -33,7 +33,7 @@ private:
     void set_buttons();
     void put_text(QString text);
     QString get_text();
-    QString color(QString color, QString arg);
+    QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
 private slots:
