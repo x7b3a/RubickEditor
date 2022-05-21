@@ -187,6 +187,8 @@ void MainWindow::Changelogs()
     QString point = ".";
     QString proc = "%";
     QString to = "to";
+    QString sec = " \u0441\u0435\u043a.";
+    QString minus = "\u2212";
   //  QMap<QString, QString> changed;
     QMap<QString, QString> Keywords = map_parser(item,"Keywords");
     QMap<QString, QString> Preposition = map_parser(item,"Preposition");
@@ -206,6 +208,8 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Talents_changes_proc = map_parser(item,"Talents_changes_proc");
     QMap<QString, QString> Keywords_small = map_parser(item,"Keywords_small");
     QMap<QString, QString> Aghanim = map_parser(item, "Aghanim");
+    QMap<QString, QString> Keywords_cooldown = map_parser(item,"Keywords_cooldown");
+    QMap<QString, QString> Cooldown = map_parser(item, "Cooldown");
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -230,7 +234,7 @@ void MainWindow::Changelogs()
         for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
         {
             temp1 = ".([0-9]+)"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+".([0-9]+)\\." ;
-            qDebug() << "temp11:" << temp1;
+          //  qDebug() << "temp11:" << temp1;
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
@@ -252,8 +256,23 @@ void MainWindow::Changelogs()
 
             }
         }
-    }
 
+
+    }
+    for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++)
+    {
+        j = Cooldown.begin();
+
+        temp1  =   "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s"+ space + j.key() + space + i.key() + space + to + space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s.";
+        //temp1 = ".([0-9]+)s" + space + j.key() + space + i.key() + space + to + space + ".([0-9]+)s.";
+        qDebug() << "temp:" << temp1;
+        texp = QRegExp(temp1);
+        while(texp.indexIn(first)!=-1 )
+        {
+        qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+        first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
+        }
+    }
     int count;
     for (i=Keywords.begin(); i!= Keywords.end();i++)
     {
