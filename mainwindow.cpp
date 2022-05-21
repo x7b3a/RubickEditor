@@ -180,6 +180,7 @@ void MainWindow::Changelogs()
     QJsonObject item = value.toObject();
     QString space = QJsonValue(item["Space"]).toString();
     QString ability = QJsonValue(item["Ability"]).toString();
+    QString Float = QJsonValue(item["Float"]).toString();
     QString changed = " changed:";
     QString changed_rus = QJsonValue(item[changed]).toString();
     QString base = "base";
@@ -204,6 +205,7 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Talents = map_parser(item,"Talents");
     QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
     QMap<QString, QString> Talents_changes = map_parser(item, "Talents_changes");
+    QMap<QString, QString> Talents_changes_n = map_parser(item,"Talents_changes_n");
     QMap<QString, QString> Talents_changes_proc = map_parser(item,"Talents_changes_proc");
     QMap<QString, QString> Keywords_small = map_parser(item,"Keywords_small");
     QMap<QString, QString> Aghanim = map_parser(item, "Aghanim");
@@ -227,50 +229,54 @@ void MainWindow::Changelogs()
     QString temp2;
     QRegExp texp;
     int iter = 0;
-    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++)
+    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++) //increased
     {
         for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
         {
-            temp1 = ".([0-9]+)"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+".([0-9]+)\\." ;
+            temp1 = Float+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float + "\\." ;
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
                 iter++;
                  qDebug() <<"while:"<< QString::number(iter)<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
-                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1) + space + Preposition.value(to)+ space + texp.cap(2))+point);
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+point);
 
             }
 
         }
         for (j=Talents_changes_proc.begin();j!=Talents_changes_proc.end();j++)
         {
-            temp1 = "([0-9]+)%"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+"([0-9]+)%\\." ;
+            temp1 = Float + "%" +space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float+"%\\." ;
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
-
-                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1) +proc+ space + Preposition.value(to)+ space + texp.cap(2))+proc+point);
-
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") +proc+ space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+proc+point);
             }
         }
-
-
     }
-    for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++)
+
+    for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++) //increased as "ycileno"
     {
         j = Cooldown.begin();
-        qDebug() << "j:" << j.key();
-        temp1  =   "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s"+ space + ability + space + j.key() + space + i.key() + space + to + space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s.";
-        qDebug() << "temp:" << temp1;
+        temp1  =   Float +"s"+ space + ability + space + j.key() + space + i.key() + space + to + space + Float + "s.";
         texp = QRegExp(temp1);
         while(texp.indexIn(first)!=-1 )
         {
         qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
         first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
         }
+        for (j=Talents_changes_n.begin();j!=Talents_changes_n.end();j++)
+        {
+            temp1 = Float+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float + "\\." ;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("-",minus) +proc+ space + Preposition.value(to)+ space + texp.cap(5).replace("-",minus))+point);
+            }
+        }
     }
     int count;
-    for (i=Keywords.begin(); i!= Keywords.end();i++)
+    for (i=Keywords.begin(); i!= Keywords.end();i++) //Increased
     {
         for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
@@ -303,7 +309,7 @@ void MainWindow::Changelogs()
             first.replace(temp1,color(temp2));
         }
     }
-    QString fromto = from+space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)" + space + to + space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)";
+    QString fromto = from+space + Float + space + to + space + Float;
     texp = QRegExp(fromto);
     while(texp.indexIn(first)!=-1 )
     {
@@ -317,16 +323,7 @@ void MainWindow::Changelogs()
     label_settext(counted);
      put_text(first);
 }
-QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
-{
-    QMap<QString, QString> array;
-    QJsonObject keywords_value = item[word].toObject();
-    foreach(const QString& key, keywords_value.keys()) {
-        QJsonValue value = keywords_value.value(key);
-        array.insert(key,value.toString());
-    }
-    return array;
-}
+
 void  MainWindow::Responses()
 {
     QString first = get_text();
@@ -347,7 +344,16 @@ void  MainWindow::Units()
     QString first = get_text();
 }
 
-
+QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
+{
+    QMap<QString, QString> array;
+    QJsonObject keywords_value = item[word].toObject();
+    foreach(const QString& key, keywords_value.keys()) {
+        QJsonValue value = keywords_value.value(key);
+        array.insert(key,value.toString());
+    }
+    return array;
+}
 QString MainWindow::start_regular_replacer (QString temp)
 {
     QString Array[5] = {"|", "{", "}", "[", "]"};
