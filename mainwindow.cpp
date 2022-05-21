@@ -179,6 +179,7 @@ void MainWindow::Changelogs()
     QJsonValue value = json.value(QString("Changelogs"));
     QJsonObject item = value.toObject();
     QString space = QJsonValue(item["Space"]).toString();
+    QString ability = QJsonValue(item["Ability"]).toString();
     QString changed = " changed:";
     QString changed_rus = QJsonValue(item[changed]).toString();
     QString base = "base";
@@ -189,13 +190,11 @@ void MainWindow::Changelogs()
     QString to = "to";
     QString sec = " \u0441\u0435\u043a.";
     QString minus = "\u2212";
-  //  QMap<QString, QString> changed;
     QMap<QString, QString> Keywords = map_parser(item,"Keywords");
     QMap<QString, QString> Preposition = map_parser(item,"Preposition");
     QMap<QString, QString> Attributes = map_parser(item,"Attributes");
     QMap<QString, QString> Attributes_base = map_parser(item,"Attributes_base");
     QMap<QString, QString> Attributes_flex = map_parser(item,"Attributes_flex");
-   // changed.insert(item.keys().at(0),item.value(item.keys().at(0)).toString());
     QJsonArray Flex_verb = item["Flex_verb"].toArray();
     QJsonArray Flex_adj = item["Flex_adj"].toArray();
     QJsonObject Stats = item["Stats"].toObject();
@@ -228,13 +227,11 @@ void MainWindow::Changelogs()
     QString temp2;
     QRegExp texp;
     int iter = 0;
-
     for (i=Keywords_small.begin(); i!= Keywords_small.end();i++)
     {
         for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
         {
             temp1 = ".([0-9]+)"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+".([0-9]+)\\." ;
-          //  qDebug() << "temp11:" << temp1;
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
@@ -262,9 +259,8 @@ void MainWindow::Changelogs()
     for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++)
     {
         j = Cooldown.begin();
-
-        temp1  =   "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s"+ space + j.key() + space + i.key() + space + to + space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s.";
-        //temp1 = ".([0-9]+)s" + space + j.key() + space + i.key() + space + to + space + ".([0-9]+)s.";
+        qDebug() << "j:" << j.key();
+        temp1  =   "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s"+ space + ability + space + j.key() + space + i.key() + space + to + space + "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)s.";
         qDebug() << "temp:" << temp1;
         texp = QRegExp(temp1);
         while(texp.indexIn(first)!=-1 )
@@ -279,7 +275,6 @@ void MainWindow::Changelogs()
         for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
             temp1 = i.key()+space+base+space+start_regular_replacer(j.key());
-            //qDebug() << QString::number(count<2?1:0);
             temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
             first.replace(temp1,color(temp2));
         }
@@ -292,7 +287,6 @@ void MainWindow::Changelogs()
         for (j=Stats_f.begin();j!=Stats_f.end();j++)
         {
             temp1 = i.key()+start_regular_replacer(j.key());
-           // qDebug() << temp1;
             temp2 = j.value()+i.value()+Flex_verb[1].toString()+ space;
             first.replace(temp1,color(temp2));
         }
@@ -313,7 +307,6 @@ void MainWindow::Changelogs()
     texp = QRegExp(fromto);
     while(texp.indexIn(first)!=-1 )
     {
-        //qDebug() << "1:" << texp.cap(0);
          first.replace(texp.cap(0),color(Preposition.value(from)+space + texp.cap(1)+space+Preposition.value(to)+space+texp.cap(5)));
     }
 
@@ -331,7 +324,6 @@ QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
     foreach(const QString& key, keywords_value.keys()) {
         QJsonValue value = keywords_value.value(key);
         array.insert(key,value.toString());
-        //qDebug() << key << value.toString() << "key??";
     }
     return array;
 }
