@@ -32,6 +32,8 @@ private:
     void label_settext(int);
     void set_buttons();
     void put_text(QString text);
+    QString start_regular_replacer (QString);
+    void end_regular_replacer (QString *);
     QString get_text();
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();

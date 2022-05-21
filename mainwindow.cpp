@@ -179,11 +179,13 @@ void MainWindow::Changelogs()
     QJsonValue value = json.value(QString("Changelogs"));
     QJsonObject item = value.toObject();
     QString space = QJsonValue(item["Space"]).toString();
-    QString changed = " changed";
+    QString changed = " changed:";
+    QString changed_rus = QJsonValue(item[changed]).toString();
     QString base = "base";
     QString gain = "gain";
     QString from = "from";
     QString point = ".";
+    QString proc = "%";
     QString to = "to";
   //  QMap<QString, QString> changed;
     QMap<QString, QString> Keywords = map_parser(item,"Keywords");
@@ -201,95 +203,89 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Talents = map_parser(item,"Talents");
     QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
     QMap<QString, QString> Talents_changes = map_parser(item, "Talents_changes");
+    QMap<QString, QString> Talents_changes_proc = map_parser(item,"Talents_changes_proc");
     QMap<QString, QString> Keywords_small = map_parser(item,"Keywords_small");
+    QMap<QString, QString> Aghanim = map_parser(item, "Aghanim");
+    first = start_regular_replacer(first);
+    for (i=Aghanim.begin();i!=Aghanim.end();i++)
+    {
+        first.replace(start_regular_replacer(i.key()),color(i.value()));
+    }
     for (i = Talents_level.begin(); i != Talents_level.end(); i++)
     {
-        first.replace(i.key() + changed,color(i.value()));
+        first.replace(i.key() + changed,color(i.value()+changed_rus));
         first.replace(i.key(),color(i.value()));
     }
     for (i = Talents.begin(); i != Talents.end(); i++)
     {
-        first.replace(i.key(),color(i.value()));
+        first.replace(start_regular_replacer(i.key()),color(i.value()));
     }
-    QRegExp re;
+    QString temp1;
+    QString temp2;
+    QRegExp texp;
     int iter = 0;
-    QMap<QString, QString> Regular = map_parser(item,"Regular");
-    for (i = Regular.begin(); i != Regular.end(); i++)
-    {
-        first.replace(i.key(),(i.value()));
-    }
+
     for (i=Keywords_small.begin(); i!= Keywords_small.end();i++)
     {
         for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
         {
-             //re = QRegExp ("\\d+" + space + to + space + "\\d+");
-
-           // QString re = "1"+space+j.key()+space+i.key()+space+to+space+"2";
-           // qDebug() << re;
-           // lastPos = 0;
-
-            //second.replace(re,"123");
-            //first.replace(re,j.value() +space + i.value() + Preposition.value(from) + space +re.cap(2) + Preposition.value(to)+space + re.cap(1));
-            //qDebug() << QString::number( re.indexIn(ar, lastPos ) );
-
-            re = QRegExp( ".([0-9]+)"+space + j.key() +space+i.key()+space+to+space+".([0-9]+)\\." );
-            while(re.indexIn(first)!=-1 )
+            temp1 = ".([0-9]+)"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+".([0-9]+)\\." ;
+            qDebug() << "temp11:" << temp1;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
             {
                 iter++;
+                 qDebug() <<"while:"<< QString::number(iter)<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1) + space + Preposition.value(to)+ space + texp.cap(2))+point);
 
-                //lastPos += re.matchedLength();
-                 qDebug() <<"while:"<< QString::number(iter)<< re.cap( 0 )  << re.cap(1) << re.cap(2) << re.cap(3) << re.cap(4) << re.cap(5);
-                 first.replace(re.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +re.cap(1) + space + Preposition.value(to)+ space + re.cap(2))+point);
-                 //lastPos = re.indexIn(second, lastPos );
-                //qDebug() <<first;
-               // flag--;
-                 /*qDebug() << j.value() +space + i.value() +space + Preposition.value(from) + space +"re.cap(2)" + Preposition.value(to)+space + "re.cap(1)";
-                first.replace(re ,j.value() +space + i.value() +space +Preposition.value(from) + space +"re.cap(2)" + Preposition.value(to)+space + "re.cap(1)");*/
-             //   lastPos = 0;
             }
 
         }
-    }
-    for (i = Regular.begin(); i != Regular.end(); i++)
-    {
-        first.replace(i.value(),(i.key()));
-    }
-    int count;
-    QString temp1;
-    QString temp2;
-    QRegExp texp;
+        for (j=Talents_changes_proc.begin();j!=Talents_changes_proc.end();j++)
+        {
+            temp1 = "([0-9]+)%"+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+"([0-9]+)%\\." ;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
 
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1) +proc+ space + Preposition.value(to)+ space + texp.cap(2))+proc+point);
+
+            }
+        }
+    }
+
+    int count;
     for (i=Keywords.begin(); i!= Keywords.end();i++)
     {
         for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
-            temp1 = i.key()+space+base+space+j.key();
-            qDebug() << QString::number(count<2?1:0);
+            temp1 = i.key()+space+base+space+start_regular_replacer(j.key());
+            //qDebug() << QString::number(count<2?1:0);
             temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
             first.replace(temp1,color(temp2));
         }
         for (j=Attributes_flex.begin();j!=Attributes_flex.end();j++)
         {
-            temp1 = i.key()+space+j.key()+space+gain+space;
+            temp1 = i.key()+space+start_regular_replacer(j.key())+space+gain+space;
             temp2 = Attributes.value(gain)+space+j.value()+space+i.value()+space;
             first.replace(temp1,color(temp2));
         }
         for (j=Stats_f.begin();j!=Stats_f.end();j++)
         {
-            temp1 = i.key()+j.key();
-            qDebug() << temp1;
+            temp1 = i.key()+start_regular_replacer(j.key());
+           // qDebug() << temp1;
             temp2 = j.value()+i.value()+Flex_verb[1].toString()+ space;
             first.replace(temp1,color(temp2));
         }
         for (j=Stats_m.begin();j!=Stats_m.end();j++)
         {
-            temp1 = i.key()+j.key();
+            temp1 = i.key()+start_regular_replacer(j.key());
             temp2 = j.value()+i.value()+Flex_verb[0].toString()+ space;
             first.replace(temp1,color(temp2));
         }
         for (j=Stats_n.begin();j!=Stats_n.end();j++)
         {
-            temp1 = i.key()+j.key();
+            temp1 = i.key()+start_regular_replacer(j.key());
             temp2 = j.value()+i.value()+Flex_verb[2].toString()+ space;
             first.replace(temp1,color(temp2));
         }
@@ -302,47 +298,9 @@ void MainWindow::Changelogs()
          first.replace(texp.cap(0),color(Preposition.value(from)+space + texp.cap(1)+space+Preposition.value(to)+space+texp.cap(5)));
     }
 
-   /* QString str = "23 to 30\n45 to 325\nqwer23to24";
-    QRegExp re("([0-9]+) to ([0-9]+)");
-    int lastPos = 0;
-    str.replace(re, re.cap(2)+ "to"+ re.cap(1));
-     qDebug() << str;
-    while( ( lastPos = re.indexIn( str, lastPos ) ) != -1 ) {
-        lastPos += re.matchedLength();
-        qDebug() << re.cap( 0 ) << ":" << re.cap( 1 ) << ":" << re.cap(2);
-
-        qDebug() << str;
-    }*/
-
-
-//    qDebug() << first;
-   /* static const char* const TEXT =
-        "#include <QRegExp>\n"
-        "#include <QStringList>\n"
-        "#include <QDebug>\n"
-        "\n"
-        "int main() {\n"
-            "QRegExp re( \"#include <([^>]+)>\" );\n"
-            "int lastPos = 0;\n"
-            "while( ( lastPos = re.indexIn( TEXT, lastPos ) ) != -1 ) {\n"
-                "lastPos += re.matchedLength();\n"
-                "qDebug() << re.cap( 0 );\n"
-            "}\n"
-            "return 0;\n"
-        "}";
-
-
-
-        QRegExp req( "#include <([^>]+)>" );
-
-        int lastPosq = 0;
-        while( ( lastPosq = req.indexIn( TEXT, lastPosq ) ) != -1 ) {
-            lastPosq += req.matchedLength();
-            qDebug() << req.cap( 0 ) << ":" << req.cap( 1 );
-        }*/
         qDebug() << "end??";
 
-
+    end_regular_replacer (&first);
     int counted = counter(first);
     label_settext(counted);
      put_text(first);
@@ -379,6 +337,21 @@ void  MainWindow::Units()
 }
 
 
+QString MainWindow::start_regular_replacer (QString temp)
+{
+    QString Array[5] = {"|", "{", "}", "[", "]"};
+    int i;
+    for (i=0; i<5;i++)
+         temp.replace(Array[i],"&dw0"+QString::number(i)+"c");
+    return temp;
+}
+void MainWindow::end_regular_replacer (QString *temp)
+{
+    QString Array[5] = {"|", "{", "}", "[", "]"};
+    int i;
+    for (i=0; i<5;i++)
+        &temp ->replace("&dw0"+QString::number(i)+"c",Array[i]);
+}
 QString MainWindow::get_text()
 {
     QString first = ui -> text1 -> toPlainText();
