@@ -1,0 +1,185 @@
+{
+    "WikiAndFixes": {
+		"|*" : "|\n*"
+	},
+	"Commafix": [ "[[en:Version ",
+	"[[zh:",
+	"[[",
+	"[[Версия ",
+	"| version = ",
+	"| previous = ",
+	"| next = ",
+	"{{VersionTableElement|",
+	"(до ",
+	"(pre ",
+	"(До ",
+	"(Pre "
+	],
+	"Changelogs" : {
+		"Space" : " ",
+		" changed:" : ":",
+		"Flex_verb" : ["", "а", "о", "ы"],
+		"Flex_adj" : ["ый", "ая", "ое", "ые"],
+		"Keywords" : {
+			"Reduced" : "уменьшен",
+			"Increased" : "увеличен",
+			"Rescaled" : "изменен"
+		},
+		"Preposition" : {
+			"from" : "с",
+			"to" : "до"
+		},
+		"Attributes" : {
+			"base" : "Базов",
+			"gain" : "Прирост",
+			"and gain_f" : "и её прирост",
+			"and_gain_m" : "и его прирост"
+		},
+		"Attributes_base" : {
+			"{{Attribute ID|strength}}" : "{{Attribute ID|сила}}",
+			"{{Attribute ID|agility}}" : "{{Attribute ID|ловкость}}",
+			"{{Attribute ID|intelligence}}" : "{{Attribute ID|интеллект}}"
+		},
+		"Attributes_flex" : {
+			"{{Attribute ID|strength}}" : "{{Attribute ID|Сила|text=силы}}",
+			"{{Attribute ID|agility}}" : "{{Attribute ID|Ловкость|text=ловкости}}",
+			"{{Attribute ID|intelligence}}" : "{{Attribute ID|Интеллект|text=интеллекта}}"
+		},
+		"Stats": {
+			"female": {
+				" [[armor]] " : "[[Броня]] ",
+				" [[movement speed]] " : "[[Скорость передвижения]] ",
+				" movement speed " : "[[Скорость передвижения]] ",
+				" base [[movement speed]] " : "Базовая [[скорость передвижения]] ",
+				" base [[attack speed]] " : "Базовая [[скорость атаки]] ",
+				" [[turn rate]] " : "[[Скорость поворота]] ",
+				" base [[armor]] " : "[[Базовая броня]] ",
+				" base armor " : "[[Базовая броня]] ",
+				" [[attack range]] " : "[[Дальность атаки]] ",
+				" attack range " : "[[Дальность атаки]] ",
+				" attack projectile speed " : "[[Скорость полёта снаряда]] ",
+				" slow duration " : "Длительность замедления ",
+				" cast range " : "Дальность применения "
+			},
+			"male" : {
+				" base [[attack damage]] " : "Базовый [[урон от атаки]] ",
+				" [[collision size]] " : "[[Размер столкновения]] ",
+				" collision size " : "[[Размер столкновения]] ",
+				" base attack damage " : "Базовый [[урон от атаки]] ",
+				" mana cost " : "Расход маны ",
+				" base damage " : "Базовый урон ",
+				" vision radius " : "Радиус [[обзор]]а ",
+				" damage " : "Урон ",
+				" proc chance " : "Шанс срабатывания "
+			},
+			"neuter" : {
+				" movement speed slow " : "Замедление [[скорость передвижения|скорости передвижения]] ",
+				" attack speed slow " : "Замедление [[скорость атаки|скорости атаки]] ",
+				" [[armor]] reduction " : "Снижение [[броня|брони]] ",
+				" armor reduction " : "Снижение [[броня|брони]] ",
+				" [[mana regeneration]] " : "[[Восстановление маны]] ",
+				" [[health regeneration]] " : "[[Восстановление здоровья]] ",
+				" health regeneration " : "[[Восстановление здоровья]] ",
+				" mana regeneration " : "[[Восстановление маны]] ",
+				" [[base attack time]] " : "[[Базовое время атаки]] ",
+				" base health regeneration " : "Базовое [[восстановление здоровья]] ",
+				" base [[health regeneration]] " : "Базовое [[восстановление здоровья]] ",
+				" base mana regeneration " : "Базовое [[восстановление маны]] ",
+				" base [[mana regeneration]] " : "Базовое [[восстановление маны]] ",
+				" evasion " : "Уклонение "
+			}
+		},
+		"Talents_level" : {
+			"Level 10 left talent" : "Левый талант 10 уровня",
+			"Level 15 left talent" : "Левый талант 15 уровня",
+			"Level 20 left talent" : "Левый талант 20 уровня",
+			"Level 25 left talent" : "Левый талант 25 уровня",
+			"Level 10 right talent" : "Правый талант 10 уровня",
+			"Level 15 right talent" : "Правый талант 15 уровня",
+			"Level 20 right talent" : "Правый талант 20 уровня",
+			"Level 25 right talent" : "Правый талант 25 уровня"
+		},
+		"Talents": {
+			"'''Talents'''" : "{{Значок|Талант}} [[Таланты]]:",
+			"{{Symbol|Talent}} '''[[Talent]]s:'''" : "{{Значок|Талант}} '''[[Таланты]]:'''",
+			"{{Symbol|Talent}} '''[[Talent]]s''':" : "{{Значок|Талант}} '''[[Таланты]]:'''",
+			"** Левый" : ":: Левый",
+			"* Левый" : ":: Левый",
+			"** Правый" : ":: Правый",
+			"* Правый" : ":: Правый",
+			"'''Reworkerd talents'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]'''",
+			"'''Reworked talents:'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]:'''",
+			"Added talents" : "Добавлены таланты"
+		},
+		"Keywords_small" : {
+			"reduced" : "уменьшен",
+			"increased" : "увеличен"
+		},
+		"Keywords_cooldown" : {
+			"reduced" : "ослабено",
+			"increased" : "усилено"
+		},
+		"Ability" : "&dw01c&dw01cA&dw00c([^>]{1,25})&dw00c([^>]{1,25})&dw02c&dw02c",
+		"Float" : "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)",
+		"Cooldown" : {
+			"cooldown" : "уменьшение перезарядки",
+			"[[respawn time]]" : "уменьшение [[время возрождения|времени возрождения]]"
+		},
+		"Abilities_one" : {
+			"female" : {
+				" cooldown " : "перезарядка ",
+				" slow duration " : "длительность замедления ",
+				" duration " : "длительность ",
+				" cast range " : "дальность применения "
+			},
+			"male" : {
+				" mana cost " : "расход маны ",
+				" critical damage " : "критический урон ",
+				" base damage " : "базовый урон "
+			},
+			"neuter" : {
+				
+			}
+		},
+		"Talents_abilities": {
+			"cast range" : "бонус к дальности применения",
+			"damage" : "бонус к урону от",
+			"silence duration" : "бонус к длительности безмолвия от",
+			"stun duration" : "бонус к длительности оглушения от"
+		},
+		"Talents_changes": {
+		"[[health regeneration]]" : "бонус к [[восстановление здоровья|восстановлению здоровья]]",
+		"[[attack speed]]" : "бонус к [[скорость атаки|скорости атаки]]",
+		"[[mana regeneration]]" : "бонус к [[восстановление маны|восстановлению маны]]",
+		"[[mana regen]]" : "бонус к [[восстановление маны|восстановлению маны]]",
+		"[[armor]]" : "бонус к [[броня|броне]]",
+		"[[movement speed]]" : "бонус к [[скорость передвижения|скорости передвижения]]",
+		"[[mana]]" : "бонус к [[мана|мане]]",
+		"[[attack damage]]" : "бонус к [[урон от атаки|урону от атаки]]",
+		"{{Attribute ID|strength}}" : "бонус к {{Attribute ID|Сила|text=силе}}",
+		"{{Attribute ID|agility}}" : "бонус к {{Attribute ID|Ловкость|text=ловкости}}",
+		"{{Attribute ID|intelligence}}" : "бонус к {{Attribute ID|Интеллект|text=интеллекту}}",
+		"[[health]]" : "бонус к [[здоровье|здоровью]]",
+		"[[attack range]]" : "бонус к [[дальность атаки|дальности атаки]]",
+		"[[cast range]]" : "бонус к [[дальность применения|дальности применения]]"
+		},
+		"Talents_changes_n" : {
+			"{{A|Armor Corruption|Armor}}" : "{{A|Снижение брони|Броня|text=снижение брони}} от атак"
+		},
+		"Talents_changes_proc" : {
+		"[[lifesteal]]" : "бонус к [[вампиризм]]у",
+		"[[evasion]]" : "бонус к [[уклонение|уклонению]]",
+		"[[magic resistance]]" : "бонус к [[сопротивление магии|сопротивлению магии]]",
+		"[[cleave]]" : "бонус к [[прорубающий удар|прорубающему урону]]",
+		"[[spell damage amplification]]" : "бонус к [[урон от заклинаний|урону от заклинаний]]",
+		"[[spell lifesteal]]" : "бонус к [[вампиризм заклинаний|вампиризму заклинаний]]"
+		},
+		"Aghanim" : {
+			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "'''Переработано''' улучшение от {{I|Aghanim' Scepter}}",
+			"* {{I|Aghanim's Scepter}} upgrade:" : "* Улучшение от {{I|Aghanim's Scepter}}:",
+			"* {{I|Aghanim's Shard}} upgrade:" : "* Улучшение от {{I|Aghanim's Shard}}",
+			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "'''Добавлено улучшение от {{I|Aghanim's Scepter}} для ",
+			"'''Added {{I|Aghanim's Shard}} upgrade for " : "'''Добавлено улучшение от {{I|Aghanim's Shard}} для "
+		}
+	}
+}
