@@ -136,8 +136,15 @@ void MainWindow::WikiAndFixes()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+    QJsonArray letter_with_for_medoke = WikiAndFixes["letter_with_for_medoke"].toArray();
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+    qDebug() << letter_with_for_medoke[0].toString() << letter_with_for_medoke[1].toString();
+    QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(" " + letter_with_for_medoke[1].toString() + " 1" + texp.cap(1)));
+    }
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
