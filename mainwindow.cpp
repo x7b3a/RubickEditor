@@ -154,7 +154,8 @@ void MainWindow::Commafix()
             first.replace(QString::number(j) + point + QString::number(k),QString::number(j) + comma + QString::number(k));
     QJsonObject json = read_json("dict.json").object();
     QJsonArray Commafix = json["Commafix"].toArray();
-
+    QRegExp texp = QRegExp("([0-9])"+ comma+"([0-9abcdefgh]{1,3}-[0-9])"+comma+"([0-9abcdefgh]{1,3})");
+     qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
     for (int i = 0; i<Commafix.size();i++)
     {
         for (int j = 0;j<10;j++)
@@ -224,6 +225,7 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Abilities_one_m = map_parser(Abilities_one,"male");
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
     QMap<QString, QString> New_Talent = map_parser(item,"New_Talent");
+    QMap<QString, QString> New_Talent_abilities = map_parser(item,"New_Talent_abilities");
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -304,7 +306,7 @@ void MainWindow::Changelogs()
             while(texp.indexIn(first)!=-1 )
             {
                 qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                first.replace(texp.cap(0),color(j.value() + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(5).replace("-",minus)+sec));
+                first.replace(texp.cap(0),color(j.value() + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus) + space + Preposition.value(to)+ space  + texp.cap(5).replace("-",minus)+sec));
             }
         }
         for (j=Talents_changes_n.begin();j!=Talents_changes_n.end();j++)
@@ -406,7 +408,7 @@ void MainWindow::Changelogs()
             while(texp.indexIn(first)!=-1 )
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+Flex_verb[2].toString()+ i.value()+ space));
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[2].toString()+ space));
             }
          }
     }
@@ -425,6 +427,17 @@ void MainWindow::Changelogs()
         {
             qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
             first.replace(texp.cap(0),color(space + texp.cap(1)+space + i.value()));
+        }
+    }
+    for (i=New_Talent_abilities.begin();i!=New_Talent_abilities.end();i++)
+    {
+        temp1 = " ([0-9/\\.\\-\\+,%s]{1,10}) "  + ability + start_regular_replacer(i.key());
+        texp = QRegExp(temp1);
+        qDebug() << "tal" << temp1 << texp;
+        while(texp.indexIn(first)!=-1 )
+        {
+            qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+            first.replace(texp.cap(0),color(space + texp.cap(1).replace("s","").replace("-",minus) + i.value() +space+ " {{A|" + texp.cap(2)+"|"+ texp.cap(3) + "}}"));
         }
     }
 
