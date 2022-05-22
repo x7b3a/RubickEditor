@@ -199,9 +199,9 @@ void MainWindow::Changelogs()
     QJsonArray Flex_verb = item["Flex_verb"].toArray();
     QJsonArray Flex_adj = item["Flex_adj"].toArray();
     QJsonObject Stats = item["Stats"].toObject();
-    QMap<QString, QString> Stats_f = map_parser(Stats, "female");
-    QMap<QString, QString> Stats_m = map_parser(Stats, "male");
-    QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
+        QMap<QString, QString> Stats_f = map_parser(Stats, "female");
+        QMap<QString, QString> Stats_m = map_parser(Stats, "male");
+        QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
     QMap<QString, QString> Talents = map_parser(item,"Talents");
     QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
     QMap<QString, QString> Talents_changes = map_parser(item, "Talents_changes");
@@ -211,6 +211,9 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Aghanim = map_parser(item, "Aghanim");
     QMap<QString, QString> Keywords_cooldown = map_parser(item,"Keywords_cooldown");
     QMap<QString, QString> Cooldown = map_parser(item, "Cooldown");
+    QMap<QString, QString> Talents_abilities = map_parser(item,"Talents_abilities");
+    QJsonObject Abilities_one = item["Abilities_one"].toObject();
+    QMap<QString, QString> Abilities_one_f = map_parser(Abilities_one,"female");
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -242,7 +245,6 @@ void MainWindow::Changelogs()
                  first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+point);
 
             }
-
         }
         for (j=Talents_changes_proc.begin();j!=Talents_changes_proc.end();j++)
         {
@@ -253,17 +255,37 @@ void MainWindow::Changelogs()
                  first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") +proc+ space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+proc+point);
             }
         }
+        for (j = Talents_abilities.begin();j!=Talents_abilities.end();j++)
+        {
+             temp1  =   Float + space + ability + space + j.key() + space + i.key() + space + to + space + Float + point;
+             texp = QRegExp(temp1);
+             while(texp.indexIn(first)!=-1 )
+             {
+                first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space  + texp.cap(7).replace("+","")+point));
+             }
+         }
     }
 
     for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++) //increased as "ycileno"
     {
-        j = Cooldown.begin();
-        temp1  =   Float +"s"+ space + ability + space + j.key() + space + i.key() + space + to + space + Float + "s.";
-        texp = QRegExp(temp1);
-        while(texp.indexIn(first)!=-1 )
+        for (j = Cooldown.begin();j!= Cooldown.end();j++)
         {
-        qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-        first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
+            temp1  =   Float +"s"+ space + ability + space + j.key() + space + i.key() + space + to + space + Float + "s.";
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
+            }
+
+            temp1  =   Float +"s"+ space + start_regular_replacer(j.key()) + space + i.key() + space + to + space + Float + "s.";
+            qDebug() << "temp1:" <<temp1;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                first.replace(texp.cap(0),color(j.value() + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(5).replace("-",minus)+sec));
+            }
         }
         for (j=Talents_changes_n.begin();j!=Talents_changes_n.end();j++)
         {
@@ -278,7 +300,7 @@ void MainWindow::Changelogs()
     int count;
     for (i=Keywords.begin(); i!= Keywords.end();i++) //Increased
     {
-        for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
+        for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end()&&count<2;j++,count++)
         {
             temp1 = i.key()+space+base+space+start_regular_replacer(j.key());
             temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
@@ -308,6 +330,18 @@ void MainWindow::Changelogs()
             temp2 = j.value()+i.value()+Flex_verb[2].toString()+ space;
             first.replace(temp1,color(temp2));
         }
+        for (j=Abilities_one_f.begin();j!=Abilities_one_f.end();j++)
+        {
+            temp1 = i.key() + space + ability + j.key();
+            texp = QRegExp(temp1);
+            qDebug() << "abil" << temp1;
+
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space));
+            }
+         }
     }
     QString fromto = from+space + Float + space + to + space + Float;
     texp = QRegExp(fromto);
