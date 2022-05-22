@@ -185,7 +185,7 @@ void MainWindow::Changelogs()
     QString eachlevel = " on each level";
     QString changed_rus = QJsonValue(item[changed]).toString();
     QString eachlevel_rus = QJsonValue(item[eachlevel]).toString();
-    qDebug() << eachlevel_rus << changed_rus;
+    QString Level_numbers = QJsonValue(item["Level_numbers"]).toString();
     QString base = "base";
     QString gain = "gain";
     QString from = "from";
@@ -194,6 +194,7 @@ void MainWindow::Changelogs()
     QString to = "to";
     QString sec = " \u0441\u0435\u043a.";
     QString minus = "\u2212";
+    QString arrow = "\u279c";
     QMap<QString, QString> Keywords = map_parser(item,"Keywords");
     QMap<QString, QString> Preposition = map_parser(item,"Preposition");
     QMap<QString, QString> Attributes = map_parser(item,"Attributes");
@@ -216,11 +217,13 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Keywords_cooldown = map_parser(item,"Keywords_cooldown");
     QMap<QString, QString> Cooldown = map_parser(item, "Cooldown");
     QMap<QString, QString> Talents_abilities = map_parser(item,"Talents_abilities");
+    QMap<QString, QString> Talents_abilities_proc = map_parser(item,"Talents_abilities_proc");
     QJsonObject Abilities_one = item["Abilities_one"].toObject();
     QMap<QString, QString> Abilities_one_d = map_parser(Abilities_one,"duration");
     QMap<QString, QString> Abilities_one_f = map_parser(Abilities_one,"female");
     QMap<QString, QString> Abilities_one_m = map_parser(Abilities_one,"male");
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
+    QMap<QString, QString> New_Talent = map_parser(item,"New_Talent");
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -271,6 +274,16 @@ void MainWindow::Changelogs()
                 first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space  + texp.cap(7).replace("+","")+point));
              }
          }
+        for (j=Talents_abilities_proc.begin();j!=Talents_abilities_proc.end();j++)
+        {
+            temp1 = Float + "%" +space + ability + space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float+"%\\." ;
+            texp = QRegExp(temp1);
+             while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " ability proc:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+Flex_verb[0].toString()+ space+ Preposition.value(from) + space + texp.cap(1).replace("+","") + proc+ space  + Preposition.value(to)+ space + texp.cap(7).replace("+","")+proc+point));
+            }
+        }
     }
 
     for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++) //increased as "ycileno"
@@ -321,14 +334,14 @@ void MainWindow::Changelogs()
         }
         for (j=Stats_d.begin();j!=Stats_d.end();j++)
         {
-            temp1 = i.key()+start_regular_replacer(j.key()) + from + space + "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|.)";
+            temp1 = i.key()+start_regular_replacer(j.key()) + from + space + Level_numbers;
             texp = QRegExp(temp1);
-            qDebug() << "temp1" << temp1 <<"\n" <<texp;
+            //qDebug() << "temp1" << temp1 <<"\n" <<texp;
 
             temp2 = j.value()+i.value()+Flex_verb[1].toString()+ space;
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " duration:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //qDebug() << " duration:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                 first.replace(texp.cap(0),color(temp2 + Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) +QString(sec + texp.cap(4).replace(" on each level",eachlevel_rus)).replace("..",".")));
             }
         }
@@ -352,10 +365,8 @@ void MainWindow::Changelogs()
         }
         for (j=Abilities_one_d.begin();j!=Abilities_one_d.end();j++)
         {
-            temp1 = i.key() + space + ability + j.key() + from + space + "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|.)";
+            temp1 = i.key() + space + ability + j.key() + from + space + Level_numbers;
             texp = QRegExp(temp1);
-           // qDebug() << "abil" << temp1;
-
             while(texp.indexIn(first)!=-1 )
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
@@ -394,16 +405,27 @@ void MainWindow::Changelogs()
 
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+Flex_verb[2].toString()+ i.value()+ space));
             }
          }
     }
-    QString fromto = from+space + Float + space + to + space + Float;
+    QString fromto = from+ space + "([0-9/\\.\\-,%]{1,20})( on each level |.)to ([0-9/\\.\\-,%]{1,20})( on each level.|.)";
     texp = QRegExp(fromto);
     while(texp.indexIn(first)!=-1 )
     {
-         first.replace(texp.cap(0),color(Preposition.value(from)+space + texp.cap(1)+space+Preposition.value(to)+space+texp.cap(5)));
+         first.replace(texp.cap(0),color(Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) + texp.cap(4).replace(" on each level",eachlevel_rus)));
+    }
+    for (i=New_Talent.begin();i!=New_Talent.end();i++)
+    {
+        temp1 = " ([0-9/\\.\\-\\+,%]{1,10})" + space + start_regular_replacer(i.key());
+        texp = QRegExp(temp1);
+        //qDebug() << "tal" << temp1 << texp;
+        while(texp.indexIn(first)!=-1 )
+        {
+            qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+            first.replace(texp.cap(0),color(space + texp.cap(1)+space + i.value()));
+        }
     }
 
         qDebug() << "end??";
