@@ -182,7 +182,10 @@ void MainWindow::Changelogs()
     QString ability = QJsonValue(item["Ability"]).toString();
     QString Float = QJsonValue(item["Float"]).toString();
     QString changed = " changed:";
+    QString eachlevel = " on each level";
     QString changed_rus = QJsonValue(item[changed]).toString();
+    QString eachlevel_rus = QJsonValue(item[eachlevel]).toString();
+    qDebug() << eachlevel_rus << changed_rus;
     QString base = "base";
     QString gain = "gain";
     QString from = "from";
@@ -199,6 +202,7 @@ void MainWindow::Changelogs()
     QJsonArray Flex_verb = item["Flex_verb"].toArray();
     QJsonArray Flex_adj = item["Flex_adj"].toArray();
     QJsonObject Stats = item["Stats"].toObject();
+        QMap<QString, QString> Stats_d = map_parser(Stats, "duration");
         QMap<QString, QString> Stats_f = map_parser(Stats, "female");
         QMap<QString, QString> Stats_m = map_parser(Stats, "male");
         QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
@@ -213,6 +217,7 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Cooldown = map_parser(item, "Cooldown");
     QMap<QString, QString> Talents_abilities = map_parser(item,"Talents_abilities");
     QJsonObject Abilities_one = item["Abilities_one"].toObject();
+    QMap<QString, QString> Abilities_one_d = map_parser(Abilities_one,"duration");
     QMap<QString, QString> Abilities_one_f = map_parser(Abilities_one,"female");
     QMap<QString, QString> Abilities_one_m = map_parser(Abilities_one,"male");
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
@@ -276,12 +281,12 @@ void MainWindow::Changelogs()
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+              //  qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                 first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
             }
 
             temp1  =   Float +"s"+ space + start_regular_replacer(j.key()) + space + i.key() + space + to + space + Float + "s.";
-            qDebug() << "temp1:" <<temp1;
+           // qDebug() << "temp1:" <<temp1;
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
@@ -314,6 +319,19 @@ void MainWindow::Changelogs()
             temp2 = Attributes.value(gain)+space+j.value()+space+i.value()+space;
             first.replace(temp1,color(temp2));
         }
+        for (j=Stats_d.begin();j!=Stats_d.end();j++)
+        {
+            temp1 = i.key()+start_regular_replacer(j.key()) + from + space + "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|.)";
+            texp = QRegExp(temp1);
+            qDebug() << "temp1" << temp1 <<"\n" <<texp;
+
+            temp2 = j.value()+i.value()+Flex_verb[1].toString()+ space;
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " duration:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                first.replace(texp.cap(0),color(temp2 + Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) +QString(sec + texp.cap(4).replace(" on each level",eachlevel_rus)).replace("..",".")));
+            }
+        }
         for (j=Stats_n.begin();j!=Stats_n.end();j++)
         {
             temp1 = i.key()+start_regular_replacer(j.key()) + from;
@@ -332,15 +350,27 @@ void MainWindow::Changelogs()
             temp2 = j.value()+i.value()+Flex_verb[0].toString()+ space;
             first.replace(temp1,color(temp2) + from);
         }
+        for (j=Abilities_one_d.begin();j!=Abilities_one_d.end();j++)
+        {
+            temp1 = i.key() + space + ability + j.key() + from + space + "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|.)";
+            texp = QRegExp(temp1);
+           // qDebug() << "abil" << temp1;
+
+            while(texp.indexIn(first)!=-1 )
+            {
+                //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space+ Preposition.value(from) + space + texp.cap(3)+ texp.cap(4).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(5) +QString(sec + texp.cap(6).replace(" on each level",eachlevel_rus)).replace("..",".")));
+            }
+         }
         for (j=Abilities_one_f.begin();j!=Abilities_one_f.end();j++)
         {
             temp1 = i.key() + space + ability + j.key();
             texp = QRegExp(temp1);
-            qDebug() << "abil" << temp1;
+           // qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space));
             }
          }
@@ -348,11 +378,11 @@ void MainWindow::Changelogs()
         {
             temp1 = i.key() + space + ability + j.key();
             texp = QRegExp(temp1);
-            qDebug() << "abil" << temp1;
+            //qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+ space));
             }
          }
