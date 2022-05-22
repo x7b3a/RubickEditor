@@ -214,6 +214,8 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Talents_abilities = map_parser(item,"Talents_abilities");
     QJsonObject Abilities_one = item["Abilities_one"].toObject();
     QMap<QString, QString> Abilities_one_f = map_parser(Abilities_one,"female");
+    QMap<QString, QString> Abilities_one_m = map_parser(Abilities_one,"male");
+    QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -300,11 +302,11 @@ void MainWindow::Changelogs()
     int count;
     for (i=Keywords.begin(); i!= Keywords.end();i++) //Increased
     {
-        for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end()&&count<2;j++,count++)
+        for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
-            temp1 = i.key()+space+base+space+start_regular_replacer(j.key());
+            temp1 = i.key()+space+base+space+start_regular_replacer(j.key() + space + from);
             temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
-            first.replace(temp1,color(temp2));
+            first.replace(temp1,color(temp2) + space + from);
         }
         for (j=Attributes_flex.begin();j!=Attributes_flex.end();j++)
         {
@@ -312,23 +314,23 @@ void MainWindow::Changelogs()
             temp2 = Attributes.value(gain)+space+j.value()+space+i.value()+space;
             first.replace(temp1,color(temp2));
         }
+        for (j=Stats_n.begin();j!=Stats_n.end();j++)
+        {
+            temp1 = i.key()+start_regular_replacer(j.key()) + from;
+            temp2 = j.value()+i.value()+Flex_verb[2].toString()+ space;
+            first.replace(temp1,color(temp2) + from);
+        }
         for (j=Stats_f.begin();j!=Stats_f.end();j++)
         {
-            temp1 = i.key()+start_regular_replacer(j.key());
+            temp1 = i.key()+start_regular_replacer(j.key()  + from);
             temp2 = j.value()+i.value()+Flex_verb[1].toString()+ space;
-            first.replace(temp1,color(temp2));
+            first.replace(temp1,color(temp2)  + from);
         }
         for (j=Stats_m.begin();j!=Stats_m.end();j++)
         {
-            temp1 = i.key()+start_regular_replacer(j.key());
+            temp1 = i.key()+start_regular_replacer(j.key()  + from);
             temp2 = j.value()+i.value()+Flex_verb[0].toString()+ space;
-            first.replace(temp1,color(temp2));
-        }
-        for (j=Stats_n.begin();j!=Stats_n.end();j++)
-        {
-            temp1 = i.key()+start_regular_replacer(j.key());
-            temp2 = j.value()+i.value()+Flex_verb[2].toString()+ space;
-            first.replace(temp1,color(temp2));
+            first.replace(temp1,color(temp2) + from);
         }
         for (j=Abilities_one_f.begin();j!=Abilities_one_f.end();j++)
         {
@@ -340,6 +342,30 @@ void MainWindow::Changelogs()
             {
                 qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space));
+            }
+         }
+        for (j=Abilities_one_m.begin();j!=Abilities_one_m.end();j++)
+        {
+            temp1 = i.key() + space + ability + j.key();
+            texp = QRegExp(temp1);
+            qDebug() << "abil" << temp1;
+
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+ space));
+            }
+         }
+        for (j=Abilities_one_n.begin();j!=Abilities_one_n.end();j++)
+        {
+            temp1 = i.key() + space + ability + j.key();
+            texp = QRegExp(temp1);
+            qDebug() << "abil" << temp1;
+
+            while(texp.indexIn(first)!=-1 )
+            {
+                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+Flex_verb[2].toString()+ i.value()+ space));
             }
          }
     }
