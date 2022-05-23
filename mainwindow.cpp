@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("Rubick Editor");
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     set_buttons();
-    this->setWindowFlags(Qt::CustomizeWindowHint);
     this->setStyleSheet("background-image:url()");
     set_theme(this);
 }
@@ -483,6 +482,7 @@ void MainWindow::set_theme(MainWindow* window)
     QString details = get_details();
     QPalette palette = get_backimage();
     QString background;
+    QString border = get_border();
     QString btext = "border-top-color: rgb(127, 127, 127);border-top-width: 1px; border-top-style: solid;border-left-color: rgb(127, 127, 127);border-left-width: 1px;border-left-style: solid;\
             border-bottom-color: rgb(127, 127, 127);\
             border-bottom-width: 1px;\
@@ -521,7 +521,36 @@ void MainWindow::set_theme(MainWindow* window)
                 ui->Output_label->setStyleSheet(dtext+details+";");
                 ui->themebutton -> setStyleSheet(dtext+details+";");
                 ui->themelabel -> setStyleSheet(dtext+details+";");
-
+        QString bback = "border-top-width: 1px;\
+                    border-top-style: solid;\
+                border-left-width: 1px;\
+                    border-left-style: solid;\
+                border-bottom-width: 1px;\
+                    border-bottom-style: solid;\
+                    border-right-width: 1px;\
+                    border-right-style: solid; background-color: rgb";
+         ui->text1 -> setStyleSheet(bback + text_back + ";\
+ color: rgb"+text +"; border-color: rgb" + border + ";");
+         ui->text2 -> setStyleSheet(bback + text_back + ";\
+                                    color: rgb"+text +"; border-color: rgb" + border + ";");
+         ui -> buttonpaste ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> buttonpaste_2 ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> refreshButton ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+}
+QString MainWindow::get_border()
+{
+    switch (theme)
+    {
+    case 0: return "(127, 127, 127)"; break;
+    case 1: return "(222, 222, 222)"; break;
+    default: return "(127, 127, 127)"; break;
+    }
 }
 QPalette MainWindow::get_backimage()
 {
@@ -529,7 +558,7 @@ QPalette MainWindow::get_backimage()
     switch (theme)
     {
         case 0:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size())));; break;
-        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark.png").scaled(this->size()))); break;
+        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark4.png").scaled(this->size()))); break;
         default:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size()))); break;
     }
     return palette;
@@ -539,7 +568,8 @@ QString MainWindow::get_highlight()
     switch (theme)
     {
     case 0: return "#ff8f45"; break;
-    case 1: return "#d17cf9"; break;
+    case 1: return "#ff8f45"; break;
+    //case 1: return "#d05300"; break;
     default: return "#ff8f45"; break;
     }
 }
@@ -548,7 +578,7 @@ QString MainWindow::get_backcolor()
     switch (theme)
     {
     case 0: return "(255,255,255)"; break;
-    case 1: return "(243, 255, 255)"; break;
+    case 1: return "(28, 28, 28)"; break;
     default: return "(255,255,255)"; break;
     }
 }
@@ -557,7 +587,10 @@ QString MainWindow::get_buttoncolor()
     switch (theme)
     {
     case 0: return "(243, 243, 243)"; break;
-    case 1: return "(2, 0, 98)"; break;
+
+        //case 1: return "(75,105,255)"; break;
+        case 1: return "(63, 86, 173)"; break;
+    //case 1: return "(2, 0, 98)"; break;
     default: return "(243, 243, 243)"; break;
     }
 }
@@ -741,7 +774,7 @@ void MainWindow::on_Output_win_clicked()
 
 void MainWindow::on_themebutton_clicked()
 {
-    put_text("lights up");
+    //put_text("lights up");
     theme = theme?0:1;
     set_theme(this);
 }

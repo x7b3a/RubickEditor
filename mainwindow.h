@@ -47,6 +47,7 @@ private:
     QString get_textcolor();
     QString get_details();
     QPalette get_backimage();
+    QString get_border();
 
 private slots:
     void on_buttochange_clicked();

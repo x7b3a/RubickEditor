@@ -12,6 +12,8 @@
         <file>images/discord.png</file>
         <file>images/back3.png</file>
         <file>images/back_dark.png</file>
+        <file>images/back_dark3.png</file>
+        <file>images/back_dark4.png</file>
     </qresource>
     <qresource prefix="/">
         <file>images/refresh.png</file>
