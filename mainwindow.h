@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSyntaxHighlighter>
 #include <QTextEdit>
 #
 
@@ -26,6 +25,9 @@ public:
                        "\u0420\u0430\u0437\u0434\u0435\u043b\u0020\u0022\u041a\u043e\u0441\u043c\u0435\u0442\u0438\u043a\u0430\u0022", //comsetic
                        "\u0055\u006e\u0069\u0074\u0073\u0020\u002d\u0020\u0421\u0443\u0449\u0435\u0441\u0442\u0432\u0430"}; //units
 private:
+    bool input = 0;
+    bool output = 1;
+    int theme = 0;
     int counter(QString);
     QJsonDocument read_json(QString filename);
     void button_switch(QString);
@@ -38,6 +40,14 @@ private:
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
+    void set_theme(MainWindow*);
+    QString get_highlight();
+    QString get_backcolor();
+    QString get_buttoncolor();
+    QString get_textcolor();
+    QString get_details();
+    QPalette get_backimage();
+
 private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();
@@ -59,5 +69,8 @@ private slots:
     void on_button5_clicked();
     void on_buttonpaste_clicked();
     void on_buttoncopy_clicked();
+    void on_Input_win_clicked();
+    void on_Output_win_clicked();
+    void on_themebutton_clicked();
 };
 #endif // MAINWINDOW_H

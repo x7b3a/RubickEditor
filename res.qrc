@@ -8,6 +8,10 @@
         <file>images/Rubick_icon.webp</file>
         <file>images/excel.png</file>
         <file>images/change.png</file>
+        <file>images/back2.png</file>
+        <file>images/discord.png</file>
+        <file>images/back3.png</file>
+        <file>images/back_dark.png</file>
     </qresource>
     <qresource prefix="/">
         <file>images/refresh.png</file>

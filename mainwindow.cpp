@@ -22,22 +22,20 @@
 #include <QRegExp>
 #include <QClipboard>
 #include <QStringList>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QPalette palette;
-    palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back.png").scaled(this->size())));
-    this->setPalette(palette);
-    this->setStyleSheet("background-image:url()");
-
     this -> showMaximized();
     this->setWindowTitle("Rubick Editor");
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
-
     set_buttons();
+    this->setWindowFlags(Qt::CustomizeWindowHint);
+    this->setStyleSheet("background-image:url()");
+    set_theme(this);
 }
 
 MainWindow::~MainWindow()
@@ -476,6 +474,111 @@ void  MainWindow::Units()
     QString first = get_text();
 }
 
+void MainWindow::set_theme(MainWindow* window)
+{
+    QString highlight = get_highlight();
+    QString text_back = get_backcolor();
+    QString button_back = get_buttoncolor();
+    QString text = get_textcolor();
+    QString details = get_details();
+    QPalette palette = get_backimage();
+    QString background;
+    QString btext = "border-top-color: rgb(127, 127, 127);border-top-width: 1px; border-top-style: solid;border-left-color: rgb(127, 127, 127);border-left-width: 1px;border-left-style: solid;\
+            border-bottom-color: rgb(127, 127, 127);\
+            border-bottom-width: 1px;\
+                border-bottom-style: solid;\
+                border-right-width: 12px;\
+                border-right-style: outset;\
+                border-bottom-right-radius: 3px;";
+                    qDebug() << theme;
+
+
+                this->setPalette(palette);
+
+                this->show();
+        ui->button1 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                color: rgb" + text +";\
+                 border-right-color: rgb" + details + ";");
+        ui->button2 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                color: rgb" + text +";\
+                 border-right-color: rgb" + details + ";");
+        ui->button3 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                color: rgb" + text +";\
+                 border-right-color: rgb" + details + ";");
+        ui->button4 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                color: rgb" + text +";\
+                 border-right-color: rgb" + details + ";");
+        ui->button5 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                color: rgb" + text +";\
+                 border-right-color: rgb" + details + ";");
+        ui -> changes -> setStyleSheet("color: rgb" + text + ";");
+        QString dtext = "background-color: rgba(255, 255, 255,0);\
+                border: none;\
+                color: rgb";
+                ui->Input_win->setStyleSheet(dtext+details+";");
+                ui->Output_win->setStyleSheet(dtext+details+";");
+                ui->Input_label->setStyleSheet(dtext+details+";");
+                ui->Output_label->setStyleSheet(dtext+details+";");
+                ui->themebutton -> setStyleSheet(dtext+details+";");
+                ui->themelabel -> setStyleSheet(dtext+details+";");
+
+}
+QPalette MainWindow::get_backimage()
+{
+        QPalette palette;
+    switch (theme)
+    {
+        case 0:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size())));; break;
+        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark.png").scaled(this->size()))); break;
+        default:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size()))); break;
+    }
+    return palette;
+}
+QString MainWindow::get_highlight()
+{
+    switch (theme)
+    {
+    case 0: return "#ff8f45"; break;
+    case 1: return "#d17cf9"; break;
+    default: return "#ff8f45"; break;
+    }
+}
+QString MainWindow::get_backcolor()
+{
+    switch (theme)
+    {
+    case 0: return "(255,255,255)"; break;
+    case 1: return "(243, 255, 255)"; break;
+    default: return "(255,255,255)"; break;
+    }
+}
+QString MainWindow::get_buttoncolor()
+{
+    switch (theme)
+    {
+    case 0: return "(243, 243, 243)"; break;
+    case 1: return "(2, 0, 98)"; break;
+    default: return "(243, 243, 243)"; break;
+    }
+}
+QString MainWindow::get_textcolor()
+{
+    switch (theme)
+    {
+    case 0: return "(0,0,0)"; break;
+    case 1: return "(243, 255, 255)"; break;
+    default: return "(0,0,0)"; break;
+    }
+}
+QString MainWindow::get_details()
+{
+    switch (theme)
+    {
+    case 0: return "(255, 191, 102)"; break;
+    case 1: return "(209, 124, 249)"; break;
+    default: return "(255, 191, 102)"; break;
+    }
+}
 QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
 {
     QMap<QString, QString> array;
@@ -516,6 +619,7 @@ QString MainWindow::get_backtext()
 
 QString MainWindow::color(QString arg,QString color)
 {
+    color = get_highlight();
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //изменения
     return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
 }
@@ -616,3 +720,28 @@ void MainWindow::on_button5_clicked()
 }
 
 
+void MainWindow::on_Input_win_clicked()
+{
+    input = input?0:1;
+    int x = (ui -> Input_label->mapToGlobal(QPoint(0,0))).x();
+    int width = ui->Input_label->geometry().size().width();
+    ui->Input_label ->setGeometry(input?x+width:x-width,-50, 85,111);
+    qDebug() << input;
+
+}
+
+void MainWindow::on_Output_win_clicked()
+{
+    output = output?0:1;
+    int x = (ui -> Output_label->mapToGlobal(QPoint(0,0))).x();
+    int width = ui->Output_label->geometry().size().width();
+    ui->Output_label ->setGeometry(output?x+width:x-width,-50, 85,111);
+    qDebug() << output;
+}
+
+void MainWindow::on_themebutton_clicked()
+{
+    put_text("lights up");
+    theme = theme?0:1;
+    set_theme(this);
+}
