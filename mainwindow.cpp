@@ -80,11 +80,12 @@ void MainWindow::on_buttonpaste_clicked()
 void MainWindow::on_buttoncopy_clicked()
 {
     QClipboard* pcb = QApplication::clipboard();
-    ui->text1->setText(pcb->text());
+    pcb -> setText(ui->text1->toPlainText());
 }
 
 void MainWindow::button_switch(QString switchStr)
 {
+     ui->error->setStyleSheet("color: rgba(255,0,0,0);");
     ui->debug->clear();
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //Викификатор и фиксы
@@ -117,7 +118,8 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSDEFAULT(
                 {
-                   ui -> text2->setText("dw error = button not founded");break;
+                   ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                   ui -> text2->setText("dw error = \u043a\u043d\u043e\u043f\u043a\u0430 \u0441 \u0442\u0430\u043a\u0438\u043c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c\n \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430");break;
                 })
                 )
 }
@@ -704,7 +706,8 @@ QJsonDocument MainWindow::read_json(QString filename)
         QJsonDocument Doc = QJsonDocument::fromJson(val.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError)
         {
-            ui->debug->setText("dw error: read json "+filename);
+            ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+            ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+filename+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
         }
         return Doc;
 }
@@ -814,7 +817,7 @@ void MainWindow::on_buttonpaste_2_clicked()
 void MainWindow::on_buttoncopy_2_clicked()
 {
     QClipboard* pcb = QApplication::clipboard();
-    ui->text2->setText(pcb->text());
+    pcb -> setText(ui->text2->toPlainText());
 }
 
 void MainWindow::on_excel_clicked()

@@ -133,7 +133,7 @@
    <widget class="QTextEdit" name="text1">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>60</x>
       <y>100</y>
       <width>770</width>
       <height>861</height>
@@ -506,6 +506,9 @@ background-color: rgb(243, 243, 243);
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="toolTip">
+     <string>Взаимодействует с заголовками разделов, примечаниями к разделам</string>
+    </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
 border-top-width: 1px;
@@ -542,6 +545,12 @@ background-color: rgb(243, 243, 243);
       <pointsize>12</pointsize>
       <kerning>true</kerning>
      </font>
+    </property>
+    <property name="toolTip">
+     <string notr="true"/>
+    </property>
+    <property name="toolTipDuration">
+     <number>10</number>
     </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
@@ -619,7 +628,7 @@ color: rgb(250, 250, 250);</string>
    <widget class="QPushButton" name="buttonpaste">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>81</x>
       <y>965</y>
       <width>351</width>
       <height>31</height>
@@ -1048,7 +1057,7 @@ color: rgb(255, 191, 102);</string>
    <widget class="QPushButton" name="buttoncopy">
     <property name="geometry">
      <rect>
-      <x>479</x>
+      <x>460</x>
       <y>965</y>
       <width>351</width>
       <height>31</height>
@@ -1200,10 +1209,10 @@ background-color: rgb(243, 243, 243);</string>
    <widget class="QLabel" name="debug">
     <property name="geometry">
      <rect>
-      <x>1630</x>
-      <y>885</y>
-      <width>291</width>
-      <height>31</height>
+      <x>1640</x>
+      <y>845</y>
+      <width>281</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="font">
@@ -1213,6 +1222,29 @@ background-color: rgb(243, 243, 243);</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="error">
+    <property name="geometry">
+     <rect>
+      <x>1640</x>
+      <y>780</y>
+      <width>261</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Reaver</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgba(255,0,0,0);
+</string>
+    </property>
+    <property name="text">
+     <string>Произошла ошибка!</string>
     </property>
    </widget>
   </widget>
