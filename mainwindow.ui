@@ -889,9 +889,9 @@ border-right-color: rgb(174, 131, 74);</string>
    <widget class="QPushButton" name="Input_win">
     <property name="geometry">
      <rect>
-      <x>1500</x>
+      <x>1480</x>
       <y>10</y>
-      <width>181</width>
+      <width>221</width>
       <height>51</height>
      </rect>
     </property>
@@ -943,7 +943,7 @@ color: rgb(255, 191, 102);</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>50</y>
+      <y>10</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -971,7 +971,7 @@ border: none;
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>50</y>
+      <y>10</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -1195,6 +1195,24 @@ background-color: rgb(243, 243, 243);</string>
     <property name="text">
      <string>Очистить
 правое окно</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="debug">
+    <property name="geometry">
+     <rect>
+      <x>1630</x>
+      <y>885</y>
+      <width>291</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

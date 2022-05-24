@@ -41,6 +41,7 @@ private:
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
     void set_theme(MainWindow*);
+    QString get_themetext();
     QString get_highlight();
     QString get_backcolor();
     QString get_buttoncolor();
@@ -73,5 +74,11 @@ private slots:
     void on_Input_win_clicked();
     void on_Output_win_clicked();
     void on_themebutton_clicked();
+    void on_Clear_left_clicked();
+    void on_Clear_right_clicked();
+    void on_buttonpaste_2_clicked();
+    void on_buttoncopy_2_clicked();
+    void on_excel_clicked();
+    void on_discord_clicked();
 };
 #endif // MAINWINDOW_H

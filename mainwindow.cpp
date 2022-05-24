@@ -80,11 +80,12 @@ void MainWindow::on_buttonpaste_clicked()
 void MainWindow::on_buttoncopy_clicked()
 {
     QClipboard* pcb = QApplication::clipboard();
-    pcb->setText(ui->text2->toPlainText());
+    ui->text1->setText(pcb->text());
 }
 
 void MainWindow::button_switch(QString switchStr)
 {
+    ui->debug->clear();
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //Викификатор и фиксы
                 {
@@ -483,6 +484,7 @@ void MainWindow::set_theme(MainWindow* window)
     QPalette palette = get_backimage();
     QString background;
     QString border = get_border();
+    QString themetext = get_themetext();
     QString btext = "border-top-color: rgb(127, 127, 127);border-top-width: 1px; border-top-style: solid;border-left-color: rgb(127, 127, 127);border-left-width: 1px;border-left-style: solid;\
             border-bottom-color: rgb(127, 127, 127);\
             border-bottom-width: 1px;\
@@ -542,6 +544,18 @@ void MainWindow::set_theme(MainWindow* window)
          ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui->themebutton->setText(themetext);
+         ui->debug->setStyleSheet("color: rgb"+text+";");
+
+}
+QString MainWindow::get_themetext()
+{
+    switch (theme)
+    {
+        case 0: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
+        case 1: return "\u0422\u0451\u043c\u043d\u0430\u044f \u0442\u0435\u043c\u0430"; break;
+        default: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
+    }
 }
 QString MainWindow::get_border()
 {
@@ -639,7 +653,11 @@ void MainWindow::end_regular_replacer (QString *temp)
 }
 QString MainWindow::get_text()
 {
-    QString first = ui -> text1 -> toPlainText();
+    QString first;
+    if (!input)
+        first = ui -> text1-> toPlainText();
+    else
+        first = ui -> text2-> toPlainText();
     first.replace("<", "&lt;");
     first.replace(">", "&gt;");
     return first;
@@ -667,11 +685,8 @@ void MainWindow::put_text(QString text)
 {
     text.replace("\n","<br>");
     text = "<html>" + text + "</html>";
-    if ((ui->reverseMode ->QCheckBox::checkState()))
-    {
-        ui -> text2 ->setText(ui->text1 ->toPlainText());
-        ui -> text1 -> setText(text);
-    }
+    if (!output)
+        ui->text1 ->setText(text);
     else
         ui -> text2 -> setText(text);
 }
@@ -689,8 +704,7 @@ QJsonDocument MainWindow::read_json(QString filename)
         QJsonDocument Doc = QJsonDocument::fromJson(val.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError)
         {
-            qDebug() << "dw error: read json " << filename;
-             // return 0;
+            ui->debug->setText("dw error: read json "+filename);
         }
         return Doc;
 }
@@ -759,6 +773,7 @@ void MainWindow::on_Input_win_clicked()
     int x = (ui -> Input_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Input_label->geometry().size().width();
     ui->Input_label ->setGeometry(input?x+width:x-width,-50, 85,111);
+    ui->Input_win->setText(input?"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430":"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430");
     qDebug() << input;
 
 }
@@ -769,6 +784,7 @@ void MainWindow::on_Output_win_clicked()
     int x = (ui -> Output_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Output_label->geometry().size().width();
     ui->Output_label ->setGeometry(output?x+width:x-width,-50, 85,111);
+    ui->Output_win->setText(!output?"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430":"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430");
     qDebug() << output;
 }
 
@@ -777,4 +793,38 @@ void MainWindow::on_themebutton_clicked()
     //put_text("lights up");
     theme = theme?0:1;
     set_theme(this);
+}
+
+void MainWindow::on_Clear_left_clicked()
+{
+    ui->text1->clear();
+}
+
+void MainWindow::on_Clear_right_clicked()
+{
+    ui->text2->clear();
+}
+
+void MainWindow::on_buttonpaste_2_clicked()
+{
+    QClipboard* pcb = QApplication::clipboard();
+    ui->text2->setText(pcb->text());
+}
+
+void MainWindow::on_buttoncopy_2_clicked()
+{
+    QClipboard* pcb = QApplication::clipboard();
+    ui->text2->setText(pcb->text());
+}
+
+void MainWindow::on_excel_clicked()
+{
+    QString wikiurl = "https://docs.google.com/spreadsheets/d/1F0ehop88qvcn6qmvXwP-4C0gIL3IWG9_ezVUCZ-xOho/edit?usp=sharing";
+    QDesktopServices::openUrl(QUrl(wikiurl));
+}
+
+void MainWindow::on_discord_clicked()
+{
+    QString wikiurl = "https://discord.com/channels/576585892937072640/577076136870281246";
+    QDesktopServices::openUrl(QUrl(wikiurl));
 }
