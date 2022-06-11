@@ -497,15 +497,17 @@ void  MainWindow::Units()
 
 void MainWindow::set_theme(MainWindow* window)
 {
-    QString highlight = get_highlight();
-    QString text_back = get_backcolor();
-    QString button_back = get_buttoncolor();
-    QString text = get_textcolor();
-    QString details = get_details();
-    QPalette palette = get_backimage();
+
+     maintheme.size =this->size();
+    QString highlight = maintheme.get_highlight();
+    QString text_back = maintheme.get_backcolor();
+    QString button_back = maintheme.get_buttoncolor();
+    QString text = maintheme.get_textcolor();
+    QString details = maintheme.get_details();
+    QPalette palette = maintheme.get_backimage();
     QString background;
-    QString border = get_border();
-    QString themetext = get_themetext();
+    QString border = maintheme.get_border();
+    QString themetext = maintheme.get_themetext();
     QString btext = "border-top-color: rgb(127, 127, 127);border-top-width: 1px; border-top-style: solid;border-left-color: rgb(127, 127, 127);border-left-width: 1px;border-left-style: solid;\
             border-bottom-color: rgb(127, 127, 127);\
             border-bottom-width: 1px;\
@@ -513,7 +515,7 @@ void MainWindow::set_theme(MainWindow* window)
                 border-right-width: 12px;\
                 border-right-style: outset;\
                 border-bottom-right-radius: 3px;";
-                    qDebug() << theme;
+                    qDebug() << maintheme.theme;
 
 
                 this->setPalette(palette);
@@ -569,84 +571,7 @@ void MainWindow::set_theme(MainWindow* window)
          ui->debug->setStyleSheet("color: rgb"+text+";");
 
 }
-QString MainWindow::get_themetext()
-{
-    switch (theme)
-    {
-        case 0: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
-        case 1: return "\u0422\u0451\u043c\u043d\u0430\u044f \u0442\u0435\u043c\u0430"; break;
-        default: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
-    }
-}
-QString MainWindow::get_border()
-{
-    switch (theme)
-    {
-    case 0: return "(127, 127, 127)"; break;
-    case 1: return "(222, 222, 222)"; break;
-    default: return "(127, 127, 127)"; break;
-    }
-}
-QPalette MainWindow::get_backimage()
-{
-        QPalette palette;
-    switch (theme)
-    {
-        case 0:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size())));; break;
-        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark4.png").scaled(this->size()))); break;
-        default:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(this->size()))); break;
-    }
-    return palette;
-}
-QString MainWindow::get_highlight()
-{
-    switch (theme)
-    {
-    case 0: return "#ff8f45"; break;
-    case 1: return "#ff8f45"; break;
-    //case 1: return "#d05300"; break;
-    default: return "#ff8f45"; break;
-    }
-}
-QString MainWindow::get_backcolor()
-{
-    switch (theme)
-    {
-    case 0: return "(255,255,255)"; break;
-    case 1: return "(28, 28, 28)"; break;
-    default: return "(255,255,255)"; break;
-    }
-}
-QString MainWindow::get_buttoncolor()
-{
-    switch (theme)
-    {
-    case 0: return "(243, 243, 243)"; break;
 
-        //case 1: return "(75,105,255)"; break;
-        case 1: return "(63, 86, 173)"; break;
-    //case 1: return "(2, 0, 98)"; break;
-    default: return "(243, 243, 243)"; break;
-    }
-}
-QString MainWindow::get_textcolor()
-{
-    switch (theme)
-    {
-    case 0: return "(0,0,0)"; break;
-    case 1: return "(243, 255, 255)"; break;
-    default: return "(0,0,0)"; break;
-    }
-}
-QString MainWindow::get_details()
-{
-    switch (theme)
-    {
-    case 0: return "(255, 191, 102)"; break;
-    case 1: return "(209, 124, 249)"; break;
-    default: return "(255, 191, 102)"; break;
-    }
-}
 QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
 {
     QMap<QString, QString> array;
@@ -691,7 +616,7 @@ QString MainWindow::get_backtext()
 
 QString MainWindow::color(QString arg,QString color)
 {
-    color = get_highlight();
+    color = maintheme.get_highlight();
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //изменения
     return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
 }
@@ -813,7 +738,7 @@ void MainWindow::on_Output_win_clicked()
 void MainWindow::on_themebutton_clicked()
 {
     //put_text("lights up");
-    theme = theme?0:1;
+    maintheme.theme = maintheme.theme?0:1;
     set_theme(this);
 }
 

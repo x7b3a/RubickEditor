@@ -43,17 +43,9 @@ private:
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
-    dwTheme them;
     dwSetter set;
     void set_theme(MainWindow*);
-    QString get_themetext();
-    QString get_highlight();
-    QString get_backcolor();
-    QString get_buttoncolor();
-    QString get_textcolor();
-    QString get_details();
-    QPalette get_backimage();
-    QString get_border();
+    dwTheme maintheme;
 
 private slots:
     void on_buttochange_clicked();
