@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
-#
+#include "dwtheme.h"
+#include "dwsetter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,10 +14,12 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool refresh=1;
     Ui::MainWindow *ui;
+
     QString cases[7] = {"\u0412\u0438\u043a\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0020\u0438\u0020\u0444\u0438\u043a\u0441\u044b", //wikifikator
                         "\u0417\u0430\u043c\u0435\u043d\u0430\u0020\u0442\u043e\u0447\u0435\u043a\u0020\u043d\u0430\u0020\u0437\u0430\u043f\u044f\u0442\u0443\u044e", //commafix
                        "\u0420\u0430\u0437\u0434\u0435\u043b\u0020\u0022\u0418\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f\u0022", //changelog
@@ -40,6 +43,8 @@ private:
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
+    dwTheme them;
+    dwSetter set;
     void set_theme(MainWindow*);
     QString get_themetext();
     QString get_highlight();

@@ -432,6 +432,9 @@ p, li { white-space: pre-wrap; }
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
 border-top-width: 1px;
@@ -469,6 +472,9 @@ background-color: rgb(243, 243, 243);
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
 border-top-width: 1px;
@@ -505,6 +511,9 @@ background-color: rgb(243, 243, 243);
       <pointsize>12</pointsize>
       <kerning>true</kerning>
      </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="toolTip">
      <string>Взаимодействует с заголовками разделов, примечаниями к разделам</string>
@@ -545,6 +554,9 @@ background-color: rgb(243, 243, 243);
       <pointsize>12</pointsize>
       <kerning>true</kerning>
      </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="toolTip">
      <string notr="true"/>
@@ -597,6 +609,9 @@ color: rgb(0, 0, 0);
       <bold>false</bold>
       <kerning>true</kerning>
      </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="toolTipDuration">
      <number>12</number>
@@ -660,6 +675,9 @@ background-color: rgb(243, 243, 243);</string>
       <pointsize>12</pointsize>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
 border-top-width: 1px;
@@ -701,6 +719,9 @@ background-color: rgb(243, 243, 243);</string>
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
@@ -737,6 +758,9 @@ background-color: rgb(243, 243, 243);</string>
      <font>
       <pointsize>16</pointsize>
      </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);

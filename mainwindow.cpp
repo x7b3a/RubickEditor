@@ -67,7 +67,7 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::on_dota2wiki_clicked()
 {
-    QString wikiurl = "https://dota2.fandom.com/ru/wiki/Dota_2_\u0412\u0438\u043a\u0438";
+    QString wikiurl = "https://dota2.fandom.com/ru/wiki/\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a:X7b3a2j/\u041f\u0435\u0441\u043e\u0447\u043d\u0438\u0446\u0430";
     QDesktopServices::openUrl(QUrl(wikiurl));
 }
 
@@ -212,10 +212,12 @@ void MainWindow::Changelogs()
     QJsonArray Flex_adj = item["Flex_adj"].toArray();
     QJsonObject Stats = item["Stats"].toObject();
         QMap<QString, QString> Stats_d = map_parser(Stats, "duration");
+        QMap<QString, QString> Stats_d_n = map_parser(Stats, "duration_n");
         QMap<QString, QString> Stats_f = map_parser(Stats, "female");
         QMap<QString, QString> Stats_m = map_parser(Stats, "male");
         QMap<QString, QString> Stats_n = map_parser(Stats, "neuter");
     QMap<QString, QString> Talents = map_parser(item,"Talents");
+    QMap<QString, QString> Anti_Irismus_Talents_level = map_parser(item,"Anti_Irismus_Talents_level");
     QMap<QString, QString> Talents_level = map_parser(item,"Talents_level");
     QMap<QString, QString> Talents_changes = map_parser(item, "Talents_changes");
     QMap<QString, QString> Talents_changes_n = map_parser(item,"Talents_changes_n");
@@ -237,6 +239,10 @@ void MainWindow::Changelogs()
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
         first.replace(start_regular_replacer(i.key()),color(i.value()));
+    }
+    for (i = Anti_Irismus_Talents_level.begin(); i != Anti_Irismus_Talents_level.end(); i++)
+    {
+        first.replace(i.key(),color(i.value()));
     }
     for (i = Talents_level.begin(); i != Talents_level.end(); i++)
     {
@@ -354,6 +360,19 @@ void MainWindow::Changelogs()
                 first.replace(texp.cap(0),color(temp2 + Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) +QString(sec + texp.cap(4).replace(" on each level",eachlevel_rus)).replace("..",".")));
             }
         }
+        for (j=Stats_d_n.begin();j!=Stats_d_n.end();j++)
+        {
+            temp1 = i.key()+start_regular_replacer(j.key()) + from + space + Level_numbers;
+            texp = QRegExp(temp1);
+            //qDebug() << "temp1" << temp1 <<"\n" <<texp;
+
+            temp2 = j.value()+i.value()+Flex_verb[2].toString()+ space;
+            while(texp.indexIn(first)!=-1 )
+            {
+                //qDebug() << " duration:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                first.replace(texp.cap(0),color(temp2 + Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) +QString(sec + texp.cap(4).replace(" on each level",eachlevel_rus)).replace("..",".")));
+            }
+        }
         for (j=Stats_n.begin();j!=Stats_n.end();j++)
         {
             temp1 = i.key()+start_regular_replacer(j.key()) + from;
@@ -384,38 +403,38 @@ void MainWindow::Changelogs()
          }
         for (j=Abilities_one_f.begin();j!=Abilities_one_f.end();j++)
         {
-            temp1 = i.key() + space + ability + j.key();
+            temp1 = i.key() + space + ability + j.key() + from;
             texp = QRegExp(temp1);
            // qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space));
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space) + from);
             }
          }
         for (j=Abilities_one_m.begin();j!=Abilities_one_m.end();j++)
         {
-            temp1 = i.key() + space + ability + j.key();
+            temp1 = i.key() + space + ability + j.key() + from;
             texp = QRegExp(temp1);
             //qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+ space));
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+ space) + from);
             }
          }
         for (j=Abilities_one_n.begin();j!=Abilities_one_n.end();j++)
         {
-            temp1 = i.key() + space + ability + j.key();
+            temp1 = i.key() + space + ability + j.key() + from;
             texp = QRegExp(temp1);
             qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[2].toString()+ space));
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[2].toString()+ space) + from);
             }
          }
     }
@@ -453,7 +472,7 @@ void MainWindow::Changelogs()
     end_regular_replacer (&first);
     int counted = counter(first);
     label_settext(counted);
-     put_text(first);
+    put_text(first);
 }
 
 void  MainWindow::Responses()
