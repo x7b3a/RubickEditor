@@ -44,7 +44,7 @@ private:
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
     dwSetter set;
-    void set_theme(MainWindow*);
+    void set_theme();
     dwTheme maintheme;
 
 private slots:

@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     set_buttons();
     this->setStyleSheet("background-image:url()");
-    set_theme(this);
+    set_theme();
 }
 
 MainWindow::~MainWindow()
@@ -102,15 +102,15 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[3],//"Раздел "Реплики"
                 {
-                    ui -> text2->setText(cases[3]);break;
+                    Responses();break;
                 })
                 QSCASE(cases[4],// "Раздел "Звуки"
                 {
-                    ui -> text2->setText(cases[4]);break;
+                    Sounds();break;
                 })
                 QSCASE(cases[5],//"Раздел "Косметика"
                 {
-                    ui -> text2->setText(cases[5]);break;
+                   Cosmetics();break;
                 })
                 QSCASE(cases[6],//"Units - Существа"
                 {
@@ -477,17 +477,74 @@ void MainWindow::Changelogs()
 
 void  MainWindow::Responses()
 {
+    QString space = " ";
+    QString proc = "%";
+    QString Int = "([0-9]+)";
+    QString chance = "\u0428\u0430\u043d\u0441 ";
     QString first = get_text();
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Responses").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    QString temp;
+    QRegExp texp;
+    temp = Int + "% chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    temp = Int + " seconds cooldown";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color("\u041f\u0435\u0440\u0435\u0437\u0430\u0440\u044f\u0434\u043a\u0430 " + texp.cap(1)+ (texp.cap(1).toInt()>4?" \u0441\u0435\u043a\u0443\u043d\u0434":texp.cap(1).toInt()>1?" \u0441\u0435\u043a\u0443\u043d\u0434\u044b":" \u0441\u0435\u043a\u0443\u043d\u0434\u0430")));
+    }
+    int counted = counter(first);
+    label_settext(counted);
+    put_text(first);
 }
 
 void  MainWindow::Sounds()
 {
     QString first = get_text();
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Sounds").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    int counted = counter(first);
+    label_settext(counted);
+    put_text(first);
 }
 
 void  MainWindow::Cosmetics()
 {
     QString first = get_text();
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Cosmetics").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    int counted = counter(first);
+    label_settext(counted);
+    put_text(first);
 }
 
 void  MainWindow::Units()
@@ -495,10 +552,10 @@ void  MainWindow::Units()
     QString first = get_text();
 }
 
-void MainWindow::set_theme(MainWindow* window)
+void MainWindow::set_theme()
 {
 
-     maintheme.size =this->size();
+    maintheme.size =this->size();
     QString highlight = maintheme.get_highlight();
     QString text_back = maintheme.get_backcolor();
     QString button_back = maintheme.get_buttoncolor();
@@ -739,7 +796,7 @@ void MainWindow::on_themebutton_clicked()
 {
     //put_text("lights up");
     maintheme.theme = maintheme.theme?0:1;
-    set_theme(this);
+    set_theme();
 }
 
 void MainWindow::on_Clear_left_clicked()
