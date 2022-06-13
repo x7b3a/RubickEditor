@@ -136,7 +136,7 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[6],//"Units - Существа"
                 {
-                    ui -> text2->setText(cases[6]);break;
+                   Units();break;
                 })
                 QSDEFAULT(
                 {
@@ -572,6 +572,19 @@ void  MainWindow::Cosmetics()
 void  MainWindow::Units()
 {
     QString first = get_text();
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Units").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace("{{U|" + i.key(),color("{{U|" + i.value()));
+    int counted = counter(first);
+    label_settext(counted);
+    put_text(first);
 }
 
 void MainWindow::set_theme()

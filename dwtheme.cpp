@@ -57,7 +57,7 @@ QString dwTheme::get_buttoncolor()
 {
     switch (theme)
     {
-    case 0: return "(243, 243, 243)"; break;
+    case 0: return "(230, 230, 230)"; break;
 
         //case 1: return "(75,105,255)"; break;
         case 1: return "(63, 86, 173)"; break;
