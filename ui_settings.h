@@ -2,6 +2,7 @@
 #define UI_SETTINGS_H
 
 #include <QWidget>
+#include <QDialog>
 #include <QApplication>
 
 namespace Ui {
@@ -16,15 +17,14 @@ public:
     explicit ui_settings(QWidget *parent = nullptr);
     ~ui_settings();
 
+signals:
+    void sendData(QString);
+
+public slots:
+    void recieveData(QString);
 
 private slots:
-    void on_toolButton_triggered(QAction *arg1);
-
     void on_comboBox_activated(const QString &arg1);
-
-
-    void on_pushButton_clicked();
-
     void on_close_clicked();
 
 private:

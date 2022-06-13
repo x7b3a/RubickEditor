@@ -57,5 +57,8 @@ void ui_settings::on_close_clicked()
     stream << jsonString;
           file.close();
   //s  par->ui -> button1 -> setPlaintText("123");
+          emit sendData("123");
+    qDebug() << "sended?";
     close();
 }
+

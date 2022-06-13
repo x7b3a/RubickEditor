@@ -29,16 +29,41 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QJsonObject json = read_json("config2.json").object();
+    QJsonValue value = json.value(QString("Theme"));
+    qDebug() << "theme" << value.toInt();
+    maintheme.theme = value.toInt();
+    QJsonObject WikiAndFixes= json.value("WikiAndFixes").toObject();
     this -> showMaximized();
     this->setWindowTitle("Rubick Editor");
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     set_buttons();
     this->setStyleSheet("background-image:url()");
     set_theme();
+    from = new ui_settings();
+    connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
+    connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
 }
 
 MainWindow::~MainWindow()
 {
+     QJsonObject recordObject;
+     recordObject.insert("Theme",maintheme.theme);
+     QFile file;
+     QJsonArray stringArray;
+     stringArray.push_back(QJsonValue::fromVariant(ui -> button1 -> text().toUtf8()));
+     stringArray.push_back(QJsonValue::fromVariant(ui -> button2 -> text().toUtf8()));
+     stringArray.push_back(QJsonValue::fromVariant(ui -> button3 -> text().toUtf8()));
+     stringArray.push_back(QJsonValue::fromVariant(ui -> button4 -> text().toUtf8()));
+     stringArray.push_back(QJsonValue::fromVariant(ui -> button5 -> text().toUtf8()));
+     recordObject.insert("Macros",stringArray);
+     QJsonDocument doc(recordObject);
+     QString jsonString = doc.toJson(QJsonDocument::Indented);
+     file.setFileName("config2.json");
+     file.open(QIODevice::WriteOnly | QIODevice::Text);
+     QTextStream stream( &file );
+     stream << jsonString;
+           file.close();
     delete ui;
 }
 
@@ -53,14 +78,11 @@ void MainWindow::on_buttochange_clicked()
 
 void MainWindow::on_settings_clicked()
 {
-    int ishow = 0;
-    ui_settings *from = new ui_settings;
     from ->show();
     from->activateWindow();
-    ishow ++;
 }
 
-void MainWindow::on_refreshButton_clicked()
+void MainWindow::recieveData(QString q)
 {
     set_buttons();
 }
@@ -620,7 +642,7 @@ void MainWindow::set_theme()
          ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> refreshButton ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         //ui -> refreshButton ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");

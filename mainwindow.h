@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include "dwtheme.h"
 #include "dwsetter.h"
+#include "ui_settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,7 +15,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-
+    ui_settings *from;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool refresh=1;
@@ -27,6 +28,10 @@ public:
                        "\u0420\u0430\u0437\u0434\u0435\u043b\u0020\u0022\u0417\u0432\u0443\u043a\u0438\u0022", //sounds
                        "\u0420\u0430\u0437\u0434\u0435\u043b\u0020\u0022\u041a\u043e\u0441\u043c\u0435\u0442\u0438\u043a\u0430\u0022", //comsetic
                        "\u0055\u006e\u0069\u0074\u0073\u0020\u002d\u0020\u0421\u0443\u0449\u0435\u0441\u0442\u0432\u0430"}; //units
+signals:
+    void sendData(QString);
+public slots:
+    void recieveData(QString);
 private:
     bool input = 0;
     bool output = 1;
@@ -50,7 +55,6 @@ private:
 private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();
-    void on_refreshButton_clicked();
     void on_dota2wiki_clicked();
 
     void WikiAndFixes();
