@@ -23,12 +23,13 @@
 #include <QClipboard>
 #include <QStringList>
 #include <QThread>
-
+#include <QDesktopWidget>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    adaptive_screen();
     QJsonObject json = read_json("config2.json").object();
     QJsonValue value = json.value(QString("Theme"));
     qDebug() << "theme" << value.toInt();
@@ -867,3 +868,18 @@ void MainWindow::on_discord_clicked()
     QString wikiurl = "https://discord.com/channels/576585892937072640/577076136870281246";
     QDesktopServices::openUrl(QUrl(wikiurl));
 }
+ void MainWindow::adaptive_screen()
+ {
+     double normw = 1920;
+     double normh = 1080;
+     double wide = QApplication::desktop()->screenGeometry().width()/normw;
+     double hide = QApplication::desktop()->screenGeometry().height()/normh;
+     QWidget *test;
+
+     for (int i = 0;i<27;i++)
+     {
+         test = centralWidget()->findChild<QWidget*>(centralWidget()->children().at(i)->objectName());
+         QRect cords = test->geometry();
+         test->setGeometry(int(cords.x()*wide),int(cords.y()*hide),int(cords.width()*wide),int(cords.height()*hide));
+     }
+ }

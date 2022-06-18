@@ -50,6 +50,7 @@ private:
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
     dwSetter set;
     void set_theme();
+    void adaptive_screen();
     dwTheme maintheme;
 
 private slots:
