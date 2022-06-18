@@ -19,6 +19,7 @@ public:
     QString get_details();
     QPalette get_backimage();
     QString get_border();
+    QString get_buttontextcolor();
 signals:
 
 };

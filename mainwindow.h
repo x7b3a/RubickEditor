@@ -51,6 +51,7 @@ private:
     dwSetter set;
     void set_theme();
     void adaptive_screen();
+    void set_fonts();
     dwTheme maintheme;
 
 private slots:

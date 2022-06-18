@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     adaptive_screen();
+    set_fonts();
     QJsonObject json = read_json("config2.json").object();
     QJsonValue value = json.value(QString("Theme"));
     qDebug() << "theme" << value.toInt();
@@ -595,7 +596,8 @@ void MainWindow::set_theme()
     QString highlight = maintheme.get_highlight();
     QString text_back = maintheme.get_backcolor();
     QString button_back = maintheme.get_buttoncolor();
-    QString text = maintheme.get_textcolor();
+    QString texttext = maintheme.get_textcolor();
+    QString text = maintheme.get_buttontextcolor();
     QString details = maintheme.get_details();
     QPalette palette = maintheme.get_backimage();
     QString background;
@@ -648,9 +650,9 @@ void MainWindow::set_theme()
                     border-right-width: 1px;\
                     border-right-style: solid; background-color: rgb";
          ui->text1 -> setStyleSheet(bback + text_back + ";\
- color: rgb"+text +"; border-color: rgb" + border + ";");
+ color: rgb"+texttext +"; border-color: rgb" + border + ";");
          ui->text2 -> setStyleSheet(bback + text_back + ";\
-                                    color: rgb"+text +"; border-color: rgb" + border + ";");
+                                    color: rgb"+texttext +"; border-color: rgb" + border + ";");
          ui -> buttonpaste ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttonpaste_2 ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
@@ -809,10 +811,15 @@ void MainWindow::on_button5_clicked()
 
 void MainWindow::on_Input_win_clicked()
 {
+    double normw = 1920;
+    double normh = 1080;
+    double wide = QApplication::desktop()->screenGeometry().width()/normw;
+    double hide = QApplication::desktop()->screenGeometry().height()/normh;
+
     input = input?0:1;
     int x = (ui -> Input_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Input_label->geometry().size().width();
-    ui->Input_label ->setGeometry(input?x+width:x-width,-50, 85,111);
+    ui->Input_label ->setGeometry(input?x+width:x-width,-50*hide, 85*wide,111*hide);
     ui->Input_win->setText(input?"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430":"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430");
     qDebug() << input;
 
@@ -820,10 +827,14 @@ void MainWindow::on_Input_win_clicked()
 
 void MainWindow::on_Output_win_clicked()
 {
+    double normw = 1920;
+    double normh = 1080;
+    double wide = QApplication::desktop()->screenGeometry().width()/normw;
+    double hide = QApplication::desktop()->screenGeometry().height()/normh;
     output = output?0:1;
     int x = (ui -> Output_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Output_label->geometry().size().width();
-    ui->Output_label ->setGeometry(output?x+width:x-width,-50, 85,111);
+    ui->Output_label ->setGeometry(output?x+width:x-width,-50*hide, 85*wide,111*hide);
     ui->Output_win->setText(!output?"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430":"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430");
     qDebug() << output;
 }
@@ -882,4 +893,41 @@ void MainWindow::on_discord_clicked()
          QRect cords = test->geometry();
          test->setGeometry(int(cords.x()*wide),int(cords.y()*hide),int(cords.width()*wide),int(cords.height()*hide));
      }
+ }
+ void MainWindow::set_fonts()
+ {
+     double normw = 1920;
+     double normh = 1080;
+     double wide = QApplication::desktop()->screenGeometry().width()/normw;
+
+     double hide = QApplication::desktop()->screenGeometry().height()/normh;
+     qDebug() << wide << hide;
+     int id = QFontDatabase::addApplicationFont(":/fonts/Reaver-Regular.ttf");
+     QString reaver = QFontDatabase::applicationFontFamilies(id).at(0);
+     wide = hide;
+     QFont button_font(reaver,12*wide);
+     id = QFontDatabase::addApplicationFont(":/fonts/consola.ttf");
+     QString consola = QFontDatabase::applicationFontFamilies(id).at(0);
+     QFont text_font(consola,10);
+     centralWidget()->setFont(button_font);
+     ui->button1->setFont(button_font);
+     ui->button2->setFont(button_font);
+     ui->button3->setFont(button_font);
+     ui->button4->setFont(button_font);
+     ui->button5->setFont(button_font);
+     ui->settings->setFont(button_font);
+     ui->buttochange->setFont(button_font);
+     ui->changes->setFont(QFont(reaver, 15*wide));
+     ui->buttoncopy->setFont(QFont(reaver,8*wide));
+     ui->buttoncopy_2->setFont(QFont(reaver,8*wide));
+     ui->buttonpaste->setFont(QFont(reaver,8*wide));
+     ui->buttonpaste_2->setFont(QFont(reaver,8*wide));
+     ui->Clear_left->setFont(QFont(reaver,9*wide));
+     ui->Clear_right->setFont(QFont(reaver,9*wide));
+     ui->Input_win->setFont(QFont(reaver,12*wide,75));
+     ui->Output_win->setFont(QFont(reaver,12*wide,75));
+     ui->themebutton->setFont(QFont(reaver,12*wide,75));
+     ui->text1->setFont(text_font);
+     ui->text2->setFont(text_font);
+
  }

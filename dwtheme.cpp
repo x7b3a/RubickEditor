@@ -70,6 +70,15 @@ QString dwTheme::get_textcolor()
     switch (theme)
     {
     case 0: return "(0,0,0)"; break;
+    case 1: return "(203, 203, 203)"; break;
+    default: return "(0,0,0)"; break;
+    }
+}
+QString dwTheme::get_buttontextcolor()
+{
+    switch (theme)
+    {
+    case 0: return "(0,0,0)"; break;
     case 1: return "(243, 255, 255)"; break;
     default: return "(0,0,0)"; break;
     }

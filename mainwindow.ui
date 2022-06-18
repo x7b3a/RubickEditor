@@ -649,6 +649,11 @@ color: rgb(250, 250, 250);</string>
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Reaver</family>
+     </font>
+    </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
@@ -717,7 +722,7 @@ background-color: rgb(243, 243, 243);</string>
     </property>
     <property name="font">
      <font>
-      <family>Reaver</family>
+      <family>Roboto</family>
       <pointsize>12</pointsize>
       <kerning>true</kerning>
      </font>
@@ -794,51 +799,6 @@ border: none;</string>
     </property>
     <property name="text">
      <string>Вас приветствует Rubick Editor by dw abuser</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="reverseMode">
-    <property name="geometry">
-     <rect>
-      <x>1650</x>
-      <y>1030</y>
-      <width>241</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Reaver</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <italic>false</italic>
-      <bold>true</bold>
-      <underline>false</underline>
-      <strikeout>false</strikeout>
-      <kerning>false</kerning>
-     </font>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 191, 102);background-color: rgba(255,255,255,0);
-border: none;</string>
-    </property>
-    <property name="text">
-     <string>Автозамена</string>
-    </property>
-    <property name="icon">
-     <iconset resource="res.qrc">
-      <normaloff>:/images/images/change.png</normaloff>:/images/images/change.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>64</width>
-      <height>64</height>
-     </size>
-    </property>
-    <property name="tristate">
-     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="Input_label">
@@ -1071,6 +1031,11 @@ color: rgb(255, 191, 102);</string>
       <width>351</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Reaver</family>
+     </font>
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>

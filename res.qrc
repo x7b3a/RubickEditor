@@ -17,5 +17,7 @@
     </qresource>
     <qresource prefix="/">
         <file>images/refresh.png</file>
+        <file>fonts/Reaver-Regular.ttf</file>
+        <file>fonts/consola.ttf</file>
     </qresource>
 </RCC>
