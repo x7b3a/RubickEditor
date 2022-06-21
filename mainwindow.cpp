@@ -583,7 +583,11 @@ void  MainWindow::Units()
             dict.insert(key,value.toString());
         }
     for (i = dict.begin(); i != dict.end(); i++)
-        first.replace("{{U|" + i.key(),color("{{U|" + i.value()));
+    {
+        first.replace("|" + i.key()+"}}",color("|" + i.value()+"}}"));
+        first.replace("|" + i.key()+"|text",color("|" + i.value())+"|text");
+    }
+
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
