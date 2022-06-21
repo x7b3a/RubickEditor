@@ -462,7 +462,7 @@ void MainWindow::Changelogs()
             }
          }
     }
-    QString fromto = from+ space + "([0-9/\\.\\-,\u2012,%]{1,20})( on each level |.)to ([0-9/\\.\\-,\u2012,%]{1,20})( on each level.|.)";
+    QString fromto = from+ space + "([0-9/\\.\\-,\u2012,%]{1,20})( on each level |.)to ([0-9/\\.\\-,\u2012,%]{1,20})( on each level.|\\.)";
     texp = QRegExp(fromto);
     while(texp.indexIn(first)!=-1 )
     {
