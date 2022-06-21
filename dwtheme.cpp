@@ -39,7 +39,7 @@ QString dwTheme::get_highlight()
     switch (theme)
     {
     case 0: return "#ff8f45"; break;
-    case 1: return "#ff8f45"; break;
+    case 1: return "#b26430"; break;
     //case 1: return "#d05300"; break;
     default: return "#ff8f45"; break;
     }

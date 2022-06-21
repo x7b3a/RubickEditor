@@ -808,6 +808,17 @@ void MainWindow::on_button5_clicked()
     button_switch(switchStr);
 }
 
+ /*void MainWindow::enterEvent(QEvent * event)
+{
+      QMouseEvent *me = static_cast<QMouseEvent *>(event);
+     qDebug() << "real pos = " << me->pos();
+    qDebug() << "ENTER!" << endl << flush;
+}
+
+void MainWindow::leaveEvent(QEvent * event)
+{
+    qDebug() << "LEAVE!" << endl << flush;
+}*/
 
 void MainWindow::on_Input_win_clicked()
 {
