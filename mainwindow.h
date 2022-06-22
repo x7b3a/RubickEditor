@@ -6,7 +6,7 @@
 #include "dwtheme.h"
 #include "dwsetter.h"
 #include "ui_settings.h"
-
+#include <QtWinExtras/QWinTaskbarProgress>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -15,6 +15,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+    QWinTaskbarProgress *progress;
     ui_settings *from;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -50,10 +51,13 @@ private:
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
-    dwSetter set;
+
     void set_theme();
     void adaptive_screen();
     void set_fonts();
+    void set_progressbar();
+
+    dwSetter set;
     dwTheme maintheme;
 
 private slots:

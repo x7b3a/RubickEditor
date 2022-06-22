@@ -24,6 +24,12 @@
 #include <QStringList>
 #include <QThread>
 #include <QDesktopWidget>
+#include <QtWinExtras/QWinTaskbarProgress>
+#include <QtWinExtras/QWinTaskbarButton>
+#define RVERSION "1.0.4"
+QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
+QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -33,18 +39,19 @@ MainWindow::MainWindow(QWidget *parent)
     set_fonts();
     QJsonObject json = read_json("config2.json").object();
     QJsonValue value = json.value(QString("Theme"));
-    qDebug() << "theme" << value.toInt();
     maintheme.theme = value.toInt();
     QJsonObject WikiAndFixes= json.value("WikiAndFixes").toObject();
     this -> showMaximized();
-    this->setWindowTitle("Rubick Editor");
+    this->setWindowTitle("Rubick Editor " + QString(RVERSION));
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     set_buttons();
     this->setStyleSheet("background-image:url()");
     set_theme();
     from = new ui_settings();
+
     connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
+    set_progressbar();
 }
 
 MainWindow::~MainWindow()
@@ -151,6 +158,7 @@ void MainWindow::button_switch(QString switchStr)
 
 void MainWindow::WikiAndFixes()
 {
+    progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -161,17 +169,21 @@ void MainWindow::WikiAndFixes()
             dict.insert(key,value.toString());
         }
     QJsonArray letter_with_for_medoke = WikiAndFixes["letter_with_for_medoke"].toArray();
+    progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+    progress->setValue(75);
     qDebug() << letter_with_for_medoke[0].toString() << letter_with_for_medoke[1].toString();
     QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
     while(texp.indexIn(first)!=-1 )
     {
         first.replace(texp.cap(0),color(" " + letter_with_for_medoke[1].toString() + " 1" + texp.cap(1)));
     }
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
 
 void MainWindow::Commafix()
@@ -180,28 +192,34 @@ void MainWindow::Commafix()
     QString comma = color(",");
     QString point = ".";
     QString first = get_text();
+    progress->setValue(10);
     for (int j = 0;j<10;j++)
         for (int k = 0;k<10;k++)
             first.replace(QString::number(j) + point + QString::number(k),QString::number(j) + comma + QString::number(k));
+    progress->setValue(20);
     QJsonObject json = read_json("dict.json").object();
     QJsonArray Commafix = json["Commafix"].toArray();
     QRegExp texp = QRegExp("([0-9])"+ comma+"([0-9abcdefgh]{1,3}-[0-9])"+comma+"([0-9abcdefgh]{1,3})");
      qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+     progress->setValue(30);
     for (int i = 0; i<Commafix.size();i++)
     {
         for (int j = 0;j<10;j++)
             for (int k = 0;k<10;k++)
                 first.replace(Commafix[i].toString()+QString::number(j) + comma + QString::number(k),Commafix[i].toString()+QString::number(j) + "."+ QString::number(k));
     }
+    progress->setValue(65);
     for (int i = 0;i<10;i++)
         for (int j = 0;j<100;j++)
             for (int k = 0;k<100;k++)
                 first.replace(comma +QString::number(j)+"-"+QString::number(i)+ comma +QString::number(k),"."+QString::number(j)+"-"+QString::number(i)+"."+QString::number(k));
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
-
+    progress->setValue(0);
 }
+
 
 void MainWindow::Changelogs()
 {
@@ -259,6 +277,7 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
     QMap<QString, QString> New_Talent = map_parser(item,"New_Talent");
     QMap<QString, QString> New_Talent_abilities = map_parser(item,"New_Talent_abilities");
+    progress->setValue(1);
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
@@ -277,11 +296,12 @@ void MainWindow::Changelogs()
     {
         first.replace(start_regular_replacer(i.key()),color(i.value()));
     }
+    progress->setValue(10);
     QString temp1;
     QString temp2;
     QRegExp texp;
     int iter = 0;
-    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++) //increased
+    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++,progress->setValue(progress->value()+15)) //increased
     {
         for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
         {
@@ -325,7 +345,8 @@ void MainWindow::Changelogs()
         }
     }
 
-    for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++) //increased as "ycileno"
+
+    for (i=Keywords_cooldown.begin();i!=Keywords_cooldown.end();i++,progress->setValue(progress->value()+10)) //increased as "ycileno"
     {
         for (j = Cooldown.begin();j!= Cooldown.end();j++)
         {
@@ -357,7 +378,7 @@ void MainWindow::Changelogs()
         }
     }
     int count;
-    for (i=Keywords.begin(); i!= Keywords.end();i++) //Increased
+    for (i=Keywords.begin(); i!= Keywords.end();i++,progress->setValue(progress->value()+10)) //Increased
     {
         for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
@@ -462,6 +483,7 @@ void MainWindow::Changelogs()
             }
          }
     }
+    progress->setValue(90);
     QString fromto = from+ space + "([0-9/\\.\\-,\u2012,%]{1,20})( on each level |.)to ([0-9/\\.\\-,\u2012,%]{1,20})( on each level.|\\.)";
     texp = QRegExp(fromto);
     while(texp.indexIn(first)!=-1 )
@@ -492,15 +514,17 @@ void MainWindow::Changelogs()
     }
 
         qDebug() << "end??";
-
+    progress->setValue(100);
     end_regular_replacer (&first);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
 
 void  MainWindow::Responses()
 {
+    progress->setValue(1);
     QString space = " ";
     QString proc = "%";
     QString Int = "([0-9]+)";
@@ -514,6 +538,7 @@ void  MainWindow::Responses()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+    progress->setValue(33);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
     QString temp;
@@ -524,19 +549,24 @@ void  MainWindow::Responses()
     {
         first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
     }
+    progress->setValue(66);
     temp = Int + " seconds cooldown";
     texp = QRegExp(temp);
     while(texp.indexIn(first)!=-1 )
     {
         first.replace(texp.cap(0),color("\u041f\u0435\u0440\u0435\u0437\u0430\u0440\u044f\u0434\u043a\u0430 " + texp.cap(1)+ (texp.cap(1).toInt()>4?" \u0441\u0435\u043a\u0443\u043d\u0434":texp.cap(1).toInt()>1?" \u0441\u0435\u043a\u0443\u043d\u0434\u044b":" \u0441\u0435\u043a\u0443\u043d\u0434\u0430")));
     }
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
+
 
 void  MainWindow::Sounds()
 {
+    progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -546,15 +576,19 @@ void  MainWindow::Sounds()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+    progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
 
 void  MainWindow::Cosmetics()
 {
+    progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -564,15 +598,19 @@ void  MainWindow::Cosmetics()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+    progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
 
 void  MainWindow::Units()
 {
+    progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -582,15 +620,17 @@ void  MainWindow::Units()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+    progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
     {
         first.replace("|" + i.key()+"}}",color("|" + i.value()+"}}"));
         first.replace("|" + i.key()+"|text",color("|" + i.value())+"|text");
     }
-
+    progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
     put_text(first);
+    progress->setValue(0);
 }
 
 void MainWindow::set_theme()
@@ -944,5 +984,12 @@ void MainWindow::on_discord_clicked()
      ui->themebutton->setFont(QFont(reaver,12*wide,75));
      ui->text1->setFont(text_font);
      ui->text2->setFont(text_font);
-
  }
+void MainWindow::set_progressbar()
+{
+    QWinTaskbarButton *tuskbar;
+    tuskbar = new QWinTaskbarButton(this);
+    tuskbar->setWindow(windowHandle());
+    progress = tuskbar->progress();
+    progress->show();
+}

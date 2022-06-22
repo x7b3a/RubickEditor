@@ -1,4 +1,5 @@
-QT       += core gui
+QT          += core gui
+QT          += winextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +28,7 @@ HEADERS += \
     dwtheme.h \
     mainwindow.h \
     qsswitch.h \
+    resouces.rc \
     ui_settings.h
 
 FORMS += \
