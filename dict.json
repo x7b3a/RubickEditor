@@ -92,7 +92,9 @@
 				" [[night vision]] " : "[[Ночной обзор]] ",
 				" radius " : "Радиус ",
 				" attack damage " : "Урон от атаки ",
-				" bonus attack damage " : "Бонусный урон от атаки "
+				" bonus attack damage " : "Бонусный урон от атаки ",
+				" [[vision]] range " : "Радиус [[обзор]]а ",
+				" [[acquisition range]] " : "Радиус поиска целей для атаки "
 			},
 			"neuter" : {
 				" movement speed slow " : "Замедление [[скорость передвижения|скорости передвижения]] ",
@@ -141,12 +143,36 @@
 			"{{Symbol|Talent}} '''[[Talent]]s:'''" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"{{Symbol|Talent}} '''[[Talent]]s''':" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"** Левый" : ":: Левый",
-			"* Левый" : ":: Левый",
 			"** Правый" : ":: Правый",
-			"* Правый" : ":: Правый",
 			"'''Reworked talents'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]'''",
 			"'''Reworked talents:'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]:'''",
+			"'''Переработаны таланты:'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]:'''",
+			"'''Переработаны таланты'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]'''",
 			"Added talents" : "Добавлены таланты"
+		},
+		"New_ability" : {
+			"Cast time" : "Задержка перед применением",
+			"Cast animation" : "Анимация применения",
+			"Cast Range" : "Дальность применения",
+			"Radius" : "Радиус",
+			"Duration" : "Длительность",
+			"Proc chance" : "Шанс срабатывания",
+			"Base damage" : "Базовый урон",
+			"Damage" : "Урон",
+			"Damage per second" : "Урон в секунду",
+			"Movement speed slow" : "Замедление скорости передвижения",
+			"Move speed slow" : "Замедление скорости передвижения",
+			"Slow duration" : "Длительность замедления",
+			"Attack speed slow" : "Замедление скорости атаки",
+			"Number of charges" : "Число зарядов",
+			"Charge replanish time" : "Время восстановления заряда",
+			"Mana cost" : "Расход маны",
+			"Cooldown" : "Перезарядка",
+			"Notes" : "Примечания"
+		},
+		"Other_last" : {
+			"* Правый" : ":: Правый",
+			"* Левый" : ":: Левый"
 		},
 		"Keywords_small" : {
 			"reduced" : "уменьшен",
@@ -186,7 +212,8 @@
 				" damage per second " : "урон в секунду ",
 				" damage " : "урон ",
 				" radius " : "радиус ",
-				" bonus attack damage " : "бонусный урон от атаки "
+				" bonus attack damage " : "бонусный урон от атаки ",
+				" damage per charge " : "урон за заряд "
 			},
 			"neuter" : {
 				" heal " : "лечение "
@@ -240,16 +267,17 @@
 		"Aghanim" : {
 			"* {{cf|Added}} '''{{I|Aghanim's Shard}} upgrade for " : "* {{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Shard}} для ",
 			"* {{cf|Added}} '''{{I|Aghanim's Scepter}} upgrade for " : "* {{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
-			"{{cf|Old}}" : "{{cf|Старая}}",
-			"{{cf|New}}" : "{{cf|Новая}}",
+			"{{cf|Old}}" : "{{cf|Старое}}",
+			"{{cf|New}}" : "{{cf|Новое}}",
 			"* {{cf|Reworked}} {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
 			"* {{cf|Reworked}} {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
-			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "'''Переработано''' улучшение от {{I|Aghanim' Scepter}}",
+			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
+			"'''Reworked''' {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
 			"* {{I|Aghanim's Scepter}} upgrade:" : "* Улучшение от {{I|Aghanim's Scepter}}:",
 			"* {{I|Aghanim's Shard}} upgrade:" : "* Улучшение от {{I|Aghanim's Shard}}",
-			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "'''Добавлено улучшение от {{I|Aghanim's Scepter}} для ",
-			"'''Added {{I|Aghanim's Shard}} upgrade for " : "'''Добавлено улучшение от {{I|Aghanim's Shard}} для ",
-			"{{Undocumented}}" : "{{Cf|H}}"
+			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
+			"'''Added {{I|Aghanim's Shard}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Shard}} для ",
+			"{{Undocumented}}" : "{{Cf|Н}}"
 		},
 		"New_Talent" : {
 		"[[health regeneration]]" : "к [[восстановление здоровья|восстановлению здоровья]]",

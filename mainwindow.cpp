@@ -277,6 +277,8 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
     QMap<QString, QString> New_Talent = map_parser(item,"New_Talent");
     QMap<QString, QString> New_Talent_abilities = map_parser(item,"New_Talent_abilities");
+    QMap<QString,QString> New_ability = map_parser(item,"New_ability");
+    QMap<QString,QString> Other_last = map_parser(item,"Other_last");
     progress->setValue(1);
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
@@ -511,6 +513,17 @@ void MainWindow::Changelogs()
             qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
             first.replace(texp.cap(0),color(space + texp.cap(1).replace("s","").replace("-",minus) + i.value() +space+ " {{A|" + texp.cap(2)+"|"+ texp.cap(3) + "}}"));
         }
+    }
+    progress->setValue(93);
+    for (i = New_ability.begin();i!= New_ability.end();i++)
+    {
+        first.replace("::" + i.key() + ":",":: " + color(i.value() + ":"));
+        first.replace(":: " + i.key() + ":",":: " + color(i.value() + ":"));
+    }
+    progress->setValue(96);
+    for (i=Other_last.begin();i!=Other_last.end();i++)
+    {
+        first.replace(i.key(), color(i.value()));
     }
 
         qDebug() << "end??";
