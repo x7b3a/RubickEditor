@@ -26,7 +26,7 @@
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
-#define RVERSION "1.0.4"
+#define RVERSION "1.0.6"
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
 
