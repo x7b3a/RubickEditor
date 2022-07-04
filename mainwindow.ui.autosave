@@ -1279,7 +1279,7 @@ background-color: rgb(243, 243, 243);</string>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="backz">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -1297,7 +1297,7 @@ background-color: rgb(243, 243, 243);</string>
      <string>⮨</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="forwardz">
     <property name="geometry">
      <rect>
       <x>130</x>

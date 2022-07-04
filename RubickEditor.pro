@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     dwsetter.cpp \
+    dwsnapshot.cpp \
     dwtheme.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     dwsetter.h \
+    dwsnapshot.h \
     dwtheme.h \
     mainwindow.h \
     qsswitch.h \
