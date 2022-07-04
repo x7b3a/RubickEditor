@@ -540,7 +540,8 @@ void  MainWindow::Responses()
     progress->setValue(1);
     QString space = " ";
     QString proc = "%";
-    QString Int = "([0-9]+)";
+    QString DInt = "([1-9][0-9])";
+    QString Int = "([1-9])";
     QString chance = "\u0428\u0430\u043d\u0441 ";
     QString first = get_text();
     QMap<QString, QString> dict;
@@ -556,6 +557,12 @@ void  MainWindow::Responses()
         first.replace(i.key(),color(i.value()));
     QString temp;
     QRegExp texp;
+    temp = DInt + "% chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
     temp = Int + "% chance";
     texp = QRegExp(temp);
     while(texp.indexIn(first)!=-1 )
@@ -715,6 +722,7 @@ void MainWindow::set_theme()
          ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         ui -> autozamena->setStyleSheet("border-color: rgb" + details + "; border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          //ui -> refreshButton ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
@@ -974,6 +982,8 @@ void MainWindow::on_discord_clicked()
      QString reaver = QFontDatabase::applicationFontFamilies(id).at(0);
      wide = hide;
      QFont button_font(reaver,12*wide);
+     QFont bottom_button_font(reaver,10*wide);
+     QFont clear_button_font(reaver,9*wide);
      id = QFontDatabase::addApplicationFont(":/fonts/consola.ttf");
      QString consola = QFontDatabase::applicationFontFamilies(id).at(0);
      QFont text_font(consola,10);
@@ -986,17 +996,18 @@ void MainWindow::on_discord_clicked()
      ui->settings->setFont(button_font);
      ui->buttochange->setFont(button_font);
      ui->changes->setFont(QFont(reaver, 15*wide));
-     ui->buttoncopy->setFont(QFont(reaver,8*wide));
-     ui->buttoncopy_2->setFont(QFont(reaver,8*wide));
-     ui->buttonpaste->setFont(QFont(reaver,8*wide));
-     ui->buttonpaste_2->setFont(QFont(reaver,8*wide));
-     ui->Clear_left->setFont(QFont(reaver,9*wide));
-     ui->Clear_right->setFont(QFont(reaver,9*wide));
+     ui->buttoncopy->setFont(bottom_button_font);
+     ui->buttoncopy_2->setFont(bottom_button_font);
+     ui->buttonpaste->setFont(bottom_button_font);
+     ui->buttonpaste_2->setFont(bottom_button_font);
+     ui->Clear_left->setFont(clear_button_font);
+     ui->Clear_right->setFont(clear_button_font);
      ui->Input_win->setFont(QFont(reaver,12*wide,75));
      ui->Output_win->setFont(QFont(reaver,12*wide,75));
      ui->themebutton->setFont(QFont(reaver,12*wide,75));
      ui->text1->setFont(text_font);
      ui->text2->setFont(text_font);
+     ui->autozamena->setFont(button_font);
  }
 void MainWindow::set_progressbar()
 {
