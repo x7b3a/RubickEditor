@@ -27,6 +27,8 @@
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
 #define RVERSION "1.0.6"
+#define snap
+
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
 
@@ -98,7 +100,7 @@ void MainWindow::recieveData(QString q)
 
 void MainWindow::on_dota2wiki_clicked()
 {
-    QString wikiurl = "https://dota2.fandom.com/ru/wiki/\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a:X7b3a2j/\u041f\u0435\u0441\u043e\u0447\u043d\u0438\u0446\u0430";
+    QString wikiurl = "https://dota2.fandom.com/ru/wiki/\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a:X7b3a2j/Rubick_Editor";
     QDesktopServices::openUrl(QUrl(wikiurl));
 }
 
@@ -118,8 +120,10 @@ void MainWindow::button_switch(QString switchStr)
 {
     ui->error->setStyleSheet("color: rgba(255,0,0,0);");
     ui->debug->clear();
+#ifdef snap
     if (snapshot.isEmpty())
         snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
+#endif
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //Викификатор и фиксы
                 {
@@ -151,13 +155,16 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSDEFAULT(
                 {
-                   ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                   ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
                    ui -> text2->setText("dw error = \u043a\u043d\u043e\u043f\u043a\u0430 \u0441 \u0442\u0430\u043a\u0438\u043c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c\n \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430");break;
                 })
                 )
+#ifdef snap
         if (snapshot.size()>9)
             snapshot.removeFirst();
         snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
+        snapshot_iterator = snapshot.size();
+#endif
 }
 
 
@@ -794,8 +801,10 @@ int MainWindow::counter(QString text)
 
 void MainWindow::put_text(QString text)
 {
+    //qDebug() << text;
     text.replace("\n","<br>");
     text = "<html>" + text + "</html>";
+    //qDebug() << text;
     if (!output)
         ui->text1 ->setText(text);
     else
@@ -1022,8 +1031,14 @@ void MainWindow::set_progressbar()
     progress = tuskbar->progress();
     progress->show();
 }
-
-void MainWindow::on_pushButton_clicked()
+#ifdef snap
+void MainWindow::on_backz_clicked()
 {
+    if (snapshot.size()>9)
+        snapshot.removeFirst();
+    snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
+    snapshot_iterator = snapshot.size();
+
     qDebug() << snapshot.size();
 }
+#endif

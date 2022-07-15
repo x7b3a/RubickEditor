@@ -61,6 +61,8 @@ private:
     dwSetter set;
     dwTheme maintheme;
     QList<dwSnapshot> snapshot;
+    int snapshot_iterator;
+    int autoz = 0;
 
 private slots:
     void on_buttochange_clicked();
@@ -92,5 +94,6 @@ private slots:
     void on_excel_clicked();
     void on_discord_clicked();
     void on_pushButton_clicked();
+    void on_backz_clicked();
 };
 #endif // MAINWINDOW_H
