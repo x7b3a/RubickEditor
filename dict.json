@@ -2,7 +2,10 @@
     "WikiAndFixes": {
 		"|*" : "|\n*",
 		"(Pre " : "(до ",
-		"letter_with_for_medoke" : ["с", "со"]
+		"letter_with_for_medoke" : ["с", "со"],
+		"text = Hidden modifier" : "text = Скрытый модификатор",
+		"text = Missing tooltip" : "text = Нет описания",
+		"text = On hidden entity" : "text = На скрытом объекте"
 	},
 	"Commafix": [ "[[en:Version ",
 	"[[zh:",
@@ -68,7 +71,8 @@
 				" [[attack range]] " : "[[Дальность атаки]] ",
 				" attack range " : "[[Дальность атаки]] ",
 				" base [[attack range]] " : "Базовая [[дальность атаки]] ",
-				" attack projectile speed " : "[[Скорость полёта снаряда]] ",
+				" attack projectile speed " : "Скорость снаряда ",
+				" projectile speed " : "[[Скорость полёта снаряда]] ",
 				" attack [[projectile speed]] " : "[[Скорость полёта снаряда]] ",
 				" [[attack point]] " : "[[Базовое время атаки]] ",
 				" attack point " : "[[Базовое время атаки]] ",
@@ -154,8 +158,11 @@
 			"Cast time" : "Задержка перед применением",
 			"Cast animation" : "Анимация применения",
 			"Cast Range" : "Дальность применения",
+			"Cast range" : "Дальность применения",
 			"Radius" : "Радиус",
 			"Duration" : "Длительность",
+			"Fade time" : "Задержка до невидимости",
+			"Fade Time" : "Задержка до невидимости",
 			"Proc chance" : "Шанс срабатывания",
 			"Base damage" : "Базовый урон",
 			"Damage" : "Урон",
@@ -164,6 +171,8 @@
 			"Move speed slow" : "Замедление скорости передвижения",
 			"Slow duration" : "Длительность замедления",
 			"Attack speed slow" : "Замедление скорости атаки",
+			"Aura linger duration" : "Длительность задержки ауры",
+			"Aura Linger Duration" : "Длительность задержки ауры",
 			"Number of charges" : "Число зарядов",
 			"Charge replanish time" : "Время восстановления заряда",
 			"Mana cost" : "Расход маны",
@@ -249,7 +258,9 @@
 		"{{Attribute ID|all}}" : "бонус ко {{Attribute ID|все|всем атрибутам}}",
 		"[[health]]" : "бонус к [[здоровье|здоровью]]",
 		"[[attack range]]" : "бонус к [[дальность атаки|дальности атаки]]",
-		"[[cast range]]" : "бонус к [[дальность применения|дальности применения]]"
+		"[[cast range]]" : "бонус к [[дальность применения|дальности применения]]",
+		"[[base damage]]" : "бонус к [[базовый урон от атаки|базовому урону]]",
+		"[[base attack damage]]" : "бонус к [[базовый урон от атаки|базовому урону]]"
 		
 		},
 		"Talents_changes_n" : {
@@ -269,15 +280,17 @@
 			"* {{cf|Added}} '''{{I|Aghanim's Scepter}} upgrade for " : "* {{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
 			"{{cf|Old}}" : "{{cf|Старое}}",
 			"{{cf|New}}" : "{{cf|Новое}}",
-			"* {{cf|Reworked}} {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
-			"* {{cf|Reworked}} {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
+			"* {{cf|Reworked}} {{I|Aghanim's Shard}} upgrade" : "* {{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
+			"* {{cf|Reworked}} {{I|Aghanim's Scepter}} upgrade" : "* {{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
 			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
 			"'''Reworked''' {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
 			"* {{I|Aghanim's Scepter}} upgrade:" : "* Улучшение от {{I|Aghanim's Scepter}}:",
 			"* {{I|Aghanim's Shard}} upgrade:" : "* Улучшение от {{I|Aghanim's Shard}}",
 			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
 			"'''Added {{I|Aghanim's Shard}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Shard}} для ",
-			"{{Undocumented}}" : "{{Cf|Н}}"
+			"{{Undocumented}}" : "{{cf|Н}}",
+			"{{cf|U}}" : "{{Cf|Н}}",
+			"{{cf|Changed}}" : "{{cf|Изменено}}"
 		},
 		"New_Talent" : {
 		"[[health regeneration]]" : "к [[восстановление здоровья|восстановлению здоровья]]",
@@ -299,7 +312,9 @@
 		"[[magic resistance]]" : "к [[сопротивление магии|сопротивлению магии]]",
 		"[[cleave]]" : "к [[прорубающий удар|прорубающему урону]]",
 		"[[spell damage amplification]]" : "к [[урон от заклинаний|урону от заклинаний]]",
-		"[[spell lifesteal]]" : "к [[вампиризм заклинаний|вампиризму заклинаний]]"
+		"[[spell lifesteal]]" : "к [[вампиризм заклинаний|вампиризму заклинаний]]",
+		"[[base damage]]" : "к [[базовый урон от атаки|базовому урону]]",
+		"[[base attack damage]]" : "к [[базовый урон от атаки|базовому урону]]"
 		},
 		"New_Talent_abilities" : {
 			" cooldown" : " сек. перезарядки",
@@ -381,7 +396,10 @@
 		"Only when distance is at least 2x the cast range, 4 seconds cooldown" : "Только есть расстояние превышает в 2 раза дальность применения, перезарядка 4 секунды",
 		"thx, thanks, ty, or ally casts certain spell on player, 30 seconds cooldown" : "thx, thanks, ty, или если союзник применяет некоторые заклинания на игрока, перезарядка 30 секунд",
 		"== Beginning battle ==" : "== Начало битвы ==",
-		"== Capturing Outposts ==" : "== Захват Аванпоста =="
+		"== Capturing Outposts ==" : "== Захват Аванпоста ==",
+		"'''Lane missing'''" : "'''Враг ушёл с линии'''",
+		"'''No'''" : "'''Нет'''",
+		"'''Yes'''" : "'''Да'''"
 	},
 	"Cosmetics" : {
 		"[[Nemestice 2021 Immortal Treasure]]" : "[[Враждостояние 2021: Immortal-сокровищница]]",
@@ -418,7 +436,24 @@
 		"Duskbloom Trickster Style Unlock" : "Новый стиль для Duskbloom Trickster",
 		"[[Nemestice 2021 Battle Pass#Cavern Crawl|Nemestice 2021 Cavern Crawl]]" : "[[Враждостояние 2021: боевой пропуск#Катакомбы|Катакомбы Враждостояния 2021]]",
 		"[[Aghanim's 2021 Immortal Treasure]]" : "[[Лабиринт Аганима 2021: Immortal-сокровищница]]",
-		"[[Aghanim's 2021 Continuum Collection]]" : "[[Лабиринт Аганима 2021: Continuum Collection]]"
+		"[[Aghanim's 2021 Continuum Collection]]" : "[[Лабиринт Аганима 2021: Continuum Collection]]",
+		"== Opens ==" : "== Отпирает ==",
+		"[[Category:Tools]]" : "[[Категория:Инструменты]]",
+		"[[Category:Loading Screens with " : "[[Категория:Загрузочные экраны с ",
+		"== See also ==" : "== См. также ==",
+		"* [[Loading Screens]]" : "* [[Загрузочные экраны]]",
+		"* [[Treasures]]" : "* [[Сокровищницы]]",
+		"[[Loading Screens]] have slightly different appearances depending on your monitor's aspect ratio." : "[[Загрузочные экраны]] выглядят немного по-разному в зависимости от соотношения сторон вашего монитора.",
+		"* The chances of receiving this item increase with each treasure opened." : "* Шанс получить этот предмет увеличивается с каждым открытием сокровищницы.",
+		"This treasure is obtained as a random [[Item drop system|drop]] and can only be unlocked using " : "Эта сокровищница приобретается только при случайном [[Система выпадения предметов|выпадении]] и может быть открыта только ",
+		"== Contents ==" : "== Содержит ==",
+		"== Opened with ==" : "== Открывается ==",
+		"=== Regular ===" : "=== Обычная ===",
+		"=== Rare ===" : "=== Редкая ===",
+		"=== Very Rare ===" : "=== Очень редкая ===",
+		"=== Ultra Rare ===" : "=== Невероятно редкая ===",
+		"[[Category:Treasures]]" : "[[Категория:Сокровищницы]]",
+		"[[Category:Active Treasures]]" : "[[Категория:Активные сокровищницы]]"
 	},
 	"Sounds" : {
 		"==Attacks==" : "== Атака ==",

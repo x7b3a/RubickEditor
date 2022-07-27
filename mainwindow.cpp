@@ -27,7 +27,7 @@
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
 #define RVERSION "1.0.6"
-#define snap
+//#define snap
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
     set_progressbar();
+    ui->autozamena->setVisible(false);
 }
 
 MainWindow::~MainWindow()

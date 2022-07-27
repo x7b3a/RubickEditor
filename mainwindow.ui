@@ -1237,6 +1237,9 @@ background-color: rgb(243, 243, 243);</string>
     </property>
    </widget>
    <widget class="QPushButton" name="autozamena">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1660</x>
@@ -1252,7 +1255,10 @@ background-color: rgb(243, 243, 243);</string>
      </font>
     </property>
     <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">border-top-color: rgb(127, 127, 127);
@@ -1280,6 +1286,9 @@ background-color: rgb(243, 243, 243);</string>
     </property>
    </widget>
    <widget class="QPushButton" name="backz">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>60</x>
