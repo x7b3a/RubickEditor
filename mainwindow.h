@@ -95,5 +95,6 @@ private slots:
     void on_discord_clicked();
     void on_pushButton_clicked();
     void on_backz_clicked();
+    void on_autozamena_clicked();
 };
 #endif // MAINWINDOW_H
