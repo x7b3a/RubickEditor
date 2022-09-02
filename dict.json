@@ -74,8 +74,6 @@
 				" attack projectile speed " : "Скорость снаряда ",
 				" projectile speed " : "[[Скорость полёта снаряда]] ",
 				" attack [[projectile speed]] " : "[[Скорость полёта снаряда]] ",
-				" [[attack point]] " : "[[Базовое время атаки]] ",
-				" attack point " : "[[Базовое время атаки]] ",
 				" cast range " : "Дальность применения ",
 				" bonus movement speed " : "Доп. скорость передвижения ",
 				" bonus attack range " : "Бонусная дальность атаки "
@@ -109,6 +107,8 @@
 				" [[health regeneration]] " : "[[Восстановление здоровья]] ",
 				" health regeneration " : "[[Восстановление здоровья]] ",
 				" mana regeneration " : "[[Восстановление маны]] ",
+				" [[attack point]] " : "[[Базовое время атаки]] ",
+				" attack point " : "[[Базовое время атаки]] ",
 				" [[base attack time]] " : "[[Базовое время атаки]] ",
 				" base health regeneration " : "Базовое [[восстановление здоровья]] ",
 				" base [[health regeneration]] " : "Базовое [[восстановление здоровья]] ",

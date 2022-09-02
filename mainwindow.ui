@@ -1238,7 +1238,7 @@ background-color: rgb(243, 243, 243);</string>
    </widget>
    <widget class="QPushButton" name="autozamena">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -1255,13 +1255,13 @@ background-color: rgb(243, 243, 243);</string>
      </font>
     </property>
     <property name="cursor">
-     <cursorShape>ArrowCursor</cursorShape>
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
+     <string notr="true">/*border-top-color: rgb(127, 127, 127);
 border-top-width: 1px;
     border-top-style: solid;
 border-left-color: rgb(127, 127, 127);
@@ -1273,7 +1273,9 @@ border-bottom-width: 1px;
 border-right-color: rgb(127, 127, 127);
 border-right-width: 1px;
     border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+background-color: rgb(243, 243, 243);*/
+/*border-color: rgb(255, 191, 102); border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb(230, 230, 230); color: rgb(0,0,0);*/
+border-color: rgb(255, 191, 102); border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb(230, 230, 230); color: rgb(0,0,0);</string>
     </property>
     <property name="text">
      <string>Автозамена (выкл)</string>

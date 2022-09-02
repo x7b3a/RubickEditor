@@ -26,7 +26,7 @@
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
-#define RVERSION "1.0.6"
+#define RVERSION "1.0.7"
 //#define snap
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
@@ -54,7 +54,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
     set_progressbar();
-    ui->autozamena->setVisible(false);
+    ui->autozamena->setVisible(true);
+    ui->backz->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -87,7 +88,6 @@ void MainWindow::on_buttochange_clicked()
    ui -> text1->setText(second);
    ui -> text2->setText(first);
 }
-
 void MainWindow::on_settings_clicked()
 {
     from ->show();
@@ -212,9 +212,33 @@ void MainWindow::Commafix()
     progress->setValue(20);
     QJsonObject json = read_json("dict.json").object();
     QJsonArray Commafix = json["Commafix"].toArray();
-    QRegExp texp = QRegExp("([0-9])"+ comma+"([0-9abcdefgh]{1,3}-[0-9])"+comma+"([0-9abcdefgh]{1,3})");
-     qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
-     progress->setValue(30);
+        // (7.23d-7.24e)
+    QRegExp texp = QRegExp("\\(([0-9])"+ comma +"([0-9abcdefgh]{2,3}-[0-9])"+comma+"([0-9abcdefgh]{2,3})\\)");
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"(" + texp.cap(1) + point + texp.cap(2)+ point + texp.cap(3)+ ")");
+
+    }
+    progress->setValue(30);
+        // (7.23d)
+    texp = QRegExp("\\(([0-9])" + comma + "([0-9abcdefgh]{2,3})\\)");
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"(" + texp.cap(1) + point + texp.cap(2) + ")");
+
+    }
+        // {{cf|At|2.28|2.31d}}
+    progress->setValue(40);
+    texp = QRegExp(("f\\|([Aa])t\\|([0-9])"+ comma +"([0-9abcdefgh]{2,3}\\|[0-9])"+comma+"([0-9abcdefgh]{2,3})\\}\\}"));
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"f|" + texp.cap(1) + "t|" + texp.cap(2) + point + texp.cap(3) + point + texp.cap(4) + "}}");
+
+    }
+     progress->setValue(50);
     for (int i = 0; i<Commafix.size();i++)
     {
         for (int j = 0;j<10;j++)
@@ -222,10 +246,7 @@ void MainWindow::Commafix()
                 first.replace(Commafix[i].toString()+QString::number(j) + comma + QString::number(k),Commafix[i].toString()+QString::number(j) + "."+ QString::number(k));
     }
     progress->setValue(65);
-    for (int i = 0;i<10;i++)
-        for (int j = 0;j<100;j++)
-            for (int k = 0;k<100;k++)
-                first.replace(comma +QString::number(j)+"-"+QString::number(i)+ comma +QString::number(k),"."+QString::number(j)+"-"+QString::number(i)+"."+QString::number(k));
+    progress->setValue(85);
     progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
@@ -656,8 +677,10 @@ void  MainWindow::Units()
     progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
     {
+        first.replace ("{{Show|A|" + i.key()+"|", color("{{Show|A|" + i.value()+"|"));
         first.replace("|" + i.key()+"}}",color("|" + i.value()+"}}"));
         first.replace("|" + i.key()+"|text",color("|" + i.value())+"|text");
+        //first.replace(i.key(), color(i.value()));
     }
     progress->setValue(100);
     int counted = counter(first);
@@ -735,8 +758,12 @@ void MainWindow::set_theme()
          ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> autozamena->setStyleSheet("border-color: rgb" + details + "; border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         //ui -> refreshButton ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         qDebug()<< "border-color: rgb" + details + "; border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";";
+         if (autoz)
+            ui -> autozamena->setStyleSheet("border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";");
+         else
+             ui->autozamena->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";");
+         //ui -> refreshButton ->setStyleSheet("nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
@@ -806,10 +833,29 @@ void MainWindow::put_text(QString text)
     text.replace("\n","<br>");
     text = "<html>" + text + "</html>";
     //qDebug() << text;
-    if (!output)
-        ui->text1 ->setText(text);
-    else
-        ui -> text2 -> setText(text);
+    if (output==input||!autoz)
+    {
+        if (!output)
+            ui->text1 ->setText(text);
+        else
+            ui -> text2 -> setText(text);
+    }
+    else if (output!=input&&autoz)
+    {
+        if (!input)
+        {
+            ui->text2 ->setPlainText(get_text());
+            ui->text1 ->setText(text);
+        }
+
+        else
+        {
+            ui -> text1 ->setPlainText(get_text());
+            ui -> text2 -> setText(text);
+        }
+
+    }
+
 }
 
 QJsonDocument MainWindow::read_json(QString filename)
@@ -978,7 +1024,7 @@ void MainWindow::on_discord_clicked()
      double hide = QApplication::desktop()->screenGeometry().height()/normh;
      QWidget *test;
 
-     for (int i = 0;i<27;i++)
+     for (int i = 0;i<29;i++)
      {
          test = centralWidget()->findChild<QWidget*>(centralWidget()->children().at(i)->objectName());
          QRect cords = test->geometry();
@@ -990,7 +1036,6 @@ void MainWindow::on_discord_clicked()
      double normw = 1920;
      double normh = 1080;
      double wide = QApplication::desktop()->screenGeometry().width()/normw;
-
      double hide = QApplication::desktop()->screenGeometry().height()/normh;
      qDebug() << wide << hide;
      int id = QFontDatabase::addApplicationFont(":/fonts/Reaver-Regular.ttf");
@@ -1043,3 +1088,11 @@ void MainWindow::on_backz_clicked()
     qDebug() << snapshot.size();
 }
 #endif
+
+void MainWindow::on_autozamena_clicked()
+{
+    autoz = autoz?0:1;
+    QString  str_autoz[2] = {"\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u044b\u043a\u043b)", "\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u043a\u043b)"};
+    ui->autozamena->setText(str_autoz[autoz]);
+    ui->autozamena->setStyleSheet(maintheme.do_autoz(autoz));
+}

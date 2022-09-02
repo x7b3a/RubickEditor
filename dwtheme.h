@@ -20,6 +20,7 @@ public:
     QPalette get_backimage();
     QString get_border();
     QString get_buttontextcolor();
+    QString do_autoz(int);
 signals:
 
 };
