@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+    QVector<QPushButton*> buttons;
     QWinTaskbarProgress *progress;
     ui_settings *from;
     MainWindow(QWidget *parent = nullptr);
@@ -44,6 +45,7 @@ private:
     QJsonDocument read_json(QString filename);
     void button_switch(QString);
     void label_settext(int);
+    void append_buttons();
     void set_buttons();
     void put_text(QString text);
     QString start_regular_replacer (QString);
@@ -93,8 +95,8 @@ private slots:
     void on_buttoncopy_2_clicked();
     void on_excel_clicked();
     void on_discord_clicked();
-    void on_pushButton_clicked();
-    void on_backz_clicked();
+    //void on_pushButton_clicked();
+   // void on_backz_clicked();
     void on_autozamena_clicked();
 };
 #endif // MAINWINDOW_H

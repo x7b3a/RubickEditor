@@ -20,6 +20,7 @@ SOURCES += \
     dwsetter.cpp \
     dwsnapshot.cpp \
     dwtheme.cpp \
+    macros.cpp \
     main.cpp \
     mainwindow.cpp \
     ui_settings.cpp
@@ -28,6 +29,7 @@ HEADERS += \
     dwsetter.h \
     dwsnapshot.h \
     dwtheme.h \
+    macros.h \
     mainwindow.h \
     qsswitch.h \
     resouces.rc \

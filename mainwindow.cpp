@@ -26,7 +26,7 @@
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
-#define RVERSION "1.0.7"
+#define RVERSION "1.0.8"
 //#define snap
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
@@ -44,8 +44,9 @@ MainWindow::MainWindow(QWidget *parent)
     maintheme.theme = value.toInt();
     QJsonObject WikiAndFixes= json.value("WikiAndFixes").toObject();
     this -> showMaximized();
-    this->setWindowTitle("Rubick Editor " + QString(RVERSION));
-    this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
+    this -> setWindowTitle("Rubick Editor " + QString(RVERSION));
+    this -> setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
+    append_buttons();
     set_buttons();
     this->setStyleSheet("background-image:url()");
     set_theme();
@@ -53,8 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
+
     set_progressbar();
-    ui->autozamena->setVisible(true);
+
     ui->backz->setVisible(false);
 }
 
@@ -64,11 +66,8 @@ MainWindow::~MainWindow()
      recordObject.insert("Theme",maintheme.theme);
      QFile file;
      QJsonArray stringArray;
-     stringArray.push_back(QJsonValue::fromVariant(ui -> button1 -> text().toUtf8()));
-     stringArray.push_back(QJsonValue::fromVariant(ui -> button2 -> text().toUtf8()));
-     stringArray.push_back(QJsonValue::fromVariant(ui -> button3 -> text().toUtf8()));
-     stringArray.push_back(QJsonValue::fromVariant(ui -> button4 -> text().toUtf8()));
-     stringArray.push_back(QJsonValue::fromVariant(ui -> button5 -> text().toUtf8()));
+     for (int i = 0; i<buttons.size();i++)
+         stringArray.push_back(QJsonValue::fromVariant(buttons[i] -> text().toUtf8()));
      recordObject.insert("Macros",stringArray);
      QJsonDocument doc(recordObject);
      QString jsonString = doc.toJson(QJsonDocument::Indented);
@@ -716,19 +715,8 @@ void MainWindow::set_theme()
                 this->setPalette(palette);
 
                 this->show();
-        ui->button1 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
-                color: rgb" + text +";\
-                 border-right-color: rgb" + details + ";");
-        ui->button2 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
-                color: rgb" + text +";\
-                 border-right-color: rgb" + details + ";");
-        ui->button3 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
-                color: rgb" + text +";\
-                 border-right-color: rgb" + details + ";");
-        ui->button4 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
-                color: rgb" + text +";\
-                 border-right-color: rgb" + details + ";");
-        ui->button5 ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+                 for (int i = 0;i<buttons.size();i++)
+        buttons[i] ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
                 color: rgb" + text +";\
                  border-right-color: rgb" + details + ";");
         ui -> changes -> setStyleSheet("color: rgb" + text + ";");
@@ -877,16 +865,21 @@ QJsonDocument MainWindow::read_json(QString filename)
         return Doc;
 }
 
+void MainWindow::append_buttons()
+{
+    buttons.append(ui->button1);
+    buttons.append(ui->button2);
+    buttons.append(ui->button3);
+    buttons.append(ui->button4);
+    buttons.append(ui->button5);
+}
+
 void MainWindow::set_buttons()
 {
     QJsonObject json = read_json("config2.json").object();
     QJsonArray Macros = json["Macros"].toArray();
-
-   ui -> button1 -> setText(Macros[0].toString());
-   ui -> button2 -> setText(Macros[1].toString());
-   ui -> button3 -> setText(Macros[2].toString());
-   ui -> button4 -> setText(Macros[3].toString());
-   ui -> button5 -> setText(Macros[4].toString());
+    for (int i = 0;i<buttons.size();i++)
+        buttons[i] ->  setText(Macros[i].toString());
 }
 
 void MainWindow::label_settext(int count)
@@ -1048,11 +1041,8 @@ void MainWindow::on_discord_clicked()
      QString consola = QFontDatabase::applicationFontFamilies(id).at(0);
      QFont text_font(consola,10);
      centralWidget()->setFont(button_font);
-     ui->button1->setFont(button_font);
-     ui->button2->setFont(button_font);
-     ui->button3->setFont(button_font);
-     ui->button4->setFont(button_font);
-     ui->button5->setFont(button_font);
+     for (int i = 0; i<buttons.size();i++)
+         buttons[i]->setFont(button_font);
      ui->settings->setFont(button_font);
      ui->buttochange->setFont(button_font);
      ui->changes->setFont(QFont(reaver, 15*wide));
