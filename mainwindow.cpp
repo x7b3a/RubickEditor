@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     set_theme();
     from = new ui_settings();
 
-    connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //отправка данных из Form1 в Form2
-    connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //отправка данных обратно из Form2 в Form1
+    connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form1 пїЅ Form2
+    connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form2 пїЅ Form1
 
     set_progressbar();
 
@@ -125,31 +125,31 @@ void MainWindow::button_switch(QString switchStr)
         snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
 #endif
     QSSWITCH(switchStr,
-                QSCASE(cases[0], //Викификатор и фиксы
+                QSCASE(cases[0], //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
                 {
                     WikiAndFixes();break;
                 })
-                QSCASE(cases[1], //Замена точек на запятую
+                QSCASE(cases[1], //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 {
                     Commafix();break;
                 })
-                QSCASE(cases[2],//"Раздел "Изменения"
+                QSCASE(cases[2],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
                    Changelogs();break;
                 })
-                QSCASE(cases[3],//"Раздел "Реплики"
+                QSCASE(cases[3],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
                     Responses();break;
                 })
-                QSCASE(cases[4],// "Раздел "Звуки"
+                QSCASE(cases[4],// "пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅ"
                 {
                     Sounds();break;
                 })
-                QSCASE(cases[5],//"Раздел "Косметика"
+                QSCASE(cases[5],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
                    Cosmetics();break;
                 })
-                QSCASE(cases[6],//"Units - Существа"
+                QSCASE(cases[6],//"Units - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
                    Units();break;
                 })
