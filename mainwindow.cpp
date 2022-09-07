@@ -26,6 +26,10 @@
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
+#include <QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include "html_parser.h"
 #define RVERSION "1.0.8"
 //#define snap
 
@@ -152,6 +156,10 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[6],//"Units - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
                    Units();break;
+                })
+                QSCASE(cases[7],
+                {
+                    Patch_heroes();break;
                 })
                 QSDEFAULT(
                 {
@@ -688,6 +696,74 @@ void  MainWindow::Units()
     progress->setValue(0);
 }
 
+void MainWindow::Patch_heroes()
+{
+    progress->setValue(1);
+    QString url  = get_text();
+    QJsonObject json = read_json("dict.json").object();
+    QJsonArray Commafix = json["Heroes"].toArray();
+    QString output;
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+     QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=7.32&language=russian");
+     QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
+    QNetworkRequest patch_request(patch_url);
+     QNetworkRequest heroes_request(heroes_url);
+
+
+    QNetworkReply* patch_reply=  manager->get(patch_request);
+    QNetworkReply* heroes_reply=  manager->get(heroes_request);
+    QString temp;
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
+    put_text(temp);
+    qDebug() << "connect?";
+}
+
+QString MainWindow::replyFinished()
+
+{
+
+  QNetworkReply *reply=
+
+    qobject_cast<QNetworkReply *>(sender());
+
+
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+
+    // Получаем содержимое ответа
+
+    QByteArray content= reply->readAll();
+
+
+
+    // Реализуем преобразование кодировки
+
+    // (зависит от кодировки сайта)
+
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+
+
+
+    // Выводим результат
+   // qDebug() << codec->toUnicode(content.data());
+    //ui->text2->setPlainText(codec->toUnicode(content.data()) );
+    *patch_r = codec->toUnicode(content.data());
+
+  }
+
+  else
+
+  {
+    // Выводим описание ошибки, если она возникает.
+    ui->text2->setPlainText(reply->errorString());
+  }
+  // разрешаем объекту-ответа "удалится"
+  reply->deleteLater();
+
+}
 void MainWindow::set_theme()
 {
 
@@ -927,18 +1003,6 @@ void MainWindow::on_button5_clicked()
     button_switch(switchStr);
 }
 
- /*void MainWindow::enterEvent(QEvent * event)
-{
-      QMouseEvent *me = static_cast<QMouseEvent *>(event);
-     qDebug() << "real pos = " << me->pos();
-    qDebug() << "ENTER!" << endl << flush;
-}
-
-void MainWindow::leaveEvent(QEvent * event)
-{
-    qDebug() << "LEAVE!" << endl << flush;
-}*/
-
 void MainWindow::on_Input_win_clicked()
 {
     double normw = 1920;
@@ -1067,7 +1131,7 @@ void MainWindow::set_progressbar()
     progress = tuskbar->progress();
     progress->show();
 }
-#ifdef snap
+/*#ifdef snap
 void MainWindow::on_backz_clicked()
 {
     if (snapshot.size()>9)
@@ -1077,7 +1141,7 @@ void MainWindow::on_backz_clicked()
 
     qDebug() << snapshot.size();
 }
-#endif
+#endif*/
 
 void MainWindow::on_autozamena_clicked()
 {
@@ -1085,4 +1149,9 @@ void MainWindow::on_autozamena_clicked()
     QString  str_autoz[2] = {"\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u044b\u043a\u043b)", "\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u043a\u043b)"};
     ui->autozamena->setText(str_autoz[autoz]);
     ui->autozamena->setStyleSheet(maintheme.do_autoz(autoz));
+}
+
+void MainWindow::end()
+{
+
 }

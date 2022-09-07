@@ -1,6 +1,6 @@
 QT          += core gui
 QT          += winextras
-
+QT          += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -20,6 +20,7 @@ SOURCES += \
     dwsetter.cpp \
     dwsnapshot.cpp \
     dwtheme.cpp \
+    html_parser.cpp \
     macros.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     dwsetter.h \
     dwsnapshot.h \
     dwtheme.h \
+    html_parser.h \
     macros.h \
     mainwindow.h \
     qsswitch.h \
