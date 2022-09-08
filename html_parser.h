@@ -7,12 +7,13 @@ class HTML_Parser : public QObject {
   Q_OBJECT
   public:
       explicit HTML_Parser(QObject *parent = 0);
+    //HTML_Parser();
   public slots:
-      void parse(QString url);
+      //void parse(QString url);
   private slots:
-      void onPage_loaded(QNetworkReply*);
+      //void onPage_loaded(QNetworkReply*);
   signals:
-      void finished(int);
+      //void finished(int);
   private:
       QNetworkAccessManager *m_manager;
 };

@@ -81,7 +81,7 @@ private slots:
     void Units();
     void Patch_heroes();
     void end();
-    QString replyFinished();
+    void replyFinished();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();

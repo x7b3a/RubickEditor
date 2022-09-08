@@ -698,11 +698,13 @@ void  MainWindow::Units()
 
 void MainWindow::Patch_heroes()
 {
+    HTML_Parser parser;
     progress->setValue(1);
     QString url  = get_text();
     QJsonObject json = read_json("dict.json").object();
     QJsonArray Commafix = json["Heroes"].toArray();
     QString output;
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
      QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=7.32&language=russian");
@@ -719,7 +721,7 @@ void MainWindow::Patch_heroes()
     qDebug() << "connect?";
 }
 
-QString MainWindow::replyFinished()
+void MainWindow::replyFinished()
 
 {
 
@@ -743,14 +745,26 @@ QString MainWindow::replyFinished()
 
     // (зависит от кодировки сайта)
 
-    QTextCodec *codec = QTextCodec::codecForName("utf8");
+   QTextCodec *codec = QTextCodec::codecForName("utf8");
 
-
+    QString undercontent = QString(content);
 
     // Выводим результат
    // qDebug() << codec->toUnicode(content.data());
-    //ui->text2->setPlainText(codec->toUnicode(content.data()) );
-    *patch_r = codec->toUnicode(content.data());
+   qDebug () << "f";
+    ui->text2->setPlainText(codec->toUnicode(content.data()) );
+    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+    QJsonObject JsonObj = doc.object();
+  //  QJsonObject heroes = JsonObj.value("heroes").toObject();
+    QJsonArray heroes = JsonObj["heroes"].toArray();
+    QSet <int> hero_list;
+    foreach (const QJsonValue & v, heroes)
+    {
+         qDebug() << v.toObject().value("hero_id").toInt();
+         hero_list.insert(v.toObject().value("hero_id").toInt());
+    }
+          qDebug() <<hero_list.size();
+   // *patch_r = codec->toUnicode(content.data());
 
   }
 
