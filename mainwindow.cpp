@@ -701,22 +701,19 @@ void MainWindow::Patch_heroes()
     HTML_Parser parser;
     progress->setValue(1);
     QString url  = get_text();
-    QJsonObject json = read_json("dict.json").object();
-    QJsonArray Commafix = json["Heroes"].toArray();
     QString output;
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
      QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=7.32&language=russian");
-     QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
+
     QNetworkRequest patch_request(patch_url);
-     QNetworkRequest heroes_request(heroes_url);
+
 
 
     QNetworkReply* patch_reply=  manager->get(patch_request);
-    QNetworkReply* heroes_reply=  manager->get(heroes_request);
-    QString temp;
-    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
+     connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
+       QString temp;
     put_text(temp);
     qDebug() << "connect?";
 }
@@ -724,58 +721,71 @@ void MainWindow::Patch_heroes()
 void MainWindow::replyFinished()
 
 {
-
-  QNetworkReply *reply=
-
-    qobject_cast<QNetworkReply *>(sender());
-
-
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
 
   if (reply->error() == QNetworkReply::NoError)
 
   {
-
+      hero_list.clear();
     // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QTextCodec *codec = QTextCodec::codecForName("utf8");
+      QString undercontent = QString(content);
 
-    QByteArray content= reply->readAll();
-
-
-
-    // Реализуем преобразование кодировки
-
-    // (зависит от кодировки сайта)
-
-   QTextCodec *codec = QTextCodec::codecForName("utf8");
-
-    QString undercontent = QString(content);
-
-    // Выводим результат
-   // qDebug() << codec->toUnicode(content.data());
    qDebug () << "f";
-    ui->text2->setPlainText(codec->toUnicode(content.data()) );
+    ui->text2->setPlainText(codec->toUnicode(content.data()));
     QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
     QJsonObject JsonObj = doc.object();
-  //  QJsonObject heroes = JsonObj.value("heroes").toObject();
     QJsonArray heroes = JsonObj["heroes"].toArray();
-    QSet <int> hero_list;
+
     foreach (const QJsonValue & v, heroes)
     {
          qDebug() << v.toObject().value("hero_id").toInt();
          hero_list.insert(v.toObject().value("hero_id").toInt());
     }
           qDebug() <<hero_list.size();
-   // *patch_r = codec->toUnicode(content.data());
-
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
+     QNetworkRequest heroes_request(heroes_url);
+     QNetworkReply* heroes_reply = manager->get(heroes_request);
+     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedHeroes()));
   }
-
   else
-
   {
     // Выводим описание ошибки, если она возникает.
     ui->text2->setPlainText(reply->errorString());
   }
   // разрешаем объекту-ответа "удалится"
   reply->deleteLater();
+}
+void MainWindow::replyFinishedHeroes()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+    if (reply->error() == QNetworkReply::NoError)
+    {
+    QByteArray content= reply->readAll();
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QString undercontent = QString(content);
+
+ qDebug () << "f";
+  ui->text1->setPlainText(codec->toUnicode(content.data()));
+  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+  QJsonObject JsonObj = doc.object();
+  QJsonObject Result  = JsonObj.value("result").toObject();
+  QJsonObject Data =  Result.value("data").toObject();
+  QJsonArray heroes = Data["heroes"].toArray();
+    foreach (const int value, hero_list)
+    {
+        QMap()
+    }
+    }
+    else
+    {
+      // Выводим описание ошибки, если она возникает.
+      ui->text1->setPlainText(reply->errorString());
+    }
+
 
 }
 void MainWindow::set_theme()

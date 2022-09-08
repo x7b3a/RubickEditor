@@ -8,6 +8,7 @@
 #include "dwsnapshot.h"
 #include "ui_settings.h"
 #include <QtWinExtras/QWinTaskbarProgress>
+#include <QSet>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -55,7 +56,7 @@ private:
     QString color(QString arg,QString color="#ff8f45");
     QString get_backtext();
     QMap<QString, QString> map_parser(QJsonObject item, QString word);
-
+    QSet <int> hero_list;
     void set_theme();
     void adaptive_screen();
     void set_fonts();
@@ -82,6 +83,7 @@ private slots:
     void Patch_heroes();
     void end();
     void replyFinished();
+    void replyFinishedHeroes();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();
