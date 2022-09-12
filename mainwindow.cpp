@@ -698,24 +698,22 @@ void  MainWindow::Units()
 
 void MainWindow::Patch_heroes()
 {
-    HTML_Parser parser;
+    QString number = get_text();
+    //HTML_Parser parser;
     progress->setValue(1);
     QString url  = get_text();
-    QString output;
-
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
-     QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=7.32&language=russian");
-
+   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
     QNetworkRequest patch_request(patch_url);
-
-
-
     QNetworkReply* patch_reply=  manager->get(patch_request);
-     connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
-       QString temp;
-    put_text(temp);
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
+   // patch_reply->close();
+   // patch_reply->deleteLater();
+    //manager->deleteResource(patch_request);
+    patch_url.clear();
     qDebug() << "connect?";
+    progress->setValue(25);
 }
 
 void MainWindow::replyFinished()
@@ -729,11 +727,10 @@ void MainWindow::replyFinished()
       hero_list.clear();
     // Получаем содержимое ответа
       QByteArray content= reply->readAll();
-      QTextCodec *codec = QTextCodec::codecForName("utf8");
       QString undercontent = QString(content);
 
    qDebug () << "f";
-    ui->text2->setPlainText(codec->toUnicode(content.data()));
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
     QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
     QJsonObject JsonObj = doc.object();
     QJsonArray heroes = JsonObj["heroes"].toArray();
@@ -748,7 +745,14 @@ void MainWindow::replyFinished()
     QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
      QNetworkRequest heroes_request(heroes_url);
      QNetworkReply* heroes_reply = manager->get(heroes_request);
+
+     //reply->close();
+     reply->deleteLater();
+
      connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedHeroes()));
+     //heroes_reply-> deleteLater();
+     //manager->deleteResource(heroes_request);
+     heroes_url.clear();
   }
   else
   {
@@ -756,7 +760,7 @@ void MainWindow::replyFinished()
     ui->text2->setPlainText(reply->errorString());
   }
   // разрешаем объекту-ответа "удалится"
-  reply->deleteLater();
+  progress->setValue(55);
 }
 void MainWindow::replyFinishedHeroes()
 {
@@ -769,24 +773,48 @@ void MainWindow::replyFinishedHeroes()
     QString undercontent = QString(content);
 
  qDebug () << "f";
-  ui->text1->setPlainText(codec->toUnicode(content.data()));
+  //ui->text1->setPlainText(codec->toUnicode(content.data()));
   QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
   QJsonObject JsonObj = doc.object();
   QJsonObject Result  = JsonObj.value("result").toObject();
   QJsonObject Data =  Result.value("data").toObject();
   QJsonArray heroes = Data["heroes"].toArray();
-    foreach (const int value, hero_list)
+  QString output = "";
+  QMap<int, QString> dict;
+  foreach(const QJsonValue & v, heroes) {
+       //qDebug() << v.toObject().value("name_loc");
+       dict.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
+     // qDebug() << v.toObject().value("id").toInt() << v.toObject().value("name_english_loc").toString();
+  }
+  progress->setValue(75);
+  QList <QString> out;
+  for (QSet<int>::iterator i = hero_list.begin(); i!= hero_list.end();i++)
+  {
+      out.insert(0,dict.value(*i));
+    //  qDebug() << dict.value(1) << *i;
+  }
+  std::sort(out.begin(), out.end());
+  foreach (QString value, out)
+  {
+      output += value;
+      output +=", ";
+  }
+  output.resize(output.size()-2);
+  put_text(output);
+  progress->setValue(100);
+   /* foreach (const int value, hero_list)
     {
         QMap()
-    }
+    }*/
     }
     else
     {
       // Выводим описание ошибки, если она возникает.
       ui->text1->setPlainText(reply->errorString());
     }
-
-
+    //reply->close();
+    reply->deleteLater();
+    progress->setValue(0);
 }
 void MainWindow::set_theme()
 {
