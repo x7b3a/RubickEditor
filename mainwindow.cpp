@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     this -> setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     append_buttons();
     set_buttons();
+    append_cases();
     this->setStyleSheet("background-image:url()");
     set_theme();
     from = new ui_settings();
@@ -131,11 +132,11 @@ void MainWindow::button_switch(QString switchStr)
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //����������� � �����
                 {
-                    WikiAndFixes();break;
+                    Commafix();break;
                 })
                 QSCASE(cases[1], //������ ����� �� �������
                 {
-                    Commafix();break;
+                    WikiAndFixes();break;
                 })
                 QSCASE(cases[2],//"������ "���������"
                 {
@@ -178,6 +179,7 @@ void MainWindow::button_switch(QString switchStr)
 
 void MainWindow::WikiAndFixes()
 {
+    qDebug() << "WikiAndFixes called";
     progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
@@ -193,7 +195,7 @@ void MainWindow::WikiAndFixes()
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
     progress->setValue(75);
-    qDebug() << letter_with_for_medoke[0].toString() << letter_with_for_medoke[1].toString();
+    //qDebug() << letter_with_for_medoke[0].toString() << letter_with_for_medoke[1].toString();
     QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
     while(texp.indexIn(first)!=-1 )
     {
@@ -208,6 +210,7 @@ void MainWindow::WikiAndFixes()
 
 void MainWindow::Commafix()
 {
+    qDebug() << "Commafix called";
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QString comma = color(",");
     QString point = ".";
@@ -264,6 +267,7 @@ void MainWindow::Commafix()
 
 void MainWindow::Changelogs()
 {
+    qDebug() <<  "Changelogs called";
     QString first = get_text();
     QJsonObject json = read_json("dict.json").object();
     QMap<QString, QString>::iterator i,j,k;
@@ -353,7 +357,7 @@ void MainWindow::Changelogs()
             while(texp.indexIn(first)!=-1 )
             {
                 iter++;
-                 qDebug() <<"while:"<< QString::number(iter)<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+                 //last qdebug qDebug() <<"while:"<< QString::number(iter)<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
                  first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+point);
 
             }
@@ -382,7 +386,7 @@ void MainWindow::Changelogs()
             texp = QRegExp(temp1);
              while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " ability proc:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //last qdebug qDebug() << " ability proc:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+Flex_verb[0].toString()+ space+ Preposition.value(from) + space + texp.cap(1).replace("+","") + proc+ space  + Preposition.value(to)+ space + texp.cap(7).replace("+","")+proc+point));
             }
         }
@@ -406,7 +410,7 @@ void MainWindow::Changelogs()
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
-                qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                //last qdebug qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                 first.replace(texp.cap(0),color(j.value() + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus) + space + Preposition.value(to)+ space  + texp.cap(5).replace("-",minus)+sec));
             }
         }
@@ -517,7 +521,7 @@ void MainWindow::Changelogs()
         {
             temp1 = i.key() + space + ability + j.key() + from;
             texp = QRegExp(temp1);
-            qDebug() << "abil" << temp1;
+            //last qdebug qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
@@ -540,7 +544,7 @@ void MainWindow::Changelogs()
         //qDebug() << "tal" << temp1 << texp;
         while(texp.indexIn(first)!=-1 )
         {
-            qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+            //last qdebug qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
             first.replace(texp.cap(0),color(space + texp.cap(1)+space + i.value()));
         }
     }
@@ -548,7 +552,7 @@ void MainWindow::Changelogs()
     {
         temp1 = " ([0-9/\\.\\-\\+,%s]{1,10}) "  + ability + start_regular_replacer(i.key());
         texp = QRegExp(temp1);
-        qDebug() << "tal" << temp1 << texp;
+        //last qdebug qDebug() << "tal" << temp1 << texp;
         while(texp.indexIn(first)!=-1 )
         {
             qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
@@ -578,6 +582,7 @@ void MainWindow::Changelogs()
 
 void  MainWindow::Responses()
 {
+    qDebug() << "Responses called";
     progress->setValue(1);
     QString space = " ";
     QString proc = "%";
@@ -627,6 +632,7 @@ void  MainWindow::Responses()
 
 void  MainWindow::Sounds()
 {
+    qDebug() << "Sound called";
     progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
@@ -649,6 +655,7 @@ void  MainWindow::Sounds()
 
 void  MainWindow::Cosmetics()
 {
+    qDebug() << "Cosmetics called";
     progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
@@ -671,6 +678,7 @@ void  MainWindow::Cosmetics()
 
 void  MainWindow::Units()
 {
+    qDebug() << "Units called";
     progress->setValue(1);
     QString first = get_text();
     QMap<QString, QString> dict;
@@ -698,6 +706,7 @@ void  MainWindow::Units()
 
 void MainWindow::Patch_heroes()
 {
+    qDebug() << "Patch heroes called";
     QString number = get_text();
     //HTML_Parser parser;
     progress->setValue(1);
@@ -888,6 +897,16 @@ void MainWindow::set_theme()
 
 }
 
+void MainWindow::append_cases()
+{
+    QJsonObject json = read_json("params.json").object();
+    QJsonArray Macros = json["Macros_list"].toArray();
+   // for (int i = 0;i<Macros.size();i++)
+    foreach(const QJsonValue &v, Macros)
+    {
+        cases.push_back (v.toString());
+    }
+}
 QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
 {
     QMap<QString, QString> array;
@@ -1202,6 +1221,7 @@ void MainWindow::on_autozamena_clicked()
     ui->autozamena->setText(str_autoz[autoz]);
     ui->autozamena->setStyleSheet(maintheme.do_autoz(autoz));
 }
+
 
 void MainWindow::end()
 {

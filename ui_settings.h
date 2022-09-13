@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QDialog>
 #include <QApplication>
-
+#include <QComboBox>
 namespace Ui {
 class ui_settings;
 }
@@ -15,6 +15,9 @@ class ui_settings : public QWidget
 
 public:
     explicit ui_settings(QWidget *parent = nullptr);
+
+    QVector<QComboBox*> comboboxes;
+
     ~ui_settings();
 
 signals:
@@ -29,6 +32,9 @@ private slots:
 
 private:
     Ui::ui_settings *ui;
+    void append_combobox();
+    void set_comboboxes();
+    void add_items();
 
 };
 
