@@ -82,7 +82,6 @@ void ui_settings::add_items()
         QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
         QJsonObject json = doc.object();
         QJsonArray Macros = json["Macros_list"].toArray();
-       // for (int i = 0;i<Macros.size();i++)
         foreach(const QJsonValue & v, Macros)
         {
             comboboxes[i]->addItem(v.toString());

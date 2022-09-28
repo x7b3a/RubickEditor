@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_settings.h"
+#include "qsswitch.h"
 #include <QString>
 #include <QTextEdit>
 #include <QApplication>
@@ -15,7 +16,6 @@
 #include <QDesktopServices>
 #include <QMap>
 #include <QHash>
-#include "qsswitch.h"
 #include <QLabel>
 #include <QSyntaxHighlighter>
 #include <string>
@@ -29,7 +29,7 @@
 #include <QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
-#include "html_parser.h"
+//#include "html_parser.h"
 #define RVERSION "1.0.8"
 //#define snap
 
@@ -61,7 +61,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form2 пїЅ Form1
 
     set_progressbar();
-
     ui->backz->setVisible(false);
 }
 
@@ -195,7 +194,6 @@ void MainWindow::WikiAndFixes()
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
     progress->setValue(75);
-    //qDebug() << letter_with_for_medoke[0].toString() << letter_with_for_medoke[1].toString();
     QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
     while(texp.indexIn(first)!=-1 )
     {
@@ -228,7 +226,6 @@ void MainWindow::Commafix()
     {
          qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
          first.replace(texp.cap(0),"(" + texp.cap(1) + point + texp.cap(2)+ point + texp.cap(3)+ ")");
-
     }
     progress->setValue(30);
         // (7.23d)
@@ -317,6 +314,7 @@ void MainWindow::Changelogs()
     QMap<QString, QString> Talents_abilities_proc = map_parser(item,"Talents_abilities_proc");
     QJsonObject Abilities_one = item["Abilities_one"].toObject();
     QMap<QString, QString> Abilities_one_d = map_parser(Abilities_one,"duration");
+    QMap<QString, QString> Abilities_one_d_n = map_parser(Abilities_one,"duration_n");
     QMap<QString, QString> Abilities_one_f = map_parser(Abilities_one,"female");
     QMap<QString, QString> Abilities_one_m = map_parser(Abilities_one,"male");
     QMap<QString, QString> Abilities_one_n = map_parser(Abilities_one,"neuter");
@@ -402,7 +400,7 @@ void MainWindow::Changelogs()
             while(texp.indexIn(first)!=-1 )
             {
               //  qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-                first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus)+sec + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
+                first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus) + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
             }
 
             temp1  =   Float +"s"+ space + start_regular_replacer(j.key()) + space + i.key() + space + to + space + Float + "s.";
@@ -452,6 +450,7 @@ void MainWindow::Changelogs()
                 first.replace(texp.cap(0),color(temp2 + Preposition.value(from) + space + texp.cap(1)+ texp.cap(2).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(3) +QString(sec + texp.cap(4).replace(" on each level",eachlevel_rus)).replace("..",".")));
             }
         }
+        //qDebug() << Stats_d_n.begin().key();
         for (j=Stats_d_n.begin();j!=Stats_d_n.end();j++)
         {
             temp1 = i.key()+start_regular_replacer(j.key()) + from + space + Level_numbers;
@@ -491,6 +490,16 @@ void MainWindow::Changelogs()
             {
                 //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                   first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[1].toString()+ space+ Preposition.value(from) + space + texp.cap(3)+ texp.cap(4).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(5) +QString(sec + texp.cap(6).replace(" on each level",eachlevel_rus)).replace("..",".")));
+            }
+         }
+        for (j=Abilities_one_d_n.begin();j!=Abilities_one_d_n.end();j++)
+        {
+            temp1 = i.key() + space + ability + j.key() + from + space + Level_numbers;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color("{{A|"+ texp.cap(1)+ "|"+texp.cap(2)+"}}: " +j.value()+ i.value()+Flex_verb[2].toString()+ space+ Preposition.value(from) + space + texp.cap(3)+ texp.cap(4).replace(" on each level",eachlevel_rus)  + Preposition.value(to)+ space + texp.cap(5) +QString(sec + texp.cap(6).replace(" on each level",eachlevel_rus)).replace("..",".")));
             }
          }
         for (j=Abilities_one_f.begin();j!=Abilities_one_f.end();j++)
@@ -693,9 +702,9 @@ void  MainWindow::Units()
     for (i = dict.begin(); i != dict.end(); i++)
     {
         first.replace ("{{Show|A|" + i.key()+"|", color("{{Show|A|" + i.value()+"|"));
+        first.replace ("{{Show|U|" + i.key()+"|", color("{{Show|U|" + i.value()+"|"));
         first.replace("|" + i.key()+"}}",color("|" + i.value()+"}}"));
         first.replace("|" + i.key()+"|text",color("|" + i.value())+"|text");
-        //first.replace(i.key(), color(i.value()));
     }
     progress->setValue(100);
     int counted = counter(first);
@@ -716,7 +725,7 @@ void MainWindow::Patch_heroes()
     QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
     QNetworkRequest patch_request(patch_url);
     QNetworkReply* patch_reply=  manager->get(patch_request);
-    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinished()));
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedH()));
    // patch_reply->close();
    // patch_reply->deleteLater();
     //manager->deleteResource(patch_request);
@@ -725,8 +734,28 @@ void MainWindow::Patch_heroes()
     progress->setValue(25);
 }
 
-void MainWindow::replyFinished()
+void MainWindow::Patch_items() //DO IT DO IT DO IT DO IT
+{
+    qDebug() << "Patch items called";
+    QString number = get_text();
+    //HTML_Parser parser;
+    progress->setValue(1);
+    QString url  = get_text();
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
+    QNetworkRequest patch_request(patch_url);
+    QNetworkReply* patch_reply=  manager->get(patch_request);
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedI()));
+   // patch_reply->close();
+   // patch_reply->deleteLater();
+    //manager->deleteResource(patch_request);
+    patch_url.clear();
+    qDebug() << "connect?";
+    progress->setValue(25);
+}
 
+void MainWindow::replyFinishedH()
 {
   QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
 
@@ -765,11 +794,107 @@ void MainWindow::replyFinished()
   }
   else
   {
-    // Выводим описание ошибки, если она возникает.
-    ui->text2->setPlainText(reply->errorString());
+      progress->stop();
+    put_text(reply->errorString());
   }
-  // разрешаем объекту-ответа "удалится"
+  // разрешаем объекту-ответа "удалиться"
   progress->setValue(55);
+}
+void MainWindow::replyFinishedI() //DO IT DO IT DO IT
+{
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+      hero_list.clear();
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+    QJsonObject JsonObj = doc.object();
+    QJsonArray heroes = JsonObj["heroes"].toArray();
+
+    foreach (const QJsonValue & v, heroes)
+    {
+         qDebug() << v.toObject().value("hero_id").toInt();
+         hero_list.insert(v.toObject().value("hero_id").toInt());
+    }
+          qDebug() <<hero_list.size();
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
+     QNetworkRequest heroes_request(heroes_url);
+     QNetworkReply* heroes_reply = manager->get(heroes_request);
+
+     //reply->close();
+     reply->deleteLater();
+
+     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedHeroes()));
+     //heroes_reply-> deleteLater();
+     //manager->deleteResource(heroes_request);
+     heroes_url.clear();
+  }
+  else
+  {
+      progress->stop();
+    put_text(reply->errorString());
+  }
+  // разрешаем объекту-ответа "удалиться"
+  progress->setValue(55);
+}
+void MainWindow::replyFinishedItems() //DO IT DO IT DO IT DO IT
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+    if (reply->error() == QNetworkReply::NoError)
+    {
+    QByteArray content= reply->readAll();
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QString undercontent = QString(content);
+
+ qDebug () << "f";
+  //ui->text1->setPlainText(codec->toUnicode(content.data()));
+  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+  QJsonObject JsonObj = doc.object();
+  QJsonObject Result  = JsonObj.value("result").toObject();
+  QJsonObject Data =  Result.value("data").toObject();
+  QJsonArray heroes = Data["heroes"].toArray();
+  QString output = "";
+  QMap<int, QString> dict;
+  foreach(const QJsonValue & v, heroes) {
+       //qDebug() << v.toObject().value("name_loc");
+       dict.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
+     // qDebug() << v.toObject().value("id").toInt() << v.toObject().value("name_english_loc").toString();
+  }
+  progress->setValue(75);
+  QList <QString> out;
+  for (QSet<int>::iterator i = hero_list.begin(); i!= hero_list.end();i++)
+  {
+      out.insert(0,dict.value(*i));
+    //  qDebug() << dict.value(1) << *i;
+  }
+  std::sort(out.begin(), out.end());
+  foreach (QString value, out)
+  {
+      output += value;
+      output +=", ";
+  }
+  output.resize(output.size()-2);
+  put_text(output);
+  progress->setValue(100);
+    }
+    else
+    {
+      // Выводим описание ошибки, если она возникает.
+      progress->stop();
+      put_text(reply->errorString());
+    }
+    //reply->close();
+    reply->deleteLater();
+    progress->setValue(0);
 }
 void MainWindow::replyFinishedHeroes()
 {
@@ -811,15 +936,12 @@ void MainWindow::replyFinishedHeroes()
   output.resize(output.size()-2);
   put_text(output);
   progress->setValue(100);
-   /* foreach (const int value, hero_list)
-    {
-        QMap()
-    }*/
     }
     else
     {
       // Выводим описание ошибки, если она возникает.
-      ui->text1->setPlainText(reply->errorString());
+      progress->stop();
+      put_text(reply->errorString());
     }
     //reply->close();
     reply->deleteLater();
