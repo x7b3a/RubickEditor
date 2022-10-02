@@ -161,6 +161,10 @@ void MainWindow::button_switch(QString switchStr)
                 {
                     Patch_heroes();break;
                 })
+                QSCASE(cases[8],
+                {
+                    Patch_Version();break;
+                })
                 QSDEFAULT(
                 {
                    ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
@@ -399,6 +403,7 @@ void MainWindow::Changelogs()
             texp = QRegExp(temp1);
             while(texp.indexIn(first)!=-1 )
             {
+                qDebug() << "123";
               //  qDebug() << " cooldown:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
                 first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("-",minus) + space + Preposition.value(to)+ space  + texp.cap(7).replace("-",minus)+sec));
             }
@@ -564,7 +569,7 @@ void MainWindow::Changelogs()
         //last qdebug qDebug() << "tal" << temp1 << texp;
         while(texp.indexIn(first)!=-1 )
         {
-            qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+            //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
             first.replace(texp.cap(0),color(space + texp.cap(1).replace("s","").replace("-",minus) + i.value() +space+ " {{A|" + texp.cap(2)+"|"+ texp.cap(3) + "}}"));
         }
     }
@@ -753,6 +758,146 @@ void MainWindow::Patch_items() //DO IT DO IT DO IT DO IT
     patch_url.clear();
     qDebug() << "connect?";
     progress->setValue(25);
+}
+
+void MainWindow::Patch_Version()
+{
+    qDebug() << "Patch heroes called";
+    QString number = get_text();
+    //HTML_Parser parser;
+    progress->setValue(1);
+    QString url  = get_text();
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
+    QNetworkRequest patch_request(patch_url);
+    QNetworkReply* patch_reply=  manager->get(patch_request);
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV()));
+   // patch_reply->close();
+   // patch_reply->deleteLater();
+    //manager->deleteResource(patch_request);
+    patch_url.clear();
+    qDebug() << "connect?";
+    progress->setValue(15);
+}
+
+void MainWindow::replyFinishedV()
+{
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+      hero_list.clear();
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+    VersionJsonObj = doc.object();
+    //QJsonArray heroes = JsonObj["heroes"].toArray();
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
+     QNetworkRequest heroes_request(heroes_url);
+     QNetworkReply* heroes_reply = manager->get(heroes_request);
+
+     //reply->close();
+     reply->deleteLater();
+
+     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV2()));
+     //heroes_reply-> deleteLater();
+     //manager->deleteResource(heroes_request);
+     heroes_url.clear();
+  }
+  else
+  {
+      progress->stop();
+    put_text(reply->errorString());
+  }
+  // разрешаем объекту-ответа "удалиться"
+  progress->setValue(30);
+}
+
+void MainWindow::replyFinishedV2()
+{
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+      hero_list.clear();
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+    HeroJsonObj = doc.object();
+    //QJsonArray heroes = JsonObj["heroes"].toArray();
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl heroes_url("https://www.dota2.com/datafeed/itemlist?language=russian");
+     QNetworkRequest heroes_request(heroes_url);
+     QNetworkReply* heroes_reply = manager->get(heroes_request);
+
+     //reply->close();
+     reply->deleteLater();
+
+     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV3()));
+     //heroes_reply-> deleteLater();
+     //manager->deleteResource(heroes_request);
+     heroes_url.clear();
+  }
+  else
+  {
+      progress->stop();
+    put_text(reply->errorString());
+  }
+  // разрешаем объекту-ответа "удалиться"
+  progress->setValue(45);
+}
+void MainWindow::replyFinishedV3()
+{
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+      hero_list.clear();
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+   QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+   ItemJsonObj = doc.object();
+    //QJsonArray heroes = JsonObj["heroes"].toArray();
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl heroes_url("https://www.dota2.com/datafeed/abilitylist?language=russian");
+     QNetworkRequest heroes_request(heroes_url);
+     QNetworkReply* heroes_reply = manager->get(heroes_request);
+
+     //reply->close();
+     reply->deleteLater();
+
+     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedVersion()));
+     //heroes_reply-> deleteLater();
+     //manager->deleteResource(heroes_request);
+     heroes_url.clear();
+  }
+  else
+  {
+      progress->stop();
+    put_text(reply->errorString());
+  }
+  // разрешаем объекту-ответа "удалиться"
+  progress->setValue(60);
 }
 
 void MainWindow::replyFinishedH()
@@ -947,6 +1092,89 @@ void MainWindow::replyFinishedHeroes()
     reply->deleteLater();
     progress->setValue(0);
 }
+
+void MainWindow::replyFinishedVersion()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+    if (reply->error() == QNetworkReply::NoError)
+    {
+    QByteArray content= reply->readAll();
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QString undercontent = QString(content);
+
+ qDebug () << "f";
+  //ui->text1->setPlainText(codec->toUnicode(content.data()));
+  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
+  AbilityJsonObj = doc.object();
+  progress->setValue(75);
+  Do_Patch();
+
+  /*QString output = "";
+
+  output.resize(output.size()-2);
+  put_text(output);*/
+    }
+    else
+    {
+      // Выводим описание ошибки, если она возникает.
+      progress->stop();
+      put_text(reply->errorString());
+    }
+    //reply->close();
+    reply->deleteLater();
+    progress->setValue(0);
+}
+
+void MainWindow::Do_Patch()
+{
+    QJsonArray generic = VersionJsonObj["generic"].toArray();
+    QJsonArray neutral_creeps = VersionJsonObj["neutral_creeps"].toArray();
+    QJsonArray neutral_items = VersionJsonObj["neutral_creeps"].toArray();
+    QJsonArray items = VersionJsonObj["items"].toArray();
+    QJsonArray heroes = VersionJsonObj["heroes"].toArray();
+    QString output = "";
+    if (!generic.isEmpty())
+        output += "== \u041e\u0431\u0449\u0438\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f ==\n";
+    foreach (QJsonValue value, generic)
+    {
+        output += "* ";
+        output += value.toObject().value("note").toString();
+       /* output += "\n";
+        output += value.toObject().value("info").toString();*/
+        output += "\n";
+    }
+    if (!neutral_creeps.isEmpty())
+        output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043a\u0440\u0438\u043f\u044b ==\n";
+    foreach (QJsonValue value, neutral_creeps)
+    {
+        output += "{{Unit label|";
+        output += value.toObject().value("localized_name").toString();
+        output += "}}\n";
+        QJsonObject temp = value.toObject();
+        QJsonArray temparray = value["neutral_creep_notes"].toArray();
+        foreach (QJsonValue value2, temparray)
+        {
+            output += "* ";
+            output += value2.toObject().value("note").toString();
+            output += "\n";
+        }
+        output += "\n";
+       /* output += "\n";
+        output += value.toObject().value("info").toString();*/
+    }
+    if (!items.isEmpty())
+        output += "== \u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
+
+    if (!neutral_items.isEmpty())
+        output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
+
+    if (!heroes.isEmpty())
+        output += "== \u0413\u0435\u0440\u043e\u0438 ==\n";
+
+    put_text(output);
+}
+
 void MainWindow::set_theme()
 {
 

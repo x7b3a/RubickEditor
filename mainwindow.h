@@ -9,6 +9,7 @@
 #include "ui_settings.h"
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QSet>
+#include <QJsonObject>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -61,6 +62,11 @@ private:
     int snapshot_iterator;
     int autoz = 0;
 
+    QJsonObject VersionJsonObj;
+    QJsonObject ItemJsonObj;
+    QJsonObject HeroJsonObj;
+    QJsonObject AbilityJsonObj;
+
 private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();
@@ -75,11 +81,17 @@ private slots:
     void Units();
     void Patch_heroes();
     void Patch_items();
+    void Patch_Version();
     void end();
     void replyFinishedH();
     void replyFinishedI();
+    void replyFinishedV();
+    void replyFinishedV2();
+    void replyFinishedV3();
     void replyFinishedItems();
     void replyFinishedHeroes();
+    void replyFinishedVersion();
+    void Do_Patch();
     void on_button1_clicked();
     void on_button2_clicked();
     void on_button3_clicked();
