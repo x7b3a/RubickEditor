@@ -1126,23 +1126,57 @@ void MainWindow::replyFinishedVersion()
     progress->setValue(0);
 }
 
+QString MainWindow::add_point(QString output)
+{
+    if (output.endsWith(" "))
+    {
+         output.resize(output.size()-1);
+         output+=".";
+    }
+    else
+    if (!output.endsWith(".")&&!output.endsWith(":")&&!output.endsWith("}")&&!output.endsWith(".)"))
+        output+=".";
+    return output;
+}
+
 void MainWindow::Do_Patch()
 {
+    QJsonObject Result  = HeroJsonObj.value("result").toObject();
+    QJsonObject Data =  Result.value("data").toObject();
+    QJsonArray id_list = Data["heroes"].toArray();
+    QMap<int, QString> dict_heroes;
+    foreach(const QJsonValue & v, id_list) {
+         //qDebug() << v.toObject().value("name_loc");
+         dict_heroes.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
+    }
+    Result  = ItemJsonObj.value("result").toObject();
+    Data =  Result.value("data").toObject();
+    id_list = Data["itemabilities"].toArray();
+    QMap<int, QString> dict_items;
+    foreach(const QJsonValue & v, id_list) {
+         dict_items.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
+    }
     QJsonArray generic = VersionJsonObj["generic"].toArray();
     QJsonArray neutral_creeps = VersionJsonObj["neutral_creeps"].toArray();
     QJsonArray neutral_items = VersionJsonObj["neutral_creeps"].toArray();
     QJsonArray items = VersionJsonObj["items"].toArray();
     QJsonArray heroes = VersionJsonObj["heroes"].toArray();
+    QString tempstring;
     QString output = "";
     if (!generic.isEmpty())
         output += "== \u041e\u0431\u0449\u0438\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f ==\n";
     foreach (QJsonValue value, generic)
     {
-        output += "* ";
-        output += value.toObject().value("note").toString();
-       /* output += "\n";
-        output += value.toObject().value("info").toString();*/
-        output += "\n";
+        if (value.toObject().value("note").toString()!="<br>")
+        {
+            output += "* ";
+            tempstring = value.toObject().value("note").toString();
+            output += add_point(tempstring);
+            tempstring.clear();
+           /* output += "\n";
+            output += value.toObject().value("info").toString();*/
+            output += "\n";
+        }
     }
     if (!neutral_creeps.isEmpty())
         output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043a\u0440\u0438\u043f\u044b ==\n";
@@ -1155,18 +1189,65 @@ void MainWindow::Do_Patch()
         QJsonArray temparray = value["neutral_creep_notes"].toArray();
         foreach (QJsonValue value2, temparray)
         {
-            output += "* ";
-            output += value2.toObject().value("note").toString();
-            output += "\n";
+            if (value2.toObject().value("note").toString()!="<br>")
+            {
+                output += "* ";
+                tempstring = value2.toObject().value("note").toString();
+                output += add_point(tempstring);
+                tempstring.clear();
+                output += "\n";
+            }
         }
         output += "\n";
        /* output += "\n";
         output += value.toObject().value("info").toString();*/
+        //NEED TO ADD INFO ELEMENT OF JSON
     }
     if (!items.isEmpty())
         output += "== \u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
-
+    foreach (QJsonValue value, items)
+    {
+        output += "{{Item label|";
+        output += dict_items.value(value.toObject().value("ability_id").toInt());
+        output += "}}\n";
+        QJsonObject temp = value.toObject();
+        QJsonArray temparray = value["ability_notes"].toArray();
+        QRegExp texp;
+        QString stringtexp;
+        foreach (QJsonValue value2, temparray)
+        {
+            if (value2.toObject().value("note").toString()!="<br>")
+            {
+                QString regstar = "\\*\\s";
+                QString star = "* ";
+                tempstring = "* ";
+                QString eng = "([^>}{1,25})";
+                QString start = "{{A|";
+                QString end = "}}";
+                QString mid = "|";
+                QString duo = ":" ;
+                stringtexp =  regstar + eng + duo;
+                texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
+                qDebug() << texp;
+                tempstring += value2.toObject().value("note").toString();
+               // qDebug() << tempstring;
+                while(texp.indexIn(tempstring)!=-1)
+                {
+                    qDebug() << texp.cap(0) << texp.cap(1);
+                    tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
+                    break;
+                }
+                output += add_point(tempstring);
+                tempstring.clear();
+                output += "\n";
+            }
+        }
+        output += "\n";
+    }
     if (!neutral_items.isEmpty())
+    {
+
+    }
         output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
 
     if (!heroes.isEmpty())

@@ -62,6 +62,8 @@ private:
     int snapshot_iterator;
     int autoz = 0;
 
+    QString add_point(QString);
+
     QJsonObject VersionJsonObj;
     QJsonObject ItemJsonObj;
     QJsonObject HeroJsonObj;
