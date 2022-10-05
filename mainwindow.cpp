@@ -1306,19 +1306,43 @@ void MainWindow::Do_Patch()
     }
     if (!heroes.isEmpty())
         output += "== \u0413\u0435\u0440\u043e\u0438 ==\n";
+    QJsonArray heroes2;
     foreach (QJsonValue value, heroes)
     {
+        QJsonObject temp =value.toObject();
+        temp.insert("hero_name", dict_heroes.value(value.toObject().value("hero_id").toInt()));
+        heroes2.append(temp);
+    }
+
+    std::sort(heroes2.begin(), heroes2.end(), [](const QJsonValue &v1, const QJsonValue &v2) {
+        return v1.toObject()["hero_name"].toString() < v2.toObject()["hero_name"].toString();
+    });
+
+    foreach (QJsonValue value, heroes2)
+    {
         output += "{{Hero label|";
-        output += dict_heroes.value(value.toObject().value("hero_id").toInt());
+        output += value.toObject().value("hero_name").toString();
         output += "}}\n";
         QJsonObject temp = value.toObject();
-        QJsonArray temparray = value["abilities"].toArray();
+        QJsonArray temparray = value["hero_notes"].toArray();
+        foreach (QJsonValue value2, temparray)
+        {
+            if (value2.toObject().value("note").toString()!="<br>")
+            {
+                output += "* ";
+                tempstring = value2.toObject().value("note").toString();
+                output += add_point(tempstring);
+                tempstring.clear();
+                output += "\n";
+            }
+        }
+        temparray = value["abilities"].toArray();
         foreach (QJsonValue value2, temparray)
         {
             output += "* {{A|";
             output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
             output += "|";
-            output += dict_heroes.value(value.toObject().value("hero_id").toInt());
+            output += value.toObject().value("hero_name").toString();
             output += "}}\n";
             QJsonArray temparray2 = value2["ability_notes"].toArray();
             foreach (QJsonValue value3, temparray2)
@@ -1332,7 +1356,6 @@ void MainWindow::Do_Patch()
                     output += "\n";
                 }
             }
-
         }
         temparray = value["talent_notes"].toArray();
         if (!temparray.isEmpty())
@@ -1751,8 +1774,13 @@ void MainWindow::on_autozamena_clicked()
     ui->autozamena->setStyleSheet(maintheme.do_autoz(autoz));
 }
 
-
 void MainWindow::end()
 {
 
+}
+inline void swap(QJsonValueRef v1, QJsonValueRef v2)
+{
+    QJsonValue temp(v1);
+    v1 = QJsonValue(v2);
+    v2 = temp;
 }
