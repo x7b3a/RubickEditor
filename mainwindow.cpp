@@ -629,6 +629,18 @@ void  MainWindow::Responses()
     {
         first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
     }
+    temp = DInt + "% Chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    temp = Int + "% Chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
     progress->setValue(66);
     temp = Int + " seconds cooldown";
     texp = QRegExp(temp);
