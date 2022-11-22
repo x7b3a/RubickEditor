@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    append_buttons();
     adaptive_screen();
     set_fonts();
     QJsonObject json = read_json("config2.json").object();
@@ -50,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
     this -> showMaximized();
     this -> setWindowTitle("Rubick Editor " + QString(RVERSION));
     this -> setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
-    append_buttons();
     set_buttons();
     append_cases();
     this->setStyleSheet("background-image:url()");
@@ -426,6 +426,7 @@ void MainWindow::Changelogs()
                  first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("-",minus) +proc+ space + Preposition.value(to)+ space + texp.cap(5).replace("-",minus))+point);
             }
         }
+
     }
     int count;
     for (i=Keywords.begin(); i!= Keywords.end();i++,progress->setValue(progress->value()+10)) //Increased
@@ -695,6 +696,17 @@ void  MainWindow::Cosmetics()
     progress->setValue(50);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+    int isInterwiki = first.indexOf("[[en:");
+    qDebug() << isInterwiki;
+    if (isInterwiki<0)
+    {
+        QRegExp rxlen("\\| name = ([A-Za-z'\\s!?\\(\\)\\-,:]{1,35})\\n\\|");
+        int pos = rxlen.indexIn(first);
+        QString name;
+        if (pos > -1)
+            name = rxlen.cap(1);
+        first += color("\n[[en:" + name + "]]");
+    }
     progress->setValue(100);
     int counted = counter(first);
     label_settext(counted);
@@ -1355,20 +1367,40 @@ void MainWindow::Do_Patch()
             output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
             output += "|";
             output += value.toObject().value("hero_name").toString();
-            output += "}}\n";
             QJsonArray temparray2 = value2["ability_notes"].toArray();
-            foreach (QJsonValue value3, temparray2)
+            if (temparray2.size()>1)
             {
-                if (value3.toObject().value("note").toString()!="<br>")
+                output += "}}\n";
+                foreach (QJsonValue value3, temparray2)
                 {
-                    output += "** ";
-                    tempstring = value3.toObject().value("note").toString();
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
+                    if (value3.toObject().value("note").toString()!="<br>")
+                    {
+                        output += "** ";
+                        tempstring = value3.toObject().value("note").toString();
+                        output += add_point(tempstring);
+                        tempstring.clear();
+                        output += "\n";
+                    }
+                }
+            }
+            else if (temparray2.size()==1)
+            {
+
+                output += "}}: ";
+                foreach (QJsonValue value3, temparray2)
+                {
+                    if (value3.toObject().value("note").toString()!="<br>")
+                    {
+                        tempstring = value3.toObject().value("note").toString();
+                        tempstring[0] = tempstring[0].toLower();
+                        output += add_point(tempstring);
+                        tempstring.clear();
+                        output += "\n";
+                    }
                 }
             }
         }
+
         temparray = value["talent_notes"].toArray();
         if (!temparray.isEmpty())
             output += "* {{\u0417\u043d\u0430\u0447\u043e\u043a|\u0422\u0430\u043b\u0430\u043d\u0442}} '''[[\u0422\u0430\u043b\u0430\u043d\u0442\u044b]]:'''\n";
@@ -1710,6 +1742,7 @@ void MainWindow::on_discord_clicked()
 }
  void MainWindow::adaptive_screen()
  {
+     //3840 õ 2160
      double normw = 1920;
      double normh = 1080;
      double wide = QApplication::desktop()->screenGeometry().width()/normw;
