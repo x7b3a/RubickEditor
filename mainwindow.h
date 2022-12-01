@@ -26,6 +26,7 @@ public:
     bool refresh=1;
     Ui::MainWindow *ui;
     QVector<QString> cases;
+    int language = 0;
 /*virtual void enterEvent(QEvent * event);
     virtual void leaveEvent(QEvent * event);*/
 signals:
@@ -73,7 +74,6 @@ private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();
     void on_dota2wiki_clicked();
-
     void WikiAndFixes();
     void Commafix();
     void Changelogs();
@@ -83,7 +83,7 @@ private slots:
     void Units();
     void Patch_heroes();
     void Patch_items();
-    void Patch_Version();
+    void Patch_Version(int a);
     void end();
     void replyFinishedH();
     void replyFinishedI();

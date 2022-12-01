@@ -28,9 +28,9 @@ QPalette dwTheme::get_backimage()
     QPalette palette;
     switch (theme)
     {
-        case 0:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(size)));; break;
-        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark4.png").scaled(size))); break;
-        default:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(size))); break;
+        case 0:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(size,Qt::IgnoreAspectRatio)));; break;
+        case 1:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back_dark4.png").scaled(size,Qt::IgnoreAspectRatio))); break;
+        default:  palette.setBrush(QPalette::Background,QBrush(QPixmap(":/images/images/back3.png").scaled(size,Qt::IgnoreAspectRatio))); break;
     }
     return palette;
 }
