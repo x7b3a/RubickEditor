@@ -1239,9 +1239,11 @@ void MainWindow::Do_Patch()
     QJsonArray neutral_items = VersionJsonObj["neutral_items"].toArray();
     QJsonArray items = VersionJsonObj["items"].toArray();
     QJsonArray heroes = VersionJsonObj["heroes"].toArray();
+
     QString tempstring;
     QString output = "";
     QRegExp texp;
+    output += "{{Version infobox\n| version = " + get_text() +"\n| image = \n| highlights = \n| new = \n| significant = \n| buffed =\n| nerfed = \n| dota2 = \n}}\n&lt;onlyinclude&gt;\n\n";
     if (!language)
     {
         if (!generic.isEmpty())
@@ -1258,6 +1260,7 @@ void MainWindow::Do_Patch()
                 output += value.toObject().value("info").toString();*/
                 output += "\n";
             }
+            output += "\n";
         }
         if (!neutral_creeps.isEmpty())
             output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043a\u0440\u0438\u043f\u044b ==\n";
@@ -1279,13 +1282,13 @@ void MainWindow::Do_Patch()
                         QString mid = "|";
                         QString duo = ":" ;
                         texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                        qDebug() << texp;
+                        //qDebug() << texp;
                         tempstring = "* ";
                         tempstring += value2.toObject().value("note").toString();
                        // qDebug() << tempstring;
                         while(texp.indexIn(tempstring)!=-1)
                         {
-                            qDebug() << texp.cap(0) << texp.cap(1);
+                            //qDebug() << texp.cap(0) << texp.cap(1);
                             tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
                             break;
                         }
@@ -1321,13 +1324,13 @@ void MainWindow::Do_Patch()
                     QString mid = "|";
                     QString duo = ":" ;
                     texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    qDebug() << texp;
+                    //qDebug() << texp;
                     tempstring = "* ";
                     tempstring += value2.toObject().value("note").toString();
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        qDebug() << texp.cap(0) << texp.cap(1);
+                        //qDebug() << texp.cap(0) << texp.cap(1);
                         tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
                         break;
                     }
@@ -1357,13 +1360,13 @@ void MainWindow::Do_Patch()
                     QString mid = "|";
                     QString duo = ":" ;
                     texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    qDebug() << texp;
+                    //qDebug() << texp;
                     tempstring = "* ";
                     tempstring += value2.toObject().value("note").toString();
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        qDebug() << texp.cap(0) << texp.cap(1);
+                        //qDebug() << texp.cap(0) << texp.cap(1);
                         tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
                         break;
                     }
@@ -1464,8 +1467,13 @@ void MainWindow::Do_Patch()
 
             output += "\n";
         }
+        if (output.back()=='\n')
+            output.chop(1);
+        output += "&lt;/onlyinclude&gt;\n\n== \u0421\u043c. \u0442\u0430\u043a\u0436\u0435 ==\n* [[\u0412\u0435\u0440\u0441\u0438\u0438]]\n* [[\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f]]\n\n{{\u0421\u0438\u0441\u0442\u0435\u043c\u0430}}\n\n[[en:Version " + get_text() + "]]";
+
     }
-    else //ENGLISH
+    else //ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH
+        //ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH
     {
         if (!generic.isEmpty())
             output += "== General ==\n";
@@ -1481,6 +1489,7 @@ void MainWindow::Do_Patch()
                 output += value.toObject().value("info").toString();*/
                 output += "\n";
             }
+            output += "\n";
         }
         if (!neutral_creeps.isEmpty())
             output += "== Neutral Creeps ==\n";
@@ -1502,13 +1511,13 @@ void MainWindow::Do_Patch()
                         QString mid = "|";
                         QString duo = ":" ;
                         texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                        qDebug() << texp;
+                        //qDebug() << texp;
                         tempstring = "* ";
                         tempstring += value2.toObject().value("note").toString();
                        // qDebug() << tempstring;
                         while(texp.indexIn(tempstring)!=-1)
                         {
-                            qDebug() << texp.cap(0) << texp.cap(1);
+                            //qDebug() << texp.cap(0) << texp.cap(1);
                             tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
                             break;
                         }
@@ -1544,13 +1553,13 @@ void MainWindow::Do_Patch()
                     QString mid = "|";
                     QString duo = ":" ;
                     texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    qDebug() << texp;
+                    //qDebug() << texp;
                     tempstring = "* ";
                     tempstring += value2.toObject().value("note").toString();
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        qDebug() << texp.cap(0) << texp.cap(1);
+                        //qDebug() << texp.cap(0) << texp.cap(1);
                         tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
                         break;
                     }
@@ -1580,13 +1589,13 @@ void MainWindow::Do_Patch()
                     QString mid = "|";
                     QString duo = ":" ;
                     texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    qDebug() << texp;
+                    //qDebug() << texp;
                     tempstring = "* ";
                     tempstring += value2.toObject().value("note").toString();
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        qDebug() << texp.cap(0) << texp.cap(1);
+                        //qDebug() << texp.cap(0) << texp.cap(1);
                         tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
                         break;
                     }
@@ -1671,6 +1680,9 @@ void MainWindow::Do_Patch()
 
             output += "\n";
         }
+        if (output.back()=='\n')
+            output.chop(1);
+        output += "&lt;/onlyinclude&gt;\n\n== See also ==\n* [[Versions]]\n* [[Patches]]\n\n{{SystemNav}}\n\n[[ru:\u0412\u0435\u0440\u0441\u0438\u044f " + get_text()+ "]]";
     }
 
     put_text(output);
