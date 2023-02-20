@@ -29,6 +29,7 @@
 #include <QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
+#include "dwjson.h"
 //#include "html_parser.h"
 #define RVERSION "1.0.9"
 //#define snap
@@ -48,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     QJsonValue value = json.value(QString("Theme"));
     maintheme.theme = value.toInt();
     QJsonObject WikiAndFixes= json.value("WikiAndFixes").toObject();
+
     this -> showMaximized();
     this -> setWindowTitle("Rubick Editor " + QString(RVERSION));
     this -> setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
@@ -1080,7 +1082,6 @@ void MainWindow::replyFinishedItems() //DO IT DO IT DO IT DO IT
   foreach(const QJsonValue & v, heroes) {
        //qDebug() << v.toObject().value("name_loc");
        dict.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
-     // qDebug() << v.toObject().value("id").toInt() << v.toObject().value("name_english_loc").toString();
   }
   progress->setValue(75);
   QList <QString> out;
@@ -1366,7 +1367,6 @@ void MainWindow::Do_Patch()
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        //qDebug() << texp.cap(0) << texp.cap(1);
                         tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
                         break;
                     }
@@ -1869,9 +1869,12 @@ QJsonDocument MainWindow::read_json(QString filename)
         QJsonDocument Doc = QJsonDocument::fromJson(val.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError)
         {
+
             ui->error->setStyleSheet("color: rgba(255,0,0,255);");
             ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+filename+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+          //  Doc = -1;
         }
+        qDebug() << Doc.isNull();
         return Doc;
 }
 
@@ -2014,6 +2017,9 @@ void MainWindow::on_discord_clicked()
      double normh = 1080;
      double wide = QApplication::desktop()->screenGeometry().width()/normw;
      double hide = QApplication::desktop()->screenGeometry().height()/normh;
+     //double wide = 3840/normw;
+     //double hide = 2160/normh;
+
      QWidget *test;
 
      for (int i = 0;i<29;i++)
@@ -2029,6 +2035,8 @@ void MainWindow::on_discord_clicked()
      double normh = 1080;
      double wide = QApplication::desktop()->screenGeometry().width()/normw;
      double hide = QApplication::desktop()->screenGeometry().height()/normh;
+     //double wide = 3840/normw;
+     //double hide = 2160/normh;
      qDebug() << wide << hide;
      int id = QFontDatabase::addApplicationFont(":/fonts/Reaver-Regular.ttf");
      QString reaver = QFontDatabase::applicationFontFamilies(id).at(0);

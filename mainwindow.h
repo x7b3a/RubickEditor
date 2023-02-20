@@ -1,9 +1,10 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QTextEdit>
 #include "dwtheme.h"
+#include "dwjson.h"
 //#include "dwsetter.h"
 //#include "dwsnapshot.h"
 #include "ui_settings.h"
@@ -21,6 +22,7 @@ public:
     QVector<QPushButton*> buttons;
     QWinTaskbarProgress *progress;
     ui_settings *from;
+    dwJson jsonerror;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool refresh=1;

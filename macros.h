@@ -1,11 +1,15 @@
+﻿#include <QString>
+
 #ifndef MACROS_H
 #define MACROS_H
-#include <mainwindow.h>
 
-class Macros : public MainWindow
+class Macros
 {
 public:
     Macros();
+    QString output;
+    int counted;
+
 };
 
 #endif // MACROS_H
