@@ -58,7 +58,6 @@ private:
     void adaptive_screen();
     void set_fonts();
     void set_progressbar();
-
     //dwSetter set;
     dwTheme maintheme;
     //QList<dwSnapshot> snapshot;
@@ -73,6 +72,7 @@ private:
     QJsonObject AbilityJsonObj;
 
 private slots:
+    void receive_progress(int);
     void on_buttochange_clicked();
     void on_settings_clicked();
     void on_dota2wiki_clicked();

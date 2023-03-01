@@ -30,9 +30,10 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include "dwjson.h"
+#include "macros.h"
+#include <QTime>
 //#include "html_parser.h"
-#define RVERSION "1.0.9"
-//#define snap
+#define RVERSION "1.1.0"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -99,6 +100,11 @@ void MainWindow::on_settings_clicked()
     from->activateWindow();
 }
 
+void MainWindow::receive_progress(int pr)
+{
+    progress->setValue(pr);
+}
+
 void MainWindow::recieveData(QString q)
 {
     set_buttons();
@@ -124,12 +130,15 @@ void MainWindow::on_buttoncopy_clicked()
 
 void MainWindow::button_switch(QString switchStr)
 {
+
+    //progress->setValue(25);
     ui->error->setStyleSheet("color: rgba(255,0,0,0);");
     ui->debug->clear();
-#ifdef snap
-    if (snapshot.isEmpty())
-        snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
-#endif
+
+    Macros dwcase(get_text());
+    connect(&dwcase,&Macros::new_progress,this,&MainWindow::receive_progress);
+QTime t1(QTime::currentTime());
+qDebug() <<t1;
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //����������� � �����
                 {
@@ -137,10 +146,21 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[1], //������ ����� �� �������
                 {
-                    WikiAndFixes();break;
+
+                    dwcase.WikiAndFixes();
+                    put_text(dwcase.first);
+                    dwcase.clearing();
+                   // progress->setValue(25);
+                    break;
+
+                    //WikiAndFixes(); break;
                 })
                 QSCASE(cases[2],//"������ "���������"
                 {
+                    /*dwcase.Changelogs();
+                    put_text(dwcase.first);
+                    dwcase.clearing();
+                    break;*/
                    Changelogs();break;
                 })
                 QSCASE(cases[3],//"������ "�������"
@@ -177,12 +197,9 @@ void MainWindow::button_switch(QString switchStr)
                    ui -> text2->setText("dw error = \u043a\u043d\u043e\u043f\u043a\u0430 \u0441 \u0442\u0430\u043a\u0438\u043c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c\n \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430");break;
                 })
                 )
-#ifdef snap
-        if (snapshot.size()>9)
-            snapshot.removeFirst();
-        snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
-        snapshot_iterator = snapshot.size();
-#endif
+
+        QTime t2(QTime::currentTime());
+        qDebug() << t2;
 }
 
 
@@ -1853,7 +1870,7 @@ void MainWindow::put_text(QString text)
         }
 
     }
-
+    progress->setValue(0);
 }
 
 QJsonDocument MainWindow::read_json(QString filename)

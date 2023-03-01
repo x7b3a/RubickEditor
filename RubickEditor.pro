@@ -19,7 +19,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     dwjson.cpp \
     dwsetter.cpp \
-    dwsnapshot.cpp \
     dwtheme.cpp \
     html_parser.cpp \
     macros.cpp \
@@ -30,7 +29,6 @@ SOURCES += \
 HEADERS += \
     dwjson.h \
     dwsetter.h \
-    dwsnapshot.h \
     dwtheme.h \
     html_parser.h \
     macros.h \
