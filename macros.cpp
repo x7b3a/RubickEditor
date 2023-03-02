@@ -20,9 +20,10 @@ Macros::~Macros()
     errors.clear();
 }
 
-Macros::Macros(QString str)
+Macros::Macros(QString str, QString str2)
 {
     first = str;
+    colour = str2;
 }
 void Macros::clearing()
 {
@@ -30,10 +31,67 @@ void Macros::clearing()
     errors.clear();
 }
 
+void Macros::Commafix()
+{
+    qDebug() << "Commafix called";
+    QString comma = color(",");
+    QString point = ".";
+    send_progress(10);
+    for (int j = 0;j<10;j++)
+        for (int k = 0;k<10;k++)
+            first.replace(QString::number(j) + point + QString::number(k),QString::number(j) + comma + QString::number(k));
+    send_progress(20);
+    QJsonObject json = dwJ.read_json("dict.json").object();
+    if (dwJ.errors)
+    {
+        qDebug() << "errors";
+        errors = "dict.json";
+        return;
+    }
+    QJsonArray Commafix = json["Commafix"].toArray();
+        // (7.23d-7.24e)
+    QRegExp texp = QRegExp("\\(([0-9])"+ comma +"([0-9abcdefgh]{2,3}-[0-9])"+comma+"([0-9abcdefgh]{2,3})\\)");
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"(" + texp.cap(1) + point + texp.cap(2)+ point + texp.cap(3)+ ")");
+    }
+    send_progress(30);
+        // (7.23d)
+    texp = QRegExp("\\(([0-9])" + comma + "([0-9abcdefgh]{2,3})\\)");
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"(" + texp.cap(1) + point + texp.cap(2) + ")");
+
+    }
+        // {{cf|At|2.28|2.31d}}
+    send_progress(40);
+    texp = QRegExp(("f\\|([Aa])t\\|([0-9])"+ comma +"([0-9abcdefgh]{2,3}\\|[0-9])"+comma+"([0-9abcdefgh]{2,3})\\}\\}"));
+    while(texp.indexIn(first)!=-1 )
+    {
+         qDebug() <<"while:"<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+         first.replace(texp.cap(0),"f|" + texp.cap(1) + "t|" + texp.cap(2) + point + texp.cap(3) + point + texp.cap(4) + "}}");
+
+    }
+     send_progress(50);
+    for (int i = 0; i<Commafix.size();i++)
+    {
+        for (int j = 0;j<10;j++)
+            for (int k = 0;k<10;k++)
+                first.replace(Commafix[i].toString()+QString::number(j) + comma + QString::number(k),Commafix[i].toString()+QString::number(j) + "."+ QString::number(k));
+    }
+    send_progress(65);
+    send_progress(85);
+    send_progress(100);
+    counted = counter(first);
+
+}
+
 void Macros::WikiAndFixes()
 {
     qDebug() << "WikiAndFixes called";
-   // progress->setValue(1);
+   // send_progress(1);
     send_progress(1);
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -51,28 +109,32 @@ void Macros::WikiAndFixes()
             dict.insert(key,value.toString());
         }
     QJsonArray letter_with_for_medoke = WikiAndFixes["letter_with_for_medoke"].toArray();
-    //progress->setValue(50);
+    //send_progress(50);
     send_progress(40);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
-    //progress->setValue(75);
+    //send_progress(75);
     send_progress(60);
     QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
     while(texp.indexIn(first)!=-1 )
     {
         first.replace(texp.cap(0),color(" " + letter_with_for_medoke[1].toString() + " 1" + texp.cap(1)));
     }
-   // progress->setValue(100);
-    send_progress(80);
-    int counted = counter(first);
-    //progress->setValue(0);
-    //send_progress(0);
+   // send_progress(100);
+    send_progress(90);
+    counted = counter(first);
 }
 
 void Macros::Changelogs()
 {
     qDebug() <<  "Changelogs called";
     QJsonObject json = dwJ.read_json("dict.json").object();
+    if (dwJ.errors)
+    {
+        qDebug() << "errors";
+        errors = "dict.json";
+        return;
+    }
     QMap<QString, QString>::iterator i,j,k;
     QJsonValue value = json.value(QString("Changelogs"));
     QJsonObject item = value.toObject();
@@ -128,7 +190,7 @@ void Macros::Changelogs()
     QMap<QString, QString> New_Talent_abilities = dwJ.map_parser(item,"New_Talent_abilities");
     QMap<QString,QString> New_ability = dwJ.map_parser(item,"New_ability");
     QMap<QString,QString> Other_last = dwJ.map_parser(item,"Other_last");
-   // progress->setValue(1);
+   // send_progress(1);
     send_progress(1);
     first = start_regular_replacer(first);
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
@@ -148,7 +210,7 @@ void Macros::Changelogs()
     {
         first.replace(start_regular_replacer(i.key()),color(i.value()));
     }
-    //progress->setValue(10);
+    //send_progress(10);
     int pr=10;
     send_progress(10);
     QString temp1;
@@ -396,15 +458,165 @@ void Macros::Changelogs()
 
         qDebug() << "end??";
     end_regular_replacer (&first);
-    int counted = counter(first);
-    //label_settext(counted);
+    counted = counter(first);
 }
 
 
-QString Macros::color(QString arg,QString color)
+void Macros::Responses()
 {
-    return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
+    qDebug() << "Responses called";
+    send_progress(1);
+    QString space = " ";
+    QString proc = "%";
+    QString DInt = "([1-9][0-9])";
+    QString Int = "([1-9])";
+    QString chance = "\u0428\u0430\u043d\u0441 ";
+
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Responses").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    send_progress(33);
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    QString temp;
+    QRegExp texp;
+    temp = DInt + "% chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    temp = Int + "% chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    temp = DInt + "% Chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    temp = Int + "% Chance";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color(chance + texp.cap(1)+ proc));
+    }
+    send_progress(66);
+    temp = Int + " seconds cooldown";
+    texp = QRegExp(temp);
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),color("\u041f\u0435\u0440\u0435\u0437\u0430\u0440\u044f\u0434\u043a\u0430 " + texp.cap(1)+ (texp.cap(1).toInt()>4?" \u0441\u0435\u043a\u0443\u043d\u0434":texp.cap(1).toInt()>1?" \u0441\u0435\u043a\u0443\u043d\u0434\u044b":" \u0441\u0435\u043a\u0443\u043d\u0434\u0430")));
+    }
+    send_progress(100);
+    counted = counter(first);
 }
+
+
+void Macros::Sounds()
+{
+    qDebug() << "Sound called";
+    send_progress(1);
+
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Sounds").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    send_progress(50);
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    send_progress(100);
+    counted = counter(first);
+}
+
+void Macros::Cosmetics()
+{
+    qDebug() << "Cosmetics called";
+    send_progress(1);
+
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Cosmetics").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    send_progress(50);
+    for (i = dict.begin(); i != dict.end(); i++)
+        first.replace(i.key(),color(i.value()));
+    int isInterwiki = first.indexOf("[[en:");
+    qDebug() << isInterwiki;
+    if (isInterwiki<0)
+    {
+        QRegExp rxlen("\\| name = ([A-Za-z'\\s!?\\(\\)\\-,:]{1,40})\\n\\|");
+        int pos = rxlen.indexIn(first);
+        QString name;
+        if (pos > -1)
+            name = rxlen.cap(1);
+        first += color("\n[[en:" + name + "]]");
+    }
+    int isBundle = first.indexOf("| prefab = Bundle");
+    if (isBundle>=0)
+    {
+        QRegExp rxlen("(\\| setitem([0-9]{1,2}) = ([A-Za-z'\\s!?\\(\\)\\-,:]{1,35}) Loading Screen\\n)");
+        int pos = rxlen.indexIn(first);
+        if (pos>-1)
+            first.replace(rxlen.cap(0),color("| setitem" + rxlen.cap(2) + " = \u0417\u0430\u0433\u0440\u0443\u0437\u043e\u0447\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d: " + rxlen.cap(3) + "\n"));
+            qDebug() << rxlen.cap(0) << rxlen.cap(1) << rxlen.cap(2) << rxlen.cap(3);
+    }
+    int isLoadingScreen = first.indexOf("| prefab = Loading Screen");
+    if (first.indexOf("| slot = Loading Screen")>isLoadingScreen)
+        isLoadingScreen = first.indexOf("| slot = Loading Screen");
+    if (isLoadingScreen>=0)
+    {
+        QRegExp rxlen("\\| name = ([A-Za-z'\\s!?\\(\\)\\-,:]{1,35}) Loading Screen\\n\\|");
+        int pos = rxlen.indexIn(first);
+        QString name;
+        if (pos > -1)
+            first.replace(rxlen.cap(0), color("| name = \u0417\u0430\u0433\u0440\u0443\u0437\u043e\u0447\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d: " + rxlen.cap(1) + "\n|"));
+    }
+    send_progress(100);
+    counted = counter(first);
+}
+
+void Macros::Units()
+{
+    qDebug() << "Units called";
+    send_progress(1);
+
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        QJsonObject WikiAndFixes= jsonObject.value("Units").toObject();
+        foreach(const QString& key, WikiAndFixes.keys()) {
+            QJsonValue value = WikiAndFixes.value(key);
+            dict.insert(key,value.toString());
+        }
+    send_progress(50);
+    for (i = dict.begin(); i != dict.end(); i++)
+    {
+        first.replace ("{{Show|A|" + i.key()+"|", color("{{Show|A|" + i.value()+"|"));
+        first.replace ("{{Show|U|" + i.key()+"|", color("{{Show|U|" + i.value()+"|"));
+        first.replace("|" + i.key()+"}}",color("|" + i.value()+"}}"));
+        first.replace("|" + i.key()+"|text",color("|" + i.value())+"|text");
+    }
+    send_progress(100);
+    counted = counter(first);
+}
+
 QString Macros::get_backtext()
 {
    return QString("<span style= \"background:");
@@ -438,3 +650,7 @@ void Macros::send_progress(int pr)
     emit new_progress(pr);
 }
 
+QString Macros::color(QString arg,QString color)
+{
+    return QString("<span style= \"background:%1\">%2</span>").arg(colour,arg);
+}

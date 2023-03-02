@@ -76,13 +76,6 @@ private slots:
     void on_buttochange_clicked();
     void on_settings_clicked();
     void on_dota2wiki_clicked();
-    void WikiAndFixes();
-    void Commafix();
-    void Changelogs();
-    void Responses();
-    void Sounds();
-    void Cosmetics();
-    void Units();
     void Patch_heroes();
     void Patch_items();
     void Patch_Version(int a);
