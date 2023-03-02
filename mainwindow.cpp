@@ -26,13 +26,10 @@
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
 #include <QtWinExtras/QWinTaskbarButton>
-#include <QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include "dwjson.h"
 #include "macros.h"
+#include "dwnetmacros.h"
 #include <QTime>
-//#include "html_parser.h"
 #define RVERSION "1.1.0"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
@@ -63,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form1 пїЅ Form2
     connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form2 пїЅ Form1
 
+    connect(&dwnetcase,&dwNetMacros::send_end,this,&MainWindow::receive_netmacros);
+    connect(&dwnetcase,&dwNetMacros::new_progress,this,&MainWindow::receive_progress);
     set_progressbar();
     ui->backz->setVisible(false);
 }
@@ -102,9 +101,16 @@ void MainWindow::on_settings_clicked()
 
 void MainWindow::receive_progress(int pr)
 {
-    progress->setValue(pr);
+    if (pr>-1)
+        progress->setValue(pr);
+    else
+        progress->stop();
 }
-
+void MainWindow::receive_netmacros()
+{
+    put_text(dwnetcase.output);
+    dwnetcase.cleaning();
+}
 void MainWindow::recieveData(QString q)
 {
     set_buttons();
@@ -135,52 +141,115 @@ void MainWindow::button_switch(QString switchStr)
 
     Macros dwcase(get_text(),maintheme.get_highlight());
     connect(&dwcase,&Macros::new_progress,this,&MainWindow::receive_progress);
-    QTime t1(QTime::currentTime());
-    qDebug() <<t1;
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
                 {
-                    dwcase.Commafix();break;
+                    dwcase.Commafix();
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                 {
+                     ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                     ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                 }
+                 dwcase.clearing();break;
                 })
                 QSCASE(cases[1], //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 {
 
                     dwcase.WikiAndFixes();
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                    {
+                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                    }
+                    dwcase.clearing();
                     break;
                     //WikiAndFixes(); break;
                 })
                 QSCASE(cases[2],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
-                    dwcase.Changelogs(); break;
+                    dwcase.Changelogs();
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                    {
+                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                    }
+                    dwcase.clearing();
                    //Changelogs();break;
                 })
                 QSCASE(cases[3],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
-                    dwcase.Responses();break;
+                    dwcase.Responses();
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                    {
+                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                    }
+                    dwcase.clearing();
                 })
                 QSCASE(cases[4],// "пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅ"
                 {
-                    dwcase.Sounds();break;
+                    dwcase.Sounds();
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                    {
+                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                    }
+                    dwcase.clearing();
                 })
                 QSCASE(cases[5],//"пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
-                   dwcase.Cosmetics();break;
+                   dwcase.Cosmetics();
+                   put_text(dwcase.first);
+                   label_settext(dwcase.counted);
+                   if (!dwcase.errors.isEmpty())
+                   {
+                       ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                       ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                   }
+                   dwcase.clearing();
                 })
                 QSCASE(cases[6],//"Units - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
                 {
-                   dwcase.Units();break;
+                   dwcase.Units();
+                   put_text(dwcase.first);
+                   label_settext(dwcase.counted);
+                   if (!dwcase.errors.isEmpty())
+                   {
+                       ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                       ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                   }
+                   dwcase.clearing();
                 })
                 QSCASE(cases[7],
                 {
-                    Patch_heroes();break;
+                    dwnetcase.version=get_text();
+                    dwnetcase.Patch_heroes();break;
+
                 })
                 QSCASE(cases[8],
                 {
-                    Patch_Version(0);break;
+                    dwnetcase.version=get_text();
+                    dwnetcase.language=0;
+                    dwnetcase.Patch_Version(0);
+                    break;
+
                 })
                 QSCASE(cases[9],
                 {
-                    Patch_Version(1);break;
+                    dwnetcase.version=get_text();
+                    dwnetcase.language=1;
+                    dwnetcase.Patch_Version(1);
+                    break;
                 })
                 QSDEFAULT(
                 {
@@ -188,937 +257,8 @@ void MainWindow::button_switch(QString switchStr)
                    ui -> text2->setText("dw error = \u043a\u043d\u043e\u043f\u043a\u0430 \u0441 \u0442\u0430\u043a\u0438\u043c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c\n \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430");break;
                 })
                 )
-                        put_text(dwcase.first);
-                        label_settext(dwcase.counted);
-                        if (!dwcase.errors.isEmpty())
-                        {
-                            ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                            ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
-                        }
-                        dwcase.clearing();
-        QTime t2(QTime::currentTime());
-        qDebug() << t2;
 }
 
-void MainWindow::Patch_heroes()
-{
-    qDebug() << "Patch heroes called";
-    QString number = get_text();
-    //HTML_Parser parser;
-    progress->setValue(1);
-    QString url  = get_text();
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
-    QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
-    QNetworkRequest patch_request(patch_url);
-    QNetworkReply* patch_reply=  manager->get(patch_request);
-    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedH()));
-   // patch_reply->close();
-   // patch_reply->deleteLater();
-    //manager->deleteResource(patch_request);
-    patch_url.clear();
-    qDebug() << "connect?";
-    progress->setValue(25);
-}
-
-void MainWindow::Patch_items() //DO IT DO IT DO IT DO IT
-{
-    qDebug() << "Patch items called";
-    QString number = get_text();
-    //HTML_Parser parser;
-    progress->setValue(1);
-    QString url  = get_text();
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
-    QUrl patch_url("https://www.dota2.com/datafeed/patchnotes?version=" + number + "&language=russian");
-    QNetworkRequest patch_request(patch_url);
-    QNetworkReply* patch_reply=  manager->get(patch_request);
-    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedI()));
-   // patch_reply->close();
-   // patch_reply->deleteLater();
-    //manager->deleteResource(patch_request);
-    patch_url.clear();
-    qDebug() << "connect?";
-    progress->setValue(25);
-}
-
-void MainWindow::Patch_Version(int a)
-{
-    language = a;
-    qDebug() << "Patch heroes called";
-    QString number = get_text();
-    //HTML_Parser parser;
-    progress->setValue(1);
-    QString url  = get_text();
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
-    QString urlstring = "https://www.dota2.com/datafeed/patchnotes?version=" + number;
-    if (!language)
-        urlstring+="&language=russian";
-    else
-        urlstring+="&language=english";
-    QUrl patch_url(urlstring);
-    QNetworkRequest patch_request(patch_url);
-    QNetworkReply* patch_reply=  manager->get(patch_request);
-    connect(patch_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV()));
-   // patch_reply->close();
-   // patch_reply->deleteLater();
-    //manager->deleteResource(patch_request);
-    patch_url.clear();
-    qDebug() << "connect?";
-    progress->setValue(15);
-}
-
-void MainWindow::replyFinishedV()
-{
-  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-  if (reply->error() == QNetworkReply::NoError)
-
-  {
-      hero_list.clear();
-    // Получаем содержимое ответа
-      QByteArray content= reply->readAll();
-      QString undercontent = QString(content);
-
-   qDebug () << "f";
-    //ui->text2->setPlainText(codec->toUnicode(content.data()));
-    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-    VersionJsonObj = doc.object();
-    //QJsonArray heroes = JsonObj["heroes"].toArray();
-
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QString urlstring = "https://www.dota2.com/datafeed/herolist?language=";
-    if (!language)
-        urlstring+="russian";
-    else
-        urlstring+="english";
-    QUrl heroes_url(urlstring);
-     QNetworkRequest heroes_request(heroes_url);
-     QNetworkReply* heroes_reply = manager->get(heroes_request);
-
-     //reply->close();
-     reply->deleteLater();
-
-     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV2()));
-     //heroes_reply-> deleteLater();
-     //manager->deleteResource(heroes_request);
-     heroes_url.clear();
-  }
-  else
-  {
-      progress->stop();
-    put_text(reply->errorString());
-  }
-  // разрешаем объекту-ответа "удалиться"
-  progress->setValue(30);
-}
-
-void MainWindow::replyFinishedV2()
-{
-  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-  if (reply->error() == QNetworkReply::NoError)
-  {
-      hero_list.clear();
-    // Получаем содержимое ответа
-      QByteArray content= reply->readAll();
-      QString undercontent = QString(content);
-
-   qDebug () << "f";
-    //ui->text2->setPlainText(codec->toUnicode(content.data()));
-    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-    HeroJsonObj = doc.object();
-    //QJsonArray heroes = JsonObj["heroes"].toArray();
-
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QString urlstring = "https://www.dota2.com/datafeed/itemlist?language=";
-    if (!language)
-        urlstring+="russian";
-    else
-        urlstring+="english";
-    QUrl heroes_url(urlstring);
-     QNetworkRequest heroes_request(heroes_url);
-     QNetworkReply* heroes_reply = manager->get(heroes_request);
-
-     //reply->close();
-     reply->deleteLater();
-
-     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedV3()));
-     //heroes_reply-> deleteLater();
-     //manager->deleteResource(heroes_request);
-     heroes_url.clear();
-  }
-  else
-  {
-      progress->stop();
-    put_text(reply->errorString());
-  }
-  // разрешаем объекту-ответа "удалиться"
-  progress->setValue(45);
-}
-void MainWindow::replyFinishedV3()
-{
-  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-  if (reply->error() == QNetworkReply::NoError)
-
-  {
-      hero_list.clear();
-    // Получаем содержимое ответа
-      QByteArray content= reply->readAll();
-      QString undercontent = QString(content);
-
-   qDebug () << "f";
-    //ui->text2->setPlainText(codec->toUnicode(content.data()));
-   QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-   ItemJsonObj = doc.object();
-    //QJsonArray heroes = JsonObj["heroes"].toArray();
-
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QString urlstring = "https://www.dota2.com/datafeed/abilitylist?language=";
-    if (!language)
-        urlstring+="russian";
-    else
-        urlstring+="english";
-    QUrl heroes_url(urlstring);
-     QNetworkRequest heroes_request(heroes_url);
-     QNetworkReply* heroes_reply = manager->get(heroes_request);
-
-     //reply->close();
-     reply->deleteLater();
-
-     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedVersion()));
-     //heroes_reply-> deleteLater();
-     //manager->deleteResource(heroes_request);
-     heroes_url.clear();
-  }
-  else
-  {
-      progress->stop();
-    put_text(reply->errorString());
-  }
-  // разрешаем объекту-ответа "удалиться"
-  progress->setValue(60);
-}
-
-void MainWindow::replyFinishedH()
-{
-  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-  if (reply->error() == QNetworkReply::NoError)
-
-  {
-      hero_list.clear();
-    // Получаем содержимое ответа
-      QByteArray content= reply->readAll();
-      QString undercontent = QString(content);
-
-   qDebug () << "f";
-    //ui->text2->setPlainText(codec->toUnicode(content.data()));
-    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-    QJsonObject JsonObj = doc.object();
-    QJsonArray heroes = JsonObj["heroes"].toArray();
-
-    foreach (const QJsonValue & v, heroes)
-    {
-         qDebug() << v.toObject().value("hero_id").toInt();
-         hero_list.insert(v.toObject().value("hero_id").toInt());
-    }
-          qDebug() <<hero_list.size();
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
-     QNetworkRequest heroes_request(heroes_url);
-     QNetworkReply* heroes_reply = manager->get(heroes_request);
-
-     //reply->close();
-     reply->deleteLater();
-
-     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedHeroes()));
-     //heroes_reply-> deleteLater();
-     //manager->deleteResource(heroes_request);
-     heroes_url.clear();
-  }
-  else
-  {
-      progress->stop();
-    put_text(reply->errorString());
-  }
-  // разрешаем объекту-ответа "удалиться"
-  progress->setValue(55);
-}
-void MainWindow::replyFinishedI() //DO IT DO IT DO IT
-{
-  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-  if (reply->error() == QNetworkReply::NoError)
-
-  {
-      hero_list.clear();
-    // Получаем содержимое ответа
-      QByteArray content= reply->readAll();
-      QString undercontent = QString(content);
-
-   qDebug () << "f";
-    //ui->text2->setPlainText(codec->toUnicode(content.data()));
-    QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-    QJsonObject JsonObj = doc.object();
-    QJsonArray heroes = JsonObj["heroes"].toArray();
-
-    foreach (const QJsonValue & v, heroes)
-    {
-         qDebug() << v.toObject().value("hero_id").toInt();
-         hero_list.insert(v.toObject().value("hero_id").toInt());
-    }
-          qDebug() <<hero_list.size();
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QUrl heroes_url("https://www.dota2.com/datafeed/herolist?language=russian");
-     QNetworkRequest heroes_request(heroes_url);
-     QNetworkReply* heroes_reply = manager->get(heroes_request);
-
-     //reply->close();
-     reply->deleteLater();
-
-     connect(heroes_reply, SIGNAL(finished()),this,  SLOT(replyFinishedHeroes()));
-     //heroes_reply-> deleteLater();
-     //manager->deleteResource(heroes_request);
-     heroes_url.clear();
-  }
-  else
-  {
-      progress->stop();
-    put_text(reply->errorString());
-  }
-  // разрешаем объекту-ответа "удалиться"
-  progress->setValue(55);
-}
-void MainWindow::replyFinishedItems() //DO IT DO IT DO IT DO IT
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-    if (reply->error() == QNetworkReply::NoError)
-    {
-    QByteArray content= reply->readAll();
-    QTextCodec *codec = QTextCodec::codecForName("utf8");
-    QString undercontent = QString(content);
-
- qDebug () << "f";
-  //ui->text1->setPlainText(codec->toUnicode(content.data()));
-  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-  QJsonObject JsonObj = doc.object();
-  QJsonObject Result  = JsonObj.value("result").toObject();
-  QJsonObject Data =  Result.value("data").toObject();
-  QJsonArray heroes = Data["heroes"].toArray();
-  QString output = "";
-  QMap<int, QString> dict;
-  foreach(const QJsonValue & v, heroes) {
-       //qDebug() << v.toObject().value("name_loc");
-       dict.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
-  }
-  progress->setValue(75);
-  QList <QString> out;
-  for (QSet<int>::iterator i = hero_list.begin(); i!= hero_list.end();i++)
-  {
-      out.insert(0,dict.value(*i));
-    //  qDebug() << dict.value(1) << *i;
-  }
-  std::sort(out.begin(), out.end());
-  foreach (QString value, out)
-  {
-      output += value;
-      output +=", ";
-  }
-  output.resize(output.size()-2);
-  put_text(output);
-  progress->setValue(100);
-    }
-    else
-    {
-      // Выводим описание ошибки, если она возникает.
-      progress->stop();
-      put_text(reply->errorString());
-    }
-    //reply->close();
-    reply->deleteLater();
-    progress->setValue(0);
-}
-void MainWindow::replyFinishedHeroes()
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-    if (reply->error() == QNetworkReply::NoError)
-    {
-    QByteArray content= reply->readAll();
-    QTextCodec *codec = QTextCodec::codecForName("utf8");
-    QString undercontent = QString(content);
-
- qDebug () << "f";
-  //ui->text1->setPlainText(codec->toUnicode(content.data()));
-  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-  QJsonObject JsonObj = doc.object();
-  QJsonObject Result  = JsonObj.value("result").toObject();
-  QJsonObject Data =  Result.value("data").toObject();
-  QJsonArray heroes = Data["heroes"].toArray();
-  QString output = "";
-  QMap<int, QString> dict;
-  foreach(const QJsonValue & v, heroes) {
-       //qDebug() << v.toObject().value("name_loc");
-       dict.insert(v.toObject().value("id").toInt(), v.toObject().value("name_english_loc").toString());
-     // qDebug() << v.toObject().value("id").toInt() << v.toObject().value("name_english_loc").toString();
-  }
-  progress->setValue(75);
-  QList <QString> out;
-  for (QSet<int>::iterator i = hero_list.begin(); i!= hero_list.end();i++)
-  {
-      out.insert(0,dict.value(*i));
-    //  qDebug() << dict.value(1) << *i;
-  }
-  std::sort(out.begin(), out.end());
-  foreach (QString value, out)
-  {
-      output += value;
-      output +=", ";
-  }
-  output.resize(output.size()-2);
-  put_text(output);
-  progress->setValue(100);
-    }
-    else
-    {
-      // Выводим описание ошибки, если она возникает.
-      progress->stop();
-      put_text(reply->errorString());
-    }
-    //reply->close();
-    reply->deleteLater();
-    progress->setValue(0);
-}
-
-void MainWindow::replyFinishedVersion()
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-
-    if (reply->error() == QNetworkReply::NoError)
-    {
-    QByteArray content= reply->readAll();
-    QTextCodec *codec = QTextCodec::codecForName("utf8");
-    QString undercontent = QString(content);
-
- qDebug () << "f";
-  //ui->text1->setPlainText(codec->toUnicode(content.data()));
-  QJsonDocument doc = QJsonDocument::fromJson(undercontent.toUtf8());
-  AbilityJsonObj = doc.object();
-  progress->setValue(75);
-  Do_Patch();
-
-  /*QString output = "";
-
-  output.resize(output.size()-2);
-  put_text(output);*/
-    }
-    else
-    {
-      // Выводим описание ошибки, если она возникает.
-      progress->stop();
-      put_text(reply->errorString());
-    }
-    //reply->close();
-    reply->deleteLater();
-    progress->setValue(0);
-}
-
-QString MainWindow::add_point(QString output)
-{
-    if (output.endsWith(" "))
-    {
-         output.resize(output.size()-1);
-         output+=".";
-    }
-    else
-    if (!output.endsWith(".")&&!output.endsWith(":")&&!output.endsWith("}")&&!output.endsWith(".)"))
-        output+=".";
-    return output;
-}
-
-void MainWindow::Do_Patch()
-{
-    QJsonObject Result  = HeroJsonObj.value("result").toObject();
-    QJsonObject Data =  Result.value("data").toObject();
-    QJsonArray id_list = Data["heroes"].toArray();
-    QMap<int, QString> dict_heroes;
-    foreach(const QJsonValue & v, id_list) {
-         //qDebug() << v.toObject().value("name_loc");
-         dict_heroes.insert(v.toObject().value("id").toInt(), v.toObject().value("name_loc").toString());
-    }
-
-    Result  = ItemJsonObj.value("result").toObject();
-    Data =  Result.value("data").toObject();
-    id_list = Data["itemabilities"].toArray();
-    QMap<int, QString> dict_items;
-    foreach(const QJsonValue & v, id_list) {
-         dict_items.insert(v.toObject().value("id").toInt(), v.toObject().value("name_loc").toString());
-    }
-
-    Result  = AbilityJsonObj.value("result").toObject();
-    Data =  Result.value("data").toObject();
-    id_list = Data["itemabilities"].toArray();
-    QMap<int, QString> dict_abilities;
-    foreach(const QJsonValue & v, id_list) {
-         dict_abilities.insert(v.toObject().value("id").toInt(), v.toObject().value("name_loc").toString());
-    }
-
-    QJsonArray generic = VersionJsonObj["generic"].toArray();
-    QJsonArray neutral_creeps = VersionJsonObj["neutral_creeps"].toArray();
-    QJsonArray neutral_items = VersionJsonObj["neutral_items"].toArray();
-    QJsonArray items = VersionJsonObj["items"].toArray();
-    QJsonArray heroes = VersionJsonObj["heroes"].toArray();
-
-    QString tempstring;
-    QString output = "";
-    QRegExp texp;
-    output += "{{Version infobox\n| version = " + get_text() +"\n| image = \n| highlights = \n| new = \n| significant = \n| buffed =\n| nerfed = \n| dota2 = \n}}\n&lt;onlyinclude&gt;\n\n";
-    if (!language)
-    {
-        if (!generic.isEmpty())
-            output += "== \u041e\u0431\u0449\u0438\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f ==\n";
-        foreach (QJsonValue value, generic)
-        {
-            if (value.toObject().value("note").toString()!="<br>")
-            {
-                output += "* ";
-                tempstring = value.toObject().value("note").toString();
-                output += add_point(tempstring);
-                tempstring.clear();
-               /* output += "\n";
-                output += value.toObject().value("info").toString();*/
-                output += "\n";
-            }
-            output += "\n";
-        }
-        if (!neutral_creeps.isEmpty())
-            output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043a\u0440\u0438\u043f\u044b ==\n";
-        foreach (QJsonValue value, neutral_creeps)
-        {
-            output += "{{Unit label|";
-            output += value.toObject().value("localized_name").toString();
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["neutral_creep_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-                {
-
-                    if (value2.toObject().value("note").toString()!="<br>")
-                    {
-                        QString star = "* ";
-                        QString start = "{{A|";
-                        QString end = "}}";
-                        QString mid = "|";
-                        QString duo = ":" ;
-                        texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                        //qDebug() << texp;
-                        tempstring = "* ";
-                        tempstring += value2.toObject().value("note").toString();
-                       // qDebug() << tempstring;
-                        while(texp.indexIn(tempstring)!=-1)
-                        {
-                            //qDebug() << texp.cap(0) << texp.cap(1);
-                            tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
-                            break;
-                        }
-                        output += add_point(tempstring);
-                        tempstring.clear();
-                        output += "\n";
-                    }
-
-                }
-            output += "\n";
-           /* output += "\n";
-            output += value.toObject().value("info").toString();*/
-            //NEED TO ADD INFO ELEMENT OF JSON
-        }
-        if (!items.isEmpty())
-            output += "== \u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
-        foreach (QJsonValue value, items)
-        {
-            output += "{{Item label|";
-            output += dict_items.value(value.toObject().value("ability_id").toInt());
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["ability_notes"].toArray();
-            QRegExp texp;
-            QString stringtexp;
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    QString star = "* ";
-                    QString start = "{{A|";
-                    QString end = "}}";
-                    QString mid = "|";
-                    QString duo = ":" ;
-                    texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    //qDebug() << texp;
-                    tempstring = "* ";
-                    tempstring += value2.toObject().value("note").toString();
-                   // qDebug() << tempstring;
-                    while(texp.indexIn(tempstring)!=-1)
-                    {
-                        //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
-                        break;
-                    }
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            output += "\n";
-        }
-        if (!neutral_items.isEmpty())
-            output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
-        foreach (QJsonValue value, neutral_items)
-        {
-            output += "{{Item label|";
-            output += dict_items.value(value.toObject().value("ability_id").toInt());
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["ability_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    QString star = "* ";
-                    QString start = "{{A|";
-                    QString end = "}}";
-                    QString mid = "|";
-                    QString duo = ":" ;
-                    texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    //qDebug() << texp;
-                    tempstring = "* ";
-                    tempstring += value2.toObject().value("note").toString();
-                   // qDebug() << tempstring;
-                    while(texp.indexIn(tempstring)!=-1)
-                    {
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
-                        break;
-                    }
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            output += "\n";
-        }
-        if (!heroes.isEmpty())
-            output += "== \u0413\u0435\u0440\u043e\u0438 ==\n";
-        QJsonArray heroes2;
-        foreach (QJsonValue value, heroes)
-        {
-            QJsonObject temp =value.toObject();
-            temp.insert("hero_name", dict_heroes.value(value.toObject().value("hero_id").toInt()));
-            heroes2.append(temp);
-        }
-
-        std::sort(heroes2.begin(), heroes2.end(), [](const QJsonValue &v1, const QJsonValue &v2) {
-            return v1.toObject()["hero_name"].toString() < v2.toObject()["hero_name"].toString();
-        });
-
-        foreach (QJsonValue value, heroes2)
-        {
-            output += "{{Hero label|";
-            output += value.toObject().value("hero_name").toString();
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["hero_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    output += "* ";
-                    tempstring = value2.toObject().value("note").toString();
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            temparray = value["abilities"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                output += "* {{A|";
-                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
-                output += "|";
-                output += value.toObject().value("hero_name").toString();
-                QJsonArray temparray2 = value2["ability_notes"].toArray();
-                if (temparray2.size()>1)
-                {
-                    output += "}}\n";
-                    foreach (QJsonValue value3, temparray2)
-                    {
-                        if (value3.toObject().value("note").toString()!="<br>")
-                        {
-                            output += "** ";
-                            tempstring = value3.toObject().value("note").toString();
-                            output += add_point(tempstring);
-                            tempstring.clear();
-                            output += "\n";
-                        }
-                    }
-                }
-                else if (temparray2.size()==1)
-                {
-
-                    output += "}}: ";
-                    foreach (QJsonValue value3, temparray2)
-                    {
-                        if (value3.toObject().value("note").toString()!="<br>")
-                        {
-                            tempstring = value3.toObject().value("note").toString();
-                            tempstring[0] = tempstring[0].toLower();
-                            output += add_point(tempstring);
-                            tempstring.clear();
-                            output += "\n";
-                        }
-                    }
-                }
-            }
-
-            temparray = value["talent_notes"].toArray();
-            if (!temparray.isEmpty())
-                output += "* {{\u0417\u043d\u0430\u0447\u043e\u043a|\u0422\u0430\u043b\u0430\u043d\u0442}} '''[[\u0422\u0430\u043b\u0430\u043d\u0442\u044b]]:'''\n";
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    output += "** ";
-                    tempstring = value2.toObject().value("note").toString();
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-
-            output += "\n";
-        }
-        if (output.back()=='\n')
-            output.chop(1);
-        output += "&lt;/onlyinclude&gt;\n\n== \u0421\u043c. \u0442\u0430\u043a\u0436\u0435 ==\n* [[\u0412\u0435\u0440\u0441\u0438\u0438]]\n* [[\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f]]\n\n{{\u0421\u0438\u0441\u0442\u0435\u043c\u0430}}\n\n[[en:Version " + get_text() + "]]";
-
-    }
-    else //ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH
-        //ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH
-    {
-        if (!generic.isEmpty())
-            output += "== General ==\n";
-        foreach (QJsonValue value, generic)
-        {
-            if (value.toObject().value("note").toString()!="<br>")
-            {
-                output += "* ";
-                tempstring = value.toObject().value("note").toString();
-                output += add_point(tempstring);
-                tempstring.clear();
-               /* output += "\n";
-                output += value.toObject().value("info").toString();*/
-                output += "\n";
-            }
-            output += "\n";
-        }
-        if (!neutral_creeps.isEmpty())
-            output += "== Neutral Creeps ==\n";
-        foreach (QJsonValue value, neutral_creeps)
-        {
-            output += "{{Unit label|";
-            output += value.toObject().value("localized_name").toString();
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["neutral_creep_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-                {
-
-                    if (value2.toObject().value("note").toString()!="<br>")
-                    {
-                        QString star = "* ";
-                        QString start = "{{A|";
-                        QString end = "}}";
-                        QString mid = "|";
-                        QString duo = ":" ;
-                        texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                        //qDebug() << texp;
-                        tempstring = "* ";
-                        tempstring += value2.toObject().value("note").toString();
-                       // qDebug() << tempstring;
-                        while(texp.indexIn(tempstring)!=-1)
-                        {
-                            //qDebug() << texp.cap(0) << texp.cap(1);
-                            tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
-                            break;
-                        }
-                        output += add_point(tempstring);
-                        tempstring.clear();
-                        output += "\n";
-                    }
-
-                }
-            output += "\n";
-           /* output += "\n";
-            output += value.toObject().value("info").toString();*/
-            //NEED TO ADD INFO ELEMENT OF JSON
-        }
-        if (!items.isEmpty())
-            output += "== Items ==\n";
-        foreach (QJsonValue value, items)
-        {
-            output += "{{Item label|";
-            output += dict_items.value(value.toObject().value("ability_id").toInt());
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["ability_notes"].toArray();
-            QRegExp texp;
-            QString stringtexp;
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    QString star = "* ";
-                    QString start = "{{A|";
-                    QString end = "}}";
-                    QString mid = "|";
-                    QString duo = ":" ;
-                    texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    //qDebug() << texp;
-                    tempstring = "* ";
-                    tempstring += value2.toObject().value("note").toString();
-                   // qDebug() << tempstring;
-                    while(texp.indexIn(tempstring)!=-1)
-                    {
-                        //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
-                        break;
-                    }
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            output += "\n";
-        }
-        if (!neutral_items.isEmpty())
-            output += "== Neutral Items ==\n";
-        foreach (QJsonValue value, neutral_items)
-        {
-            output += "{{Item label|";
-            output += dict_items.value(value.toObject().value("ability_id").toInt());
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["ability_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    QString star = "* ";
-                    QString start = "{{A|";
-                    QString end = "}}";
-                    QString mid = "|";
-                    QString duo = ":" ;
-                    texp = QRegExp("[\* \s]{2}([A-Za-z \s \']{1,25}):");
-                    //qDebug() << texp;
-                    tempstring = "* ";
-                    tempstring += value2.toObject().value("note").toString();
-                   // qDebug() << tempstring;
-                    while(texp.indexIn(tempstring)!=-1)
-                    {
-                        //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
-                        break;
-                    }
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            output += "\n";
-        }
-        if (!heroes.isEmpty())
-            output += "== Heroes ==\n";
-        QJsonArray heroes2;
-        foreach (QJsonValue value, heroes)
-        {
-            QJsonObject temp =value.toObject();
-            temp.insert("hero_name", dict_heroes.value(value.toObject().value("hero_id").toInt()));
-            heroes2.append(temp);
-        }
-
-        std::sort(heroes2.begin(), heroes2.end(), [](const QJsonValue &v1, const QJsonValue &v2) {
-            return v1.toObject()["hero_name"].toString() < v2.toObject()["hero_name"].toString();
-        });
-
-        foreach (QJsonValue value, heroes2)
-        {
-            output += "{{Hero label|";
-            output += value.toObject().value("hero_name").toString();
-            output += "}}\n";
-            QJsonObject temp = value.toObject();
-            QJsonArray temparray = value["hero_notes"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    output += "* ";
-                    tempstring = value2.toObject().value("note").toString();
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-            temparray = value["abilities"].toArray();
-            foreach (QJsonValue value2, temparray)
-            {
-                output += "* {{A|";
-                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
-                output += "|";
-                output += value.toObject().value("hero_name").toString();
-                QJsonArray temparray2 = value2["ability_notes"].toArray();
-                if (temparray2.size())
-                {
-                    output += "}}\n";
-                    foreach (QJsonValue value3, temparray2)
-                    {
-                        if (value3.toObject().value("note").toString()!="<br>")
-                        {
-                            output += "** ";
-                            tempstring = value3.toObject().value("note").toString();
-                            output += add_point(tempstring);
-                            tempstring.clear();
-                            output += "\n";
-                        }
-                    }
-                }
-            }
-
-            temparray = value["talent_notes"].toArray();
-            if (!temparray.isEmpty())
-                output += "* {{Symbol|Talent}} [[Talents]]\n";
-            foreach (QJsonValue value2, temparray)
-            {
-                if (value2.toObject().value("note").toString()!="<br>")
-                {
-                    output += "** ";
-                    tempstring = value2.toObject().value("note").toString();
-                    output += add_point(tempstring);
-                    tempstring.clear();
-                    output += "\n";
-                }
-            }
-
-            output += "\n";
-        }
-        if (output.back()=='\n')
-            output.chop(1);
-        output += "&lt;/onlyinclude&gt;\n\n== See also ==\n* [[Versions]]\n* [[Patches]]\n\n{{SystemNav}}\n\n[[ru:\u0412\u0435\u0440\u0441\u0438\u044f " + get_text()+ "]]";
-    }
-
-    put_text(output);
-}
 
 void MainWindow::set_theme()
 {
@@ -1212,21 +352,7 @@ QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
     }
     return array;
 }
-QString MainWindow::start_regular_replacer (QString temp)
-{
-    QString Array[5] = {"|", "{", "}", "[", "]"};
-    int i;
-    for (i=0; i<5;i++)
-         temp.replace(Array[i],"&dw0"+QString::number(i)+"c");
-    return temp;
-}
-void MainWindow::end_regular_replacer (QString *temp)
-{
-    QString Array[5] = {"|", "{", "}", "[", "]"};
-    int i;
-    for (i=0; i<5;i++)
-        &temp ->replace("&dw0"+QString::number(i)+"c",Array[i]);
-}
+
 QString MainWindow::get_text()
 {
     QString first;
@@ -1239,11 +365,6 @@ QString MainWindow::get_text()
     return first;
 }
 
-QString MainWindow::get_backtext()
-{
-   return QString("<span style= \"background:");
-}
-
 QString MainWindow::color(QString arg,QString color)
 {
     color = maintheme.get_highlight();
@@ -1251,11 +372,6 @@ QString MainWindow::color(QString arg,QString color)
     return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
 }
 
-int MainWindow::counter(QString text)
-{
-    QRegExp found(get_backtext());
-    return text.count(found);
-}
 
 void MainWindow::put_text(QString text)
 {
@@ -1498,6 +614,7 @@ void MainWindow::on_discord_clicked()
      ui->text2->setFont(text_font);
      ui->autozamena->setFont(button_font);
  }
+
 void MainWindow::set_progressbar()
 {
     QWinTaskbarButton *tuskbar;
@@ -1506,17 +623,6 @@ void MainWindow::set_progressbar()
     progress = tuskbar->progress();
     progress->show();
 }
-/*#ifdef snap
-void MainWindow::on_backz_clicked()
-{
-    if (snapshot.size()>9)
-        snapshot.removeFirst();
-    snapshot.append(dwSnapshot(ui -> text1-> toPlainText(), ui -> text2-> toPlainText()));
-    snapshot_iterator = snapshot.size();
-
-    qDebug() << snapshot.size();
-}
-#endif*/
 
 void MainWindow::on_autozamena_clicked()
 {
@@ -1529,10 +635,4 @@ void MainWindow::on_autozamena_clicked()
 void MainWindow::end()
 {
 
-}
-inline void swap(QJsonValueRef v1, QJsonValueRef v2)
-{
-    QJsonValue temp(v1);
-    v1 = QJsonValue(v2);
-    v2 = temp;
 }
