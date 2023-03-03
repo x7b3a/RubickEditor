@@ -475,6 +475,12 @@ void Macros::Responses()
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
         QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        if (dwJ.errors)
+        {
+            qDebug() << "errors";
+            errors = "dict.json";
+            return;
+        }
         QJsonObject WikiAndFixes= jsonObject.value("Responses").toObject();
         foreach(const QString& key, WikiAndFixes.keys()) {
             QJsonValue value = WikiAndFixes.value(key);
@@ -529,6 +535,12 @@ void Macros::Sounds()
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
         QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        if (dwJ.errors)
+        {
+            qDebug() << "errors";
+            errors = "dict.json";
+            return;
+        }
         QJsonObject WikiAndFixes= jsonObject.value("Sounds").toObject();
         foreach(const QString& key, WikiAndFixes.keys()) {
             QJsonValue value = WikiAndFixes.value(key);
@@ -549,6 +561,12 @@ void Macros::Cosmetics()
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
         QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        if (dwJ.errors)
+        {
+            qDebug() << "errors";
+            errors = "dict.json";
+            return;
+        }
         QJsonObject WikiAndFixes= jsonObject.value("Cosmetics").toObject();
         foreach(const QString& key, WikiAndFixes.keys()) {
             QJsonValue value = WikiAndFixes.value(key);
@@ -600,6 +618,12 @@ void Macros::Units()
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
         QJsonObject jsonObject = dwJ.read_json("dict.json").object();
+        if (dwJ.errors)
+        {
+            qDebug() << "errors";
+            errors = "dict.json";
+            return;
+        }
         QJsonObject WikiAndFixes= jsonObject.value("Units").toObject();
         foreach(const QString& key, WikiAndFixes.keys()) {
             QJsonValue value = WikiAndFixes.value(key);
@@ -617,6 +641,53 @@ void Macros::Units()
     counted = counter(first);
 }
 
+void Macros::Animations()
+{
+    qDebug() << "Anime called";
+    QMap<QString, QString> dict;
+    QMap<QString, QString>::iterator i;
+        QJsonObject json = dwJ.read_json("dict.json").object();
+        if (dwJ.errors)
+        {
+            qDebug() << "errors";
+            errors = "dict.json";
+            return;
+        }
+        QJsonValue value = json.value(QString("Animations"));
+        QJsonObject item = value.toObject();
+        QMap<QString, QString> Complex = dwJ.map_parser(item,"Complex");
+        QMap<QString, QString> Main = dwJ.map_parser(item,"Main");
+        QMap<QString, QString> Tags = dwJ.map_parser(item,"Tags");
+        QMap<QString, QString> Extra;
+        QMap<QString, QString> Repair = dwJ.map_parser(item,"Repair");
+        Extra.insert("2 ||", " 2 ||");
+        Extra.insert("3 ||", " 3 ||");
+        for (i=Extra.begin();i!=Extra.end();i++)
+        {
+            first.replace(i.key(),i.value());
+        }
+        for (i=Complex.begin();i!=Complex.end();i++)
+        {
+            first.replace(i.key(),color(i.value()));
+        }
+        send_progress(60);
+        for (i = Main.begin(); i != Main.end(); i++)
+        {
+            first.replace(i.key(),color(i.value()));
+        }
+        send_progress(70);
+        for (i = Tags.begin(); i != Tags.end(); i++)
+        {
+            first.replace(i.key() + " ",color(i.value() +" "));
+        }
+        for (i = Repair.begin(); i != Repair.end(); i++)
+        {
+            first.replace(color(i.key())+".mp4",i.value()+".mp4");
+        }
+    send_progress(80);
+    counted = counter(first);
+    send_progress(100);
+}
 QString Macros::get_backtext()
 {
    return QString("<span style= \"background:");
@@ -646,7 +717,6 @@ void Macros::end_regular_replacer (QString *temp)
 }
 void Macros::send_progress(int pr)
 {
-    qDebug() << pr;
     emit new_progress(pr);
 }
 

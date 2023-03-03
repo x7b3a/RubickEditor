@@ -16,8 +16,8 @@
 #include <QDesktopServices>
 #include <QMap>
 #include <QHash>
-#include <QLabel>
 #include <QSyntaxHighlighter>
+#include <QLabel>
 #include <string>
 #include <QRegExp>
 #include <QClipboard>
@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
     QJsonObject json = read_json("config2.json").object();
     QJsonValue value = json.value(QString("Theme"));
     maintheme.theme = value.toInt();
-    QJsonObject WikiAndFixes= json.value("WikiAndFixes").toObject();
 
     this -> showMaximized();
     this -> setWindowTitle("Rubick Editor " + QString(RVERSION));
@@ -62,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&dwnetcase,&dwNetMacros::send_end,this,&MainWindow::receive_netmacros);
     connect(&dwnetcase,&dwNetMacros::new_progress,this,&MainWindow::receive_progress);
+
     set_progressbar();
     ui->backz->setVisible(false);
 }
@@ -108,6 +108,8 @@ void MainWindow::receive_progress(int pr)
 }
 void MainWindow::receive_netmacros()
 {
+    qDebug() << "netmacros rececived";
+    //qDebug() << dwnetcase.output;
     put_text(dwnetcase.output);
     dwnetcase.cleaning();
 }
@@ -138,7 +140,7 @@ void MainWindow::button_switch(QString switchStr)
 {
     ui->error->setStyleSheet("color: rgba(255,0,0,0);");
     ui->debug->clear();
-
+    progress->resume();
     Macros dwcase(get_text(),maintheme.get_highlight());
     connect(&dwcase,&Macros::new_progress,this,&MainWindow::receive_progress);
     QSSWITCH(switchStr,
@@ -251,6 +253,13 @@ void MainWindow::button_switch(QString switchStr)
                     dwnetcase.Patch_Version(1);
                     break;
                 })
+                QSCASE(cases[10],
+                {
+                    dwnetcase.version=get_text();
+                    dwnetcase.colour=maintheme.get_highlight();
+                    dwnetcase.Parse_Animations();
+                    break;
+                })
                 QSDEFAULT(
                 {
                    ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
@@ -341,16 +350,6 @@ void MainWindow::append_cases()
     {
         cases.push_back (v.toString());
     }
-}
-QMap<QString, QString> MainWindow::map_parser(QJsonObject item, QString word)
-{
-    QMap<QString, QString> array;
-    QJsonObject keywords_value = item[word].toObject();
-    foreach(const QString& key, keywords_value.keys()) {
-        QJsonValue value = keywords_value.value(key);
-        array.insert(key,value.toString());
-    }
-    return array;
 }
 
 QString MainWindow::get_text()

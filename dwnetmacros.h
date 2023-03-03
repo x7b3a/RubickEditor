@@ -16,6 +16,7 @@ public:
     dwNetMacros(QString, int);
     ~dwNetMacros();
     QString output = "";
+    QString colour;
 
     int language = 0;
     QString version = "";
@@ -25,6 +26,7 @@ public:
     void Patch_heroes();
     void Patch_items();
     void Patch_Version(int a);
+    void Parse_Animations();
     void end();
 
     QString add_point(QString);
@@ -49,6 +51,7 @@ private slots:
     void replyFinishedHeroes();
     void replyFinishedVersion();
     void Do_Patch();
+    void Do_Animations();
 };
 
 #endif // DWNETMACROS_H

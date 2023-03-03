@@ -7,10 +7,9 @@
 #include "dwjson.h"
 #include "dwnetmacros.h"
 //#include "dwsetter.h"
-//#include "dwsnapshot.h"
 #include "ui_settings.h"
 #include <QtWinExtras/QWinTaskbarProgress>
-#include <QJsonObject>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -47,7 +46,6 @@ private:
     void put_text(QString text);
     QString get_text();
     QString color(QString arg,QString color="#ff8f45");
-    QMap<QString, QString> map_parser(QJsonObject item, QString word);
     void set_theme();
     void adaptive_screen();
     void set_fonts();

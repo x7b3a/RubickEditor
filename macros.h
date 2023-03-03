@@ -35,6 +35,7 @@ public:
     void Sounds();
     void Cosmetics();
     void Units();
+    void Animations();
 signals:
     void new_progress(int);
 

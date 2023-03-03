@@ -7,6 +7,8 @@
 #include <QObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <macros.h>
+
 dwNetMacros::dwNetMacros()
 {
     version="";
@@ -92,9 +94,7 @@ void  dwNetMacros::Patch_Version(int a)
         urlstring+="&language=english";
     QUrl patch_url(urlstring);
     QNetworkRequest patch_request(patch_url);
-     qDebug() << patch_url;
     QNetworkReply* patch_reply1=  manager->get(patch_request);
-    qDebug() << manager->get(patch_request);
    connect(patch_reply1, SIGNAL(finished()),this,  SLOT(replyFinishedV()));
    // patch_reply->close();
    // patch_reply->deleteLater();
@@ -961,6 +961,57 @@ void  dwNetMacros::Do_Patch()
     }
     emit send_end();
 }
+
+void dwNetMacros::Parse_Animations()
+{
+    QString url  = version;
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    QUrl patch_url("https://dota2.fandom.com/wiki/"+ version + "/Animations?action=edit");
+    QNetworkRequest patch_request(patch_url);
+
+    QNetworkReply* patch_reply= manager->get(patch_request);
+    send_progress(25);
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(Do_Animations()));
+    patch_url.clear();
+   // patch_reply->close();
+   // patch_reply->deleteLater();
+    //manager->deleteResource(patch_request);
+}
+
+void dwNetMacros::Do_Animations()
+{
+    qDebug() << "Do_Animations called";
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+    QRegExp rxlen("<textarea (.*) name=\"wpTextbox1\">(.*)<.textarea>");
+    rxlen.indexIn(undercontent);
+    output = "{{DISPLAYTITLE:Анимации " + version + "}}\n" + rxlen.cap(2) + "[[en:" + version + "/Animations]]";
+    send_progress(50);
+    Macros dwcase(output, colour);
+    dwcase.Animations();
+    output = dwcase.first;
+    dwcase.clearing();
+    colour.clear();
+    send_end();
+  reply->deleteLater();
+}
+    else
+    {
+       send_progress(-1);
+       qDebug() << "bad end";
+     output = reply->errorString(); emit send_end();
+}
+}
 inline void swap(QJsonValueRef v1, QJsonValueRef v2)
 {
     QJsonValue temp(v1);
@@ -970,6 +1021,5 @@ inline void swap(QJsonValueRef v1, QJsonValueRef v2)
 
 void dwNetMacros::send_progress(int pr)
 {
-    qDebug() << pr;
     emit new_progress(pr);
 }
