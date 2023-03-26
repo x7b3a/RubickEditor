@@ -30,6 +30,9 @@
 #include "macros.h"
 #include "dwnetmacros.h"
 #include <QTime>
+#include <QPainter>
+#include <QColor>
+#include <QRgb>
 #define RVERSION "1.1.0"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
@@ -53,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     set_buttons();
     append_cases();
     this->setStyleSheet("background-image:url()");
+    maintheme.size =this->size();
     set_theme();
     from = new ui_settings();
 
@@ -63,7 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&dwnetcase,&dwNetMacros::new_progress,this,&MainWindow::receive_progress);
 
     set_progressbar();
-    ui->backz->setVisible(false);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -109,7 +114,6 @@ void MainWindow::receive_progress(int pr)
 void MainWindow::receive_netmacros()
 {
     qDebug() << "netmacros rececived";
-    //qDebug() << dwnetcase.output;
     put_text(dwnetcase.output);
     dwnetcase.cleaning();
 }
@@ -234,8 +238,11 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[7],
                 {
-                    dwnetcase.version=get_text();
-                    dwnetcase.Patch_heroes();break;
+
+                        dwnetcase.version=get_text();
+                        dwnetcase.Patch_heroes();
+                        break;
+
 
                 })
                 QSCASE(cases[8],
@@ -255,10 +262,26 @@ void MainWindow::button_switch(QString switchStr)
                 })
                 QSCASE(cases[10],
                 {
-                    dwnetcase.version=get_text();
-                    dwnetcase.colour=maintheme.get_highlight();
-                    dwnetcase.Parse_Animations();
+                    qDebug() << "size" << get_text().size();
+                    if (get_text().size()<100)
+                    {
+                        dwnetcase.version=get_text();
+                        dwnetcase.colour=maintheme.get_highlight();
+                        dwnetcase.Parse_Animations();
+                    }
+                    else
+                        {
+                            dwcase.Animations();
+                            put_text(dwcase.first);
+                            if (!dwcase.errors.isEmpty())
+                            {
+                                ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                                ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                            }
+                            dwcase.clearing();
+                        }
                     break;
+
                 })
                 QSDEFAULT(
                 {
@@ -269,10 +292,15 @@ void MainWindow::button_switch(QString switchStr)
 }
 
 
+void error_checker(QString er)
+{
+    if (er.isEmpty())
+    {
+
+    }
+}
 void MainWindow::set_theme()
 {
-
-    maintheme.size =this->size();
     QString highlight = maintheme.get_highlight();
     QString text_back = maintheme.get_backcolor();
     QString button_back = maintheme.get_buttoncolor();
@@ -296,6 +324,8 @@ void MainWindow::set_theme()
                 this->setPalette(palette);
 
                 this->show();
+
+
                  for (int i = 0;i<buttons.size();i++)
         buttons[i] ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
                 color: rgb" + text +";\
@@ -321,13 +351,12 @@ void MainWindow::set_theme()
          ui->text1 -> setStyleSheet(bback + text_back + ";\
  color: rgb"+texttext +"; border-color: rgb" + border + ";");
          ui->text2 -> setStyleSheet(bback + text_back + ";\
-                                    color: rgb"+texttext +"; border-color: rgb" + border + ";");
+ color: rgb"+texttext +"; border-color: rgb" + border + ";");
          ui -> buttonpaste ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttonpaste_2 ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         qDebug()<< "border-color: rgb" + details + "; border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";";
          if (autoz)
             ui -> autozamena->setStyleSheet("border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";");
          else
@@ -338,6 +367,17 @@ void MainWindow::set_theme()
          ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
          ui->themebutton->setText(themetext);
          ui->debug->setStyleSheet("color: rgb"+text+";");
+         if (maintheme.theme)
+         {
+             ui->dota2wiki->setIcon(maintheme.wiki_dark);
+             ui->excel->setIcon(maintheme.excel_dark);
+             ui->discord->setIcon(maintheme.discord_dark);
+         }
+         else {
+             ui->dota2wiki->setIcon(QIcon(":/images/images/wiki.png"));
+             ui->excel->setIcon(QIcon(":/images/images/excel.png"));
+             ui->discord->setIcon(QIcon(":/images/images/discord.png"));
+         }
 
 }
 
@@ -568,8 +608,7 @@ void MainWindow::on_discord_clicked()
      //double hide = 2160/normh;
 
      QWidget *test;
-
-     for (int i = 0;i<29;i++)
+     for (int i = 0;i<centralWidget()->children().size();i++)
      {
          test = centralWidget()->findChild<QWidget*>(centralWidget()->children().at(i)->objectName());
          QRect cords = test->geometry();

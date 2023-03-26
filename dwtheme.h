@@ -21,7 +21,11 @@ public:
     QString get_border();
     QString get_buttontextcolor();
     QString do_autoz(int);
-signals:
+
+    void colorize_image(QPixmap &, QString, int, int, int);
+    QPixmap discord_dark;
+    QPixmap excel_dark;
+    QPixmap wiki_dark;
 
 };
 

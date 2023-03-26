@@ -27,8 +27,6 @@ public:
     bool refresh=1;
     Ui::MainWindow *ui;
     QVector<QString> cases;
-/*virtual void enterEvent(QEvent * event);
-    virtual void leaveEvent(QEvent * event);*/
 signals:
     void sendData(QString);
 public slots:
@@ -36,6 +34,7 @@ public slots:
 private:
     bool input = 0;
     bool output = 1;
+    int autoz = 0;
     int theme = 0;
     QJsonDocument read_json(QString filename);
     void button_switch(QString);
@@ -51,7 +50,7 @@ private:
     void set_fonts();
     void set_progressbar();
     dwTheme maintheme;
-    int autoz = 0;
+    void error_checker(QString);
 
 private slots:
     void receive_netmacros();

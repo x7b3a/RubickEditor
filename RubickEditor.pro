@@ -20,7 +20,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     dwjson.cpp \
     dwnetmacros.cpp \
-    dwsetter.cpp \
     dwtheme.cpp \
     macros.cpp \
     main.cpp \
@@ -30,7 +29,6 @@ SOURCES += \
 HEADERS += \
     dwjson.h \
     dwnetmacros.h \
-    dwsetter.h \
     dwtheme.h \
     macros.h \
     mainwindow.h \

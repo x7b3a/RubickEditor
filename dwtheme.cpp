@@ -1,8 +1,21 @@
 #include "dwtheme.h"
 #include <QMainWindow>
+#include <QPainter>
+
 dwTheme::dwTheme(QWidget *parent) : QMainWindow(parent)
 {
+   colorize_image(wiki_dark, ":/images/images/wiki_trans.png", 104,123,200);
+   colorize_image(excel_dark, ":/images/images/excel_trans.png", 114,132,203);
+   colorize_image(discord_dark, ":/images/images/discord.png", 114,132,203);
+}
 
+void dwTheme::colorize_image(QPixmap &image, QString path, int r, int g, int b)
+{
+    image = QPixmap(path);
+    QPainter painter(&image);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    painter.fillRect(image.rect(),qRgb(r,g,b));
+    painter.end();
 }
 
 QString dwTheme::get_themetext()

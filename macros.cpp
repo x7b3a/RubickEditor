@@ -113,12 +113,20 @@ void Macros::WikiAndFixes()
     send_progress(40);
     for (i = dict.begin(); i != dict.end(); i++)
         first.replace(i.key(),color(i.value()));
+
     //send_progress(75);
     send_progress(60);
     QRegExp texp = QRegExp(" " + letter_with_for_medoke[0].toString()+ " 1([0-9][0-9][^0-9])");
     while(texp.indexIn(first)!=-1 )
     {
         first.replace(texp.cap(0),color(" " + letter_with_for_medoke[1].toString() + " 1" + texp.cap(1)));
+    }
+    texp = QRegExp("\\{\\{VersionTableElement\\|([0-9a-g\\.]{4,5})\\|\\{\\{");
+    //texp.setPatternSyntax(QRegExp::FixedString);
+    qDebug() <<texp;
+    while(texp.indexIn(first)!=-1 )
+    {
+        first.replace(texp.cap(0),"{{VersionTableElement|" + texp.cap(1) +  color("|\n{{"));
     }
    // send_progress(100);
     send_progress(90);
@@ -216,7 +224,55 @@ void Macros::Changelogs()
     QString temp1;
     QString temp2;
     QRegExp texp;
+    QRegExp texp2;
     int iter = 0;
+    //tal changes
+    for (i=Keywords_small.begin(); i!= Keywords_small.end();i++,pr+=15) //increased
+    {
+        send_progress(pr);
+        for (j = Talents_changes.begin();j!=Talents_changes.end();j++)
+        {
+            temp1 = Float+space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                iter++;
+                 //last qdebug qDebug() <<"while:"<< QString::number(iter)<< texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5);
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space + texp.cap(5).replace("+","")));
+
+            }
+        }
+        for (j=Talents_changes_proc.begin();j!=Talents_changes_proc.end();j++)
+        {
+            temp1 = Float + "%" +space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float+"%" ;
+            texp = QRegExp(temp1);
+            while(texp.indexIn(first)!=-1 )
+            {
+                 first.replace(texp.cap(0),color( j.value() +space + i.value() +space +Preposition.value(from) + space +texp.cap(1).replace("+","") +proc+ space + Preposition.value(to)+ space + texp.cap(5).replace("+",""))+proc);
+            }
+        }
+        for (j = Talents_abilities.begin();j!=Talents_abilities.end();j++)
+        {
+             temp1  =   Float + space + ability + space + j.key() + space + i.key() + space + to + space + Float;
+             texp = QRegExp(temp1);
+             while(texp.indexIn(first)!=-1 )
+             {
+                first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+ space + Preposition.value(from) + space +texp.cap(1).replace("+","") + space + Preposition.value(to)+ space  + texp.cap(7).replace("+","")));
+             }
+         }
+        for (j=Talents_abilities_proc.begin();j!=Talents_abilities_proc.end();j++)
+        {
+            temp1 = Float + "%" +space + ability + space + start_regular_replacer(j.key()) +space+i.key()+space+to+space+Float+"%" ;
+            texp = QRegExp(temp1);
+             while(texp.indexIn(first)!=-1 )
+            {
+                //last qdebug qDebug() << " ability proc:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+                  first.replace(texp.cap(0),color(j.value() + " {{A|"+ texp.cap(5)+ "|"+texp.cap(6)+"}} " + i.value()+Flex_verb[0].toString()+ space+ Preposition.value(from) + space + texp.cap(1).replace("+","") + proc+ space  + Preposition.value(to)+ space + texp.cap(7).replace("+","")+proc));
+            }
+        }
+    }
+    //tal changes end
+
     for (i=Keywords_small.begin(); i!= Keywords_small.end();i++,pr+=15) //increased
     {
         send_progress(pr);
@@ -304,7 +360,8 @@ void Macros::Changelogs()
         for (j=Attributes_base.begin(),count = 0;j!=Attributes_base.end();j++,count++)
         {
             temp1 = i.key()+space+base+space+start_regular_replacer(j.key() + space + from);
-            temp2 = Attributes.value(base)+Flex_adj[count<2?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count<2?0:1].toString();
+            qDebug() << "count" << count << j.key();
+            temp2 = Attributes.value(base)+Flex_adj[count==1?0:1].toString()+space+j.value()+space+i.value()+Flex_verb[count==1?0:1].toString();
             first.replace(temp1,color(temp2) + space + from);
         }
         for (j=Attributes_flex.begin();j!=Attributes_flex.end();j++)
@@ -424,24 +481,31 @@ void Macros::Changelogs()
     }
     for (i=New_Talent.begin();i!=New_Talent.end();i++)
     {
-        temp1 = " ([0-9/\\.\\-\\+,%]{1,10})" + space + start_regular_replacer(i.key());
+        temp1 = "([0-9/\\.\\-\\+\\ ,%;=]{1,10})" + space + start_regular_replacer(i.key()) +";";
         texp = QRegExp(temp1);
+        temp2 = "([0-9/\\.\\-\\+\\ ,%;=]{1,10})" + space + start_regular_replacer("[["+i.key()+"]]")+";";
+        texp2=QRegExp(temp2);
         //qDebug() << "tal" << temp1 << texp;
         while(texp.indexIn(first)!=-1 )
         {
             //last qdebug qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-            first.replace(texp.cap(0),color(space + texp.cap(1)+space + i.value()));
+            first.replace(texp.cap(0),color(space + texp.cap(1)+space + i.value()+";"));
+        }
+        while(texp2.indexIn(first)!=-1 )
+        {
+            //last qdebug qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
+            first.replace(texp2.cap(0), color(texp2.cap(1)+space+i.value()+";"));
         }
     }
     for (i=New_Talent_abilities.begin();i!=New_Talent_abilities.end();i++)
     {
-        temp1 = " ([0-9/\\.\\-\\+,%s]{1,10}) "  + ability + start_regular_replacer(i.key());
+        temp1 = "([0-9/\\.\\-\\+\\ ,%s;=]{1,10}) "  + ability + start_regular_replacer(i.key());
         texp = QRegExp(temp1);
         //last qdebug qDebug() << "tal" << temp1 << texp;
         while(texp.indexIn(first)!=-1 )
         {
             //qDebug() << " respawn:" << texp.cap( 0 )  << texp.cap(1) << texp.cap(2) << texp.cap(3) << texp.cap(4) << texp.cap(5)<< texp.cap(6)<< texp.cap(7)<< texp.cap(8);
-            first.replace(texp.cap(0),color(space + texp.cap(1).replace("s","").replace("-",minus) + i.value() +space+ " {{A|" + texp.cap(2)+"|"+ texp.cap(3) + "}}"));
+            first.replace(texp.cap(0),color(texp.cap(1).replace("s","").replace("-",minus) + i.value() +space+ " {{A|" + texp.cap(2)+"|"+ texp.cap(3) + "}}"));
         }
     }
     send_progress(92);
@@ -662,28 +726,38 @@ void Macros::Animations()
         QMap<QString, QString> Repair = dwJ.map_parser(item,"Repair");
         Extra.insert("2 ||", " 2 ||");
         Extra.insert("3 ||", " 3 ||");
-        for (i=Extra.begin();i!=Extra.end();i++)
-        {
+        QRegExp texp;
+        QString texr;
+       for (i=Extra.begin();i!=Extra.end();i++)
+        {    
             first.replace(i.key(),i.value());
         }
         for (i=Complex.begin();i!=Complex.end();i++)
         {
-            first.replace(i.key(),color(i.value()));
+            first.replace(i.key(), i.value());
         }
         send_progress(60);
-        for (i = Main.begin(); i != Main.end(); i++)
+       for (i = Main.begin(); i != Main.end(); i++)
         {
             first.replace(i.key(),color(i.value()));
         }
         send_progress(70);
         for (i = Tags.begin(); i != Tags.end(); i++)
         {
-            first.replace(i.key() + " ",color(i.value() +" "));
+            texr = "("+ i.key()+")([^\\.]{30})";
+            texp = QRegExp(texr);
+            qDebug() << texp;
+            //qDebug() << first;
+            while(texp.indexIn(first)!=-1 )
+            {
+                first.replace(texp.cap(0),color(i.value()) + texp.cap(2));
+                qDebug() << texp.cap(0) << texp.cap(1);
+            }
         }
-        for (i = Repair.begin(); i != Repair.end(); i++)
+       /* for (i = Repair.begin(); i != Repair.end(); i++)
         {
             first.replace(color(i.key())+".mp4",i.value()+".mp4");
-        }
+        }*/
     send_progress(80);
     counted = counter(first);
     send_progress(100);
