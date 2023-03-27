@@ -15,6 +15,8 @@ public:
     QString get_highlight();
     QString get_backcolor();
     QString get_buttoncolor();
+    QString get_buttoncolor_hover();
+    QString get_buttoncolor_pressed();
     QString get_textcolor();
     QString get_details();
     QPalette get_backimage();

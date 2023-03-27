@@ -723,9 +723,9 @@ void Macros::Animations()
         QMap<QString, QString> Main = dwJ.map_parser(item,"Main");
         QMap<QString, QString> Tags = dwJ.map_parser(item,"Tags");
         QMap<QString, QString> Extra;
-        QMap<QString, QString> Repair = dwJ.map_parser(item,"Repair");
         Extra.insert("2 ||", " 2 ||");
         Extra.insert("3 ||", " 3 ||");
+        Extra.insert("4 ||", " 4 ||");
         QRegExp texp;
         QString texr;
        for (i=Extra.begin();i!=Extra.end();i++)
@@ -746,18 +746,12 @@ void Macros::Animations()
         {
             texr = "("+ i.key()+")([^\\.]{30})";
             texp = QRegExp(texr);
-            qDebug() << texp;
-            //qDebug() << first;
             while(texp.indexIn(first)!=-1 )
             {
                 first.replace(texp.cap(0),color(i.value()) + texp.cap(2));
-                qDebug() << texp.cap(0) << texp.cap(1);
             }
         }
-       /* for (i = Repair.begin(); i != Repair.end(); i++)
-        {
-            first.replace(color(i.key())+".mp4",i.value()+".mp4");
-        }*/
+
     send_progress(80);
     counted = counter(first);
     send_progress(100);

@@ -304,6 +304,8 @@ void MainWindow::set_theme()
     QString highlight = maintheme.get_highlight();
     QString text_back = maintheme.get_backcolor();
     QString button_back = maintheme.get_buttoncolor();
+    QString button_back_hover = maintheme.get_buttoncolor_hover();
+    QString button_back_pressed = maintheme.get_buttoncolor_pressed();
     QString texttext = maintheme.get_textcolor();
     QString text = maintheme.get_buttontextcolor();
     QString details = maintheme.get_details();
@@ -327,9 +329,15 @@ void MainWindow::set_theme()
 
 
                  for (int i = 0;i<buttons.size();i++)
-        buttons[i] ->setStyleSheet(btext + "background-color: rgb" + button_back +";\
+        buttons[i] ->setStyleSheet("QPushButton {" + btext + "background-color: rgb" + button_back +";\
                 color: rgb" + text +";\
-                 border-right-color: rgb" + details + ";");
+                 border-right-color: rgb" + details + ";} \
+                    QPushButton:hover {" + btext + "background-color: rgb" + button_back_hover + ";\
+                    color: rgb" + text + ";\
+                  border-right-color: rgb" + details + ";} \
+                    QPushButton:pressed {" + btext + "background-color: rgb" + button_back_pressed + ";\
+                                     color: rgb" + text + ";\
+                                   border-right-color: rgb" + details + ";}");
         ui -> changes -> setStyleSheet("color: rgb" + text + ";");
         QString dtext = "background-color: rgba(255, 255, 255,0);\
                 border: none;\
@@ -352,19 +360,20 @@ void MainWindow::set_theme()
  color: rgb"+texttext +"; border-color: rgb" + border + ";");
          ui->text2 -> setStyleSheet(bback + text_back + ";\
  color: rgb"+texttext +"; border-color: rgb" + border + ";");
-         ui -> buttonpaste ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> buttonpaste_2 ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> buttoncopy ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> buttoncopy_2->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> buttochange ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         if (autoz)
-            ui -> autozamena->setStyleSheet("border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";");
-         else
-             ui->autozamena->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";");
-         //ui -> refreshButton ->setStyleSheet("nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> settings ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> Clear_left ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
-         ui -> Clear_right ->setStyleSheet("border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;\n\nbackground-color: rgb" + button_back + "; color: rgb" + text + ";");
+         QString bobtext = "QPushButton {border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid; background-color: rgb" + button_back + "; color: rgb" + text + ";} QPushButton:hover {\
+                border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid; background-color: rgb" +button_back_hover + "; color: rgb" + text + ";} QPushButton:pressed {\
+            border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid; background-color: rgb" + button_back_pressed + "; color: rgb" + text + ";}";
+         ui -> buttonpaste ->setStyleSheet(bobtext);
+         ui -> buttonpaste_2 ->setStyleSheet(bobtext);
+         ui -> buttoncopy ->setStyleSheet(bobtext);
+         ui -> buttoncopy_2->setStyleSheet(bobtext);
+         ui -> buttochange ->setStyleSheet(bobtext);
+         ui -> autozamena->setStyleSheet(maintheme.do_autoz(autoz));
+
+
+         ui -> settings ->setStyleSheet(bobtext);
+         ui -> Clear_left ->setStyleSheet(bobtext);
+         ui -> Clear_right ->setStyleSheet(bobtext);
          ui->themebutton->setText(themetext);
          ui->debug->setStyleSheet("color: rgb"+text+";");
          if (maintheme.theme)

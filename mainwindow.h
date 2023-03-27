@@ -36,6 +36,7 @@ private:
     bool output = 1;
     int autoz = 0;
     int theme = 0;
+    dwTheme maintheme;
     QJsonDocument read_json(QString filename);
     void button_switch(QString);
     void label_settext(int);
@@ -49,7 +50,6 @@ private:
     void adaptive_screen();
     void set_fonts();
     void set_progressbar();
-    dwTheme maintheme;
     void error_checker(QString);
 
 private slots:
@@ -75,8 +75,6 @@ private slots:
     void on_buttoncopy_2_clicked();
     void on_excel_clicked();
     void on_discord_clicked();
-    //void on_pushButton_clicked();
-   // void on_backz_clicked();
     void on_autozamena_clicked();
 };
 #endif // MAINWINDOW_H

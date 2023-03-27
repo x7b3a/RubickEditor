@@ -165,19 +165,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-						background-color: rgb(243, 243, 243);
-    border-right-width: 1px;
-    border-right-style: outset; /* just a single line */
-    border-bottom-right-radius: 3px;</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QTextEdit" name="text2">
@@ -402,26 +390,7 @@ border-bottom-width: 1px;
      <string/>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-						background-color: rgb(243, 243, 243);
-    border-right-width: 1px;
-    border-right-style: outset; /* just a single line */
-    border-bottom-right-radius: 3px;
-
-
-background-color: rgb(2, 0, 98);
-background-color: rgb(7, 0, 68);
-background-color: rgb(7, 0, 30);
-color: rgb(250, 250, 250);
-color: rgb(243, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="autoFormatting">
      <set>QTextEdit::AutoAll</set>
@@ -454,21 +423,7 @@ p, li { white-space: pre-wrap; }
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-background-color: rgb(243, 243, 243);
-    border-right-width: 12px;
-    border-right-color: rgb(255, 191, 102);
-    border-right-style: outset; /* just a single line */
-
-    border-bottom-right-radius: 3px;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>5</string>
@@ -494,21 +449,7 @@ background-color: rgb(243, 243, 243);
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-background-color: rgb(243, 243, 243);
-    border-right-width: 12px;
-    border-right-color: rgb(255, 191, 102);
-    border-right-style: outset; /* just a single line */
-
-    border-bottom-right-radius: 3px;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>4</string>
@@ -537,21 +478,7 @@ background-color: rgb(243, 243, 243);
      <string>Взаимодействует с заголовками разделов, примечаниями к разделам</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-background-color: rgb(243, 243, 243);
-    border-right-width: 12px;
-    border-right-color: rgb(255, 191, 102);
-    border-right-style: outset; /* just a single line */
-
-    border-bottom-right-radius: 3px;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>3</string>
@@ -583,24 +510,7 @@ background-color: rgb(243, 243, 243);
      <number>10</number>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-
-    border-right-width: 12px;
-   
-    border-right-style: outset; /* just a single line */
-
-    border-bottom-right-radius: 3px;
-background-color: rgb(243, 243, 243);
-color: rgb(0, 0, 0);
- border-right-color: rgb(255, 191, 102);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>2</string>
@@ -635,24 +545,7 @@ color: rgb(0, 0, 0);
      <number>12</number>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-						background-color: rgb(243, 243, 243);
-    border-right-width: 12px;
-    border-right-style: outset; /* just a single line */
-    border-bottom-right-radius: 3px;
-
-
-background-color: rgb(2, 0, 98);
-border-right-color: rgb(209, 124, 249);
-color: rgb(250, 250, 250);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>1</string>
@@ -676,11 +569,7 @@ color: rgb(250, 250, 250);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-color: rgb(127, 127, 127);
-border-width: 1px;
-    border-style: solid;
-
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Вставить из буфера</string>
@@ -705,19 +594,7 @@ background-color: rgb(243, 243, 243);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Поменять местами</string>
@@ -752,19 +629,7 @@ background-color: rgb(243, 243, 243);</string>
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Настройки
@@ -799,7 +664,7 @@ border: none;</string>
      <string/>
     </property>
     <property name="icon">
-     <iconset resource="res.qrc">
+     <iconset>
       <normaloff>:/images/images/wiki_dark2.png</normaloff>:/images/images/wiki_dark2.png</iconset>
     </property>
     <property name="iconSize">
@@ -1081,19 +946,7 @@ color: rgb(255, 191, 102);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Копировать в буфер</string>
@@ -1112,19 +965,7 @@ background-color: rgb(243, 243, 243);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Вставить из буфера</string>
@@ -1143,19 +984,7 @@ background-color: rgb(243, 243, 243);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Копировать в буфер</string>
@@ -1179,19 +1008,7 @@ background-color: rgb(243, 243, 243);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Очистить
@@ -1216,19 +1033,7 @@ background-color: rgb(243, 243, 243);</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Очистить
@@ -1301,21 +1106,7 @@ background-color: rgb(243, 243, 243);</string>
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">/*border-top-color: rgb(127, 127, 127);
-border-top-width: 1px;
-    border-top-style: solid;
-border-left-color: rgb(127, 127, 127);
-border-left-width: 1px;
-    border-left-style: solid;
-border-bottom-color: rgb(127, 127, 127);
-border-bottom-width: 1px;
-    border-bottom-style: solid;
-border-right-color: rgb(127, 127, 127);
-border-right-width: 1px;
-    border-right-style: solid;
-background-color: rgb(243, 243, 243);*/
-/*border-color: rgb(255, 191, 102); border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb(230, 230, 230); color: rgb(0,0,0);*/
-border-color: rgb(255, 191, 102); border-width: 4px; border-radius: 4px;\n    border-style: solid;\n\nbackground-color: rgb(230, 230, 230); color: rgb(0,0,0);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Автозамена (выкл)</string>
