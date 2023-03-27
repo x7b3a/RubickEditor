@@ -1,6 +1,7 @@
 QT          += core gui
 QT          += winextras
 QT          += network
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -17,20 +18,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    dwsetter.cpp \
-    dwsnapshot.cpp \
+    dwjson.cpp \
+    dwnetmacros.cpp \
     dwtheme.cpp \
-    html_parser.cpp \
     macros.cpp \
     main.cpp \
     mainwindow.cpp \
     ui_settings.cpp
 
 HEADERS += \
-    dwsetter.h \
-    dwsnapshot.h \
+    dwjson.h \
+    dwnetmacros.h \
     dwtheme.h \
-    html_parser.h \
     macros.h \
     mainwindow.h \
     qsswitch.h \

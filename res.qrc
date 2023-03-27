@@ -7,6 +7,9 @@
         <file>images/discord.png</file>
         <file>images/back3.png</file>
         <file>images/back_dark4.png</file>
+        <file>images/wiki.png</file>
+        <file>images/wiki_trans.png</file>
+        <file>images/excel_trans.png</file>
     </qresource>
     <qresource prefix="/">
         <file>images/refresh.png</file>

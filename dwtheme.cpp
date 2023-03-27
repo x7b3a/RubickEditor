@@ -1,8 +1,21 @@
 #include "dwtheme.h"
 #include <QMainWindow>
+#include <QPainter>
+
 dwTheme::dwTheme(QWidget *parent) : QMainWindow(parent)
 {
+   colorize_image(wiki_dark, ":/images/images/wiki_trans.png", 104,123,200);
+   colorize_image(excel_dark, ":/images/images/excel_trans.png", 114,132,203);
+   colorize_image(discord_dark, ":/images/images/discord.png", 114,132,203);
+}
 
+void dwTheme::colorize_image(QPixmap &image, QString path, int r, int g, int b)
+{
+    image = QPixmap(path);
+    QPainter painter(&image);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    painter.fillRect(image.rect(),qRgb(r,g,b));
+    painter.end();
 }
 
 QString dwTheme::get_themetext()
@@ -65,6 +78,30 @@ QString dwTheme::get_buttoncolor()
     default: return "(243, 243, 243)"; break;
     }
 }
+QString dwTheme::get_buttoncolor_hover()
+{
+    switch (theme)
+    {
+    case 0: return "(250, 250, 250)"; break;
+
+        //case 1: return "(75,105,255)"; break;
+        case 1: return "(83, 106, 193)"; break;
+    //case 1: return "(2, 0, 98)"; break;
+    default: return "(250, 250, 250)"; break;
+    }
+}
+QString dwTheme::get_buttoncolor_pressed()
+{
+    switch (theme)
+    {
+    case 0: return "(210, 210, 210)"; break;
+
+        //case 1: return "(75,105,255)"; break;
+        case 1: return "(58, 66, 153)"; break;
+    //case 1: return "(2, 0, 98)"; break;
+    default: return "(210, 210, 210)"; break;
+    }
+}
 QString dwTheme::get_textcolor()
 {
     switch (theme)
@@ -92,13 +129,23 @@ QString dwTheme::get_details()
     default: return "(255, 191, 102)"; break;
     }
 }
+QString dwTheme::get_details_hover()
+{
+    switch (theme)
+    {
+    case 0: return "(255, 211, 122)"; break;
+    case 1: return "(229, 144, 255)"; break;
+    default: return "(255, 211, 122)"; break;
+    }
+}
 QString dwTheme::do_autoz(int onoff)
 {
     QString details = get_details();
     QString button_back = get_buttoncolor();
+    QString button_back_hover = get_buttoncolor_hover();
     QString text = get_buttontextcolor();
-    QString text_autoz =  "border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";";
-    QString text_noautoz = "border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";";
+    QString text_autoz =  "QPushButton {border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";} QPushButton:hover {border-color: rgb" + details + "; border-width: 1px;\n    border-style: solid  ; border-width: 4px; border-radius: 4px;\n    border-style: solid;background-color: rgb" + button_back_hover + "; color: rgb" + text + ";}";
+    QString text_noautoz = "QPushButton {border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;background-color: rgb" + button_back + "; color: rgb" + text + ";} QPushButton:hover {border-color: rgb(127, 127, 127); border-width: 1px;\n    border-style: solid;background-color: rgb" + button_back_hover + "; color: rgb" + text + ";}";
     switch (onoff)
     {
         case 0: return text_noautoz;
