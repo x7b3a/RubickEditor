@@ -309,10 +309,10 @@ void MainWindow::set_theme()
     QString texttext = maintheme.get_textcolor();
     QString text = maintheme.get_buttontextcolor();
     QString details = maintheme.get_details();
+    QString details_hover = maintheme.get_details_hover();
     QPalette palette = maintheme.get_backimage();
     QString background;
     QString border = maintheme.get_border();
-    QString themetext = maintheme.get_themetext();
     QString btext = "border-top-color: rgb(127, 127, 127);border-top-width: 1px; border-top-style: solid;border-left-color: rgb(127, 127, 127);border-left-width: 1px;border-left-style: solid;\
             border-bottom-color: rgb(127, 127, 127);\
             border-bottom-width: 1px;\
@@ -342,11 +342,11 @@ void MainWindow::set_theme()
         QString dtext = "background-color: rgba(255, 255, 255,0);\
                 border: none;\
                 color: rgb";
-                ui->Input_win->setStyleSheet(dtext+details+";");
-                ui->Output_win->setStyleSheet(dtext+details+";");
+                ui->Input_win->setStyleSheet("QPushButton {"+dtext+details+";} QPushButton:hover {" + dtext + details_hover + ";}");
+                ui->Output_win->setStyleSheet("QPushButton {"+dtext+details+";} QPushButton:hover {" + dtext + details_hover + ";}");
                 ui->Input_label->setStyleSheet(dtext+details+";");
                 ui->Output_label->setStyleSheet(dtext+details+";");
-                ui->themebutton -> setStyleSheet(dtext+details+";");
+                ui->themebutton -> setStyleSheet("QPushButton {"+dtext+details+";} QPushButton:hover {" + dtext + details_hover + ";}");
                 ui->themelabel -> setStyleSheet(dtext+details+";");
         QString bback = "border-top-width: 1px;\
                     border-top-style: solid;\
@@ -374,7 +374,7 @@ void MainWindow::set_theme()
          ui -> settings ->setStyleSheet(bobtext);
          ui -> Clear_left ->setStyleSheet(bobtext);
          ui -> Clear_right ->setStyleSheet(bobtext);
-         ui->themebutton->setText(themetext);
+         ui->themebutton->setText(maintheme.get_themetext());
          ui->debug->setStyleSheet("color: rgb"+text+";");
          if (maintheme.theme)
          {

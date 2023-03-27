@@ -97,7 +97,7 @@ QString dwTheme::get_buttoncolor_pressed()
     case 0: return "(210, 210, 210)"; break;
 
         //case 1: return "(75,105,255)"; break;
-        case 1: return "(63, 46, 153)"; break;
+        case 1: return "(58, 66, 153)"; break;
     //case 1: return "(2, 0, 98)"; break;
     default: return "(210, 210, 210)"; break;
     }
@@ -127,6 +127,15 @@ QString dwTheme::get_details()
     case 0: return "(255, 191, 102)"; break;
     case 1: return "(209, 124, 249)"; break;
     default: return "(255, 191, 102)"; break;
+    }
+}
+QString dwTheme::get_details_hover()
+{
+    switch (theme)
+    {
+    case 0: return "(255, 211, 122)"; break;
+    case 1: return "(229, 144, 255)"; break;
+    default: return "(255, 211, 122)"; break;
     }
 }
 QString dwTheme::do_autoz(int onoff)
