@@ -33,7 +33,8 @@
 #include <QPainter>
 #include <QColor>
 #include <QRgb>
-#define RVERSION "1.1.0"
+
+#define RVERSION "1.1.1"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -178,6 +179,7 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[2],//"������ "���������"
                 {
                     dwcase.Changelogs();
+                    section = 2;
                     put_text(dwcase.first);
                     label_settext(dwcase.counted);
                     if (!dwcase.errors.isEmpty())
@@ -191,6 +193,7 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[3],//"������ "�������"
                 {
                     dwcase.Responses();
+                    section = 3;
                     put_text(dwcase.first);
                     label_settext(dwcase.counted);
                     if (!dwcase.errors.isEmpty())
@@ -203,6 +206,7 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[4],// "������ "�����"
                 {
                     dwcase.Sounds();
+                    section = 4;
                     put_text(dwcase.first);
                     label_settext(dwcase.counted);
                     if (!dwcase.errors.isEmpty())
@@ -215,6 +219,7 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[5],//"������ "���������"
                 {
                    dwcase.Cosmetics();
+                   section = 5;
                    put_text(dwcase.first);
                    label_settext(dwcase.counted);
                    if (!dwcase.errors.isEmpty())
@@ -263,6 +268,8 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[10],
                 {
                     qDebug() << "size" << get_text().size();
+
+                    section = 10;
                     if (get_text().size()<100)
                     {
                         dwnetcase.version=get_text();
@@ -368,6 +375,7 @@ void MainWindow::set_theme()
          ui -> buttoncopy ->setStyleSheet(bobtext);
          ui -> buttoncopy_2->setStyleSheet(bobtext);
          ui -> buttochange ->setStyleSheet(bobtext);
+         ui->preview->setStyleSheet(bobtext);
          ui -> autozamena->setStyleSheet(maintheme.do_autoz(autoz));
 
 
@@ -682,4 +690,17 @@ void MainWindow::on_autozamena_clicked()
 void MainWindow::end()
 {
 
+}
+
+void MainWindow::on_preview_clicked()
+{
+    switch (section)
+    {
+        case 2:break;
+        case 3:break;
+        case 4:break;
+        case 5:break;
+        case 10:break; //animations
+        default: break;
+    }
 }

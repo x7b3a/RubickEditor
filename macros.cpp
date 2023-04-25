@@ -198,9 +198,12 @@ void Macros::Changelogs()
     QMap<QString, QString> New_Talent_abilities = dwJ.map_parser(item,"New_Talent_abilities");
     QMap<QString,QString> New_ability = dwJ.map_parser(item,"New_ability");
     QMap<QString,QString> Other_last = dwJ.map_parser(item,"Other_last");
+    QMap<QString,QString> unihero = dwJ.map_parser(item,"unihero");
+
    // send_progress(1);
     send_progress(1);
     first = start_regular_replacer(first);
+
     for (i=Aghanim.begin();i!=Aghanim.end();i++)
     {
         first.replace(start_regular_replacer(i.key()),color(i.value()));
@@ -227,6 +230,17 @@ void Macros::Changelogs()
     QRegExp texp2;
     int iter = 0;
     //tal changes
+
+
+    for (i=unihero.begin();i!=unihero.end();i++)
+    {
+        texp = QRegExp(start_regular_replacer("{{H|") + "([a-zA-Z\\ \\-]{1,35})" +(start_regular_replacer("}}")+ start_regular_replacer(i.key())));
+        while(texp.indexIn(first)!=-1 )
+        {
+            first.replace(texp.cap(0),color(i.value()));
+        }
+
+    }
     for (i=Keywords_small.begin(); i!= Keywords_small.end();i++,pr+=15) //increased
     {
         send_progress(pr);

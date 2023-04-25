@@ -24,6 +24,9 @@
 		" on each level" : " на каждом уровне",
 		"Space" : " ",
 		" changed:" : ":",
+		"unihero" : {
+		" no longer has a [[primary attribute]] and is now a {{Attribute ID|Universal}} hero." : "Больше не имеет [[основной атрибут|основного атрибута]] и теперь является {{Attribute ID|Универсальный|text=универсальным}} героем."
+		},
 		"Flex_verb" : ["", "а", "о", "ы"],
 		"Flex_adj" : ["ый", "ая", "ое", "ые"],
 		"Keywords" : {
@@ -79,7 +82,8 @@
 				" attack [[projectile speed]] " : "[[Скорость полёта снаряда]] ",
 				" cast range " : "Дальность применения ",
 				" bonus movement speed " : "Доп. скорость передвижения ",
-				" bonus attack range " : "Бонусная дальность атаки "
+				" bonus attack range " : "Бонусная дальность атаки ",
+				" base [[mana]] " : "Базовая [[мана]] "
 			},
 			"male" : {
 				" base [[attack damage]] " : "Базовый [[урон от атаки]] ",
@@ -118,7 +122,8 @@
 				" base mana regeneration " : "Базовое [[восстановление маны]] ",
 				" base [[mana regeneration]] " : "Базовое [[восстановление маны]] ",
 				" evasion " : "Уклонение ",
-				" heal " : "Лечение "
+				" heal " : "Лечение ",
+				" base [[health]] " : "Базовое [[здоровье]] "
 			}
 		},
 		"Anti_Irismus_Talents_level" : {
@@ -151,11 +156,20 @@
 			"{{Symbol|Talent}} '''[[Talent]]s''':" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"** Левый" : ":: Левый",
 			"** Правый" : ":: Правый",
-			"'''Reworked talents'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]'''",
-			"'''Reworked talents:'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]:'''",
-			"'''Переработаны таланты:'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]:'''",
-			"'''Переработаны таланты'''" : "'''Переработаны {{Значок|Талант}} [[таланты]]'''",
-			"Added talents" : "Добавлены таланты"
+			"'''Reworked talents'''" : "'''{{cf|Переработаны}} {{Значок|Талант}} [[таланты]]'''",
+			"'''Reworked talents:'''" : "'''{{cf|Переработаны}} {{Значок|Талант}} [[таланты]]:'''",
+			"'''Переработаны таланты:'''" : "'''{{cf|Переработаны}} {{Значок|Талант}} [[таланты]]:'''",
+			"'''Переработаны таланты'''" : "'''{{cf|Переработаны}} {{Значок|Талант}} [[таланты]]'''",
+			"Added talents" : "{{cf|Добавлены}} {{Значок|Талант}} '''[[таланты]]:'''",
+			"''Старые:''" : "{{Cf|Старые}}",
+			"''Новые:''" : "{{cf|Новые}}",
+			"Добавлены таланты:" : "{{cf|Добавлены}} {{Значок|Талант}} '''[[таланты]]:'''",
+			"''Новая " : "{{Cf|Новая}} ''",
+			"''Старая " : "{{Cf|Старая}} ''",
+			"** Старое:" : "** {{Cf|Старое}}",
+			"** Новое:" : "** {{Cf|Новое}}",
+			"'''Переработано " : "{{Cf|Переработано}} '''",
+			"'''Добавлено " : "{{Cf|Добавлено}} '''"
 		},
 		"New_ability" : {
 			"Cast time" : "Задержка перед применением",
@@ -199,6 +213,7 @@
 		"Level_numbers" : "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|\\.)",
 		"Cooldown" : {
 			"cooldown reduction" : "уменьшение перезарядки ",
+			"cooldown" : "уменьшение перезарядки ",
 			"[[respawn time]]" : "уменьшение [[время возрождения|времени возрождения]] "
 		},
 		"Abilities_one" : {
@@ -207,7 +222,9 @@
 				" slow duration " : "длительность замедления ",
 				" duration " : "длительность ",
 				" cast animation " : "анимация применения ",
-				" cast time " : "задержка перед применением "
+				" cast time " : "задержка перед применением ",
+				" stun duration " : "длительность [[оглушение|оглушения]] ",
+				" [[stun]] duration " : "длительность [[оглушение|оглушения]] "
 			},
 			"duration_n" : {
 				" charge replenish time " : "время восстановления заряда "
@@ -244,7 +261,8 @@
 		},
 		"Talents_abilities_proc" : {
 			"evasion" : "бонус к уклонению от",
-			"movement speed slow" : "бонус к замедлению скорости передвижения от"
+			"movement speed slow" : "бонус к замедлению скорости передвижения от",
+			"[[spell amplification]]" : "бонус к [[урон от заклинаний|урон от заклинаний]]"
 		},
 		"Talents_changes": {
 		"[[health regeneration]]" : "бонус к [[восстановление здоровья|восстановлению здоровья]]",
@@ -260,6 +278,7 @@
 		"{{Attribute ID|intelligence}}" : "бонус к {{Attribute ID|Интеллект|text=интеллекту}}",
 		"{{Attribute ID|all}}" : "бонус ко {{Attribute ID|все|всем атрибутам}}",
 		"[[health]]" : "бонус к [[здоровье|здоровью]]",
+		"health" : "бонус к [[здоровье|здоровью]]",
 		"[[attack range]]" : "бонус к [[дальность атаки|дальности атаки]]",
 		"[[cast range]]" : "бонус к [[дальность применения|дальности применения]]",
 		"[[base damage]]" : "бонус к [[базовый урон от атаки|базовому урону]]",
@@ -279,46 +298,48 @@
 		"[[spell amplification]]" : "бонус к [[урон от заклинаний|урону от заклинаний]]"
 		},
 		"Aghanim" : {
-			"* {{cf|Added}} '''{{I|Aghanim's Shard}} upgrade for " : "* {{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Shard}} для ",
-			"* {{cf|Added}} '''{{I|Aghanim's Scepter}} upgrade for " : "* {{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
+			"* {{cf|Added}} '''{{I|Aghanim's Shard}} upgrade for " : "* {{cf|Добавлено}} '''улучшение от {{I|Aghanim's Shard}} для ",
+			"* {{cf|Added}} '''{{I|Aghanim's Scepter}} upgrade for " : "* {{cf|Добавлено}} '''улучшение от {{I|Aghanim's Scepter}} для ",
 			"{{cf|Old}}" : "{{cf|Старое}}",
 			"{{cf|New}}" : "{{cf|Новое}}",
-			"* {{cf|Reworked}} {{I|Aghanim's Shard}} upgrade" : "* {{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
-			"* {{cf|Reworked}} {{I|Aghanim's Scepter}} upgrade" : "* {{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
-			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Shard}}",
-			"'''Reworked''' {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} Улучшение от {{I|Aghanim's Scepter}}",
+			"* {{cf|Reworked}} {{I|Aghanim's Shard}} upgrade" : "* {{cf|Переработано}} улучшение от {{I|Aghanim's Shard}}",
+			"* {{cf|Reworked}} {{I|Aghanim's Scepter}} upgrade" : "* {{cf|Переработано}} улучшение от {{I|Aghanim's Scepter}}",
+			"'''Reworked''' {{I|Aghanim's Shard}} upgrade" : "{{cf|Переработано}} улучшение от {{I|Aghanim's Shard}}",
+			"'''Reworked''' {{I|Aghanim's Scepter}} upgrade" : "{{cf|Переработано}} улучшение от {{I|Aghanim's Scepter}}",
 			"* {{I|Aghanim's Scepter}} upgrade" : "* Улучшение от {{I|Aghanim's Scepter}}",
 			"* {{I|Aghanim's Shard}} upgrade" : "* Улучшение от {{I|Aghanim's Shard}}",
-			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Scepter}} для ",
-			"'''Added {{I|Aghanim's Shard}} upgrade for " : "{{cf|Добавлено}} '''Улучшение от {{I|Aghanim's Shard}} для ",
+			"'''Added {{I|Aghanim's Scepter}} upgrade for " : "{{cf|Добавлено}} '''улучшение от {{I|Aghanim's Scepter}} для ",
+			"'''Added {{I|Aghanim's Shard}} upgrade for " : "{{cf|Добавлено}} '''улучшение от {{I|Aghanim's Shard}} для ",
 			"{{Undocumented}}" : "{{cf|Н}}",
 			"{{cf|U}}" : "{{Cf|Н}}",
 			"{{cf|Changed}}" : "{{cf|Изменено}}"
+			
 		},
 		"New_Talent" : {
-		"[[health regeneration]]" : "к [[восстановление здоровья|восстановлению здоровья]]",
-		"[[attack speed]]" : "к [[скорость атаки|скорости атаки]]",
-		"[[mana regeneration]]" : "к [[восстановление маны|восстановлению маны]]",
-		"[[mana regen]]" : "к [[восстановление маны|восстановлению маны]]",
-		"[[armor]]" : "к [[броня|броне]]",
-		"[[movement speed]]" : "к [[скорость передвижения|скорости передвижения]]",
-		"[[mana]]" : "к [[мана|мане]]",
-		"[[attack damage]]" : "к [[урон от атаки|урону от атаки]]",
-		"{{Attribute ID|strength}}" : "к {{Attribute ID|Сила|text=силе}}",
-		"{{Attribute ID|agility}}" : "к {{Attribute ID|Ловкость|text=ловкости}}",
-		"{{Attribute ID|intelligence}}" : "к {{Attribute ID|Интеллект|text=интеллекту}}",
-		"[[health]]" : "к [[здоровье|здоровью]]",
-		"[[attack range]]" : "к [[дальность атаки|дальности атаки]]",
-		"[[cast range]]" : "к [[дальность применения|дальности применения]]",
-		"[[lifesteal]]" : "к [[вампиризм]]у",
-		"[[evasion]]" : "к [[уклонение|уклонению]]",
-		"[[magic resistance]]" : "к [[сопротивление магии|сопротивлению магии]]",
-		"[[cleave]]" : "к [[прорубающий удар|прорубающему урону]]",
-		"[[spell damage amplification]]" : "к [[урон от заклинаний|урону от заклинаний]]",
-		"[[spell lifesteal]]" : "к [[вампиризм заклинаний|вампиризму заклинаний]]",
-		"[[base damage]]" : "к [[базовый урон от атаки|базовому урону]]",
-		"[[base attack damage]]" : "к [[базовый урон от атаки|базовому урону]]",
-		"[[gold]] per minute" : "[[золото|золота]] в минуту"
+			"health regeneration" : "к [[восстановление здоровья|восстановлению здоровья]]",
+			"attack speed" : "к [[скорость атаки|скорости атаки]]",
+			"mana regeneration" : "к [[восстановление маны|восстановлению маны]]",
+			"mana regen" : "к [[восстановление маны|восстановлению маны]]",
+			"armor" : "к [[броня|броне]]",
+			"movement speed" : "к [[скорость передвижения|скорости передвижения]]",
+			"mana" : "к [[мана|мане]]",
+			"[[attack damage" : "к [[урон от атаки|урону от атаки]]",
+			"{{Attribute ID|strength}}" : "к {{Attribute ID|Сила|text=силе}}",
+			"{{Attribute ID|agility}}" : "к {{Attribute ID|Ловкость|text=ловкости}}",
+			"{{Attribute ID|intelligence}}" : "к {{Attribute ID|Интеллект|text=интеллекту}}",
+			"health" : "к [[здоровье|здоровью]]",
+			"attack range" : "к [[дальность атаки|дальности атаки]]",
+			"cast range" : "к [[дальность применения|дальности применения]]",
+			"lifesteal" : "к [[вампиризм]]у",
+			"evasion" : "к [[уклонение|уклонению]]",
+			"magic resistance" : "к [[сопротивление магии|сопротивлению магии]]",
+			"cleave" : "к [[прорубающий удар|прорубающему урону]]",
+			"spell damage amplification" : "к [[урон от заклинаний|урону от заклинаний]]",
+			"spell lifesteal" : "к [[вампиризм заклинаний|вампиризму заклинаний]]",
+			"base damage" : "к [[базовый урон от атаки|базовому урону]]",
+			"base attack damage" : "к [[базовый урон от атаки|базовому урону]]",
+			"[[gold]] per minute" : "[[золото|золота]] в минуту",
+			"spell amplification" : "к [[урон от заклинаний|урону от заклинаний]]"
 		},
 		"New_Talent_abilities" : {
 			" cooldown" : " сек. перезарядки",
@@ -409,6 +430,9 @@
 	},
 	"Cosmetics" : {
 		"[[Nemestice 2021 Immortal Treasure]]" : "[[Враждостояние 2021: Immortal-сокровищница]]",
+		"[[Nemestice Collector's Cache 2021]]": "[[Враждостояние 2021: Collector's Cache]]",
+		"[[Trust of the Benefactor Nemestice 2021]]" : "[[Враждостояние 2021: Trust of the Benefactor]]",
+		"[[Rarities of the Benefactor Nemestice 2021]]" : "[[Враждостояние 2021: Rarities of the Benefactor]]",
 		"== Customizations ==" : "== Изменения ==",
 		"|Customization" : "|Изменяется",
 		"|Type" : "|Тип",
@@ -419,9 +443,9 @@
 		"=== Ability Icon ===" : "=== Иконка способности ===",
 		"== Trivia ==" : "== Другое ==",
 		"* This item shares aesthetics with " : "* Этот предмет имеет общую стилистику с ",
-		"<center>Top</center>" : "<center>Сверху</center>",
-		"|<center>Front</center>" : "|<center>Спереди</center>",
-		"|<center>Back</center>" : "|<center>Сзади</center>",
+		"Top&lt;/center&gt;" : "Сверху&lt;/center&gt;",
+		"Front&lt;/center&gt;" : "Спереди&lt;/center&gt;",
+		"Back&lt;/center&gt;" : "Сзади&lt;/center&gt;",
 		"{{Equipment " : "{{Снаряжение ",
 		"== Gallery ==" : "== Галерея ==",
 		"| Animation" : "| Анимация",
@@ -436,6 +460,7 @@
 		"The textures on the claws and mandibles" : "Текстуры когтей и нижней челюсти",
 		"The textures on the rifle" : "Текстуры на винтовке",
 		"|Bound To" : "|Связан с",
+		"|Bound to" : "|Связан с",
 		"* This set's internal name is " : "* Внутреннее название набора — ",
 		"== Styles ==" : "== Стили ==",
 		"== Style Unlock Items ==" : "== Предметы, разблокирующие стили ==",
@@ -443,6 +468,27 @@
 		"[[Nemestice 2021 Battle Pass#Cavern Crawl|Nemestice 2021 Cavern Crawl]]" : "[[Враждостояние 2021: боевой пропуск#Катакомбы|Катакомбы Враждостояния 2021]]",
 		"[[Aghanim's 2021 Immortal Treasure]]" : "[[Лабиринт Аганима 2021: Immortal-сокровищница]]",
 		"[[Aghanim's 2021 Continuum Collection]]" : "[[Лабиринт Аганима 2021: Continuum Collection]]",
+		"[[Aghanim's 2021 Ageless Heirlooms]]" :"[[Лабиринт Аганима 2021: Ageless Heirlooms]]",
+		"[[Aghanim's 2021 Collector's Cache]]" : "[[Лабиринт Аганима 2021: Collector's Cache]]",
+		
+			"БОЕВОЙ ПРОПУСК 2022" : "БОЕВОЙ ПРОПУСК 2022",
+			
+		"[[Battle Pass 2022]]" : "[[Боевой пропуск 2022]]",
+		"[[Ageless Heirlooms 2022]]" : "[[Боевой пропуск 2022: Ageless Heirlooms]]",
+		"[[Immortal Treasure I 2022]]" : "[[Боевой пропуск 2022: Immortal Treasure I]]",
+		"[[Immortal Treasure II 2022]]" : "[[Боевой пропуск 2022: Immortal Treasure II]]",
+		"[[Battle Pass 2022 Candy Sack]]" : "[[Боевой пропуск 2022: мешочек конфет]]",
+		"[[The Battle Pass Collection 2022]]" : "[[Боевой пропуск 2022: коллекция предметов]]",
+		"[[Diretide 2022 Collector's Cache]]" : "[[Боевой пропуск 2022: Collector's Cache]]",
+		"[[Diretide 2022 Collector's Cache II]]" : "[[Боевой пропуск 2022: Collector's Cache II]]",
+		
+			"СМЕРТНАЯ РАСПЛАТА" : "СМЕРТНАЯ РАСПЛАТА",
+			
+		"Unearthed from a Dead Reckoning Chest in recognition of The Revenant Muerta's arrival" : "Возвращение призрака Муэрты привело к началу смертной расплаты",
+		
+		">Top<" : ">Сверху<",
+		">Front<" : ">Спереди<",
+		">Back<" : ">Сзади<",
 		"== Opens ==" : "== Отпирает ==",
 		"[[Category:Tools]]" : "[[Категория:Инструменты]]",
 		"[[Category:Loading Screens with " : "[[Категория:Загрузочные экраны с ",
@@ -450,14 +496,22 @@
 		"* [[Loading Screens]]" : "* [[Загрузочные экраны]]",
 		"* [[Treasures]]" : "* [[Сокровищницы]]",
 		"[[Loading Screens]] have slightly different appearances depending on your monitor's aspect ratio." : "[[Загрузочные экраны]] выглядят немного по-разному в зависимости от соотношения сторон вашего монитора.",
+		"* Contents are not tradeable or marketable for one year, but can be [[Gifting|gifted]] once. " : "* Предметы нельзя обменивать и передавать в течение года, но они могут быть [[Подарки|подарены]] единожды.",
+		"* Any five items in this treasure can be recycled in the [[Armory]] to gain an additional" : "* Любые четыре предмета в этой сокровищнице можно перековать в [[арсенал]]е, чтобы получить дополнительную",
 		"* The chances of receiving this item increase with each treasure opened." : "* Шанс получить этот предмет увеличивается с каждым открытием сокровищницы.",
 		"This treasure is obtained as a random [[Item drop system|drop]] and can only be unlocked using " : "Эта сокровищница приобретается только при случайном [[Система выпадения предметов|выпадении]] и может быть открыта только ",
+		"This treasure can be obtained by leveling" : "Сокровищницу можно получить при повышении",
+		"The weapon piece has an entry for a custom particle effect, but uses the default effect." : "Оружие из этого набора имеет строку для изменённого эффекта частиц, но используется стандартный эффект.",
+		"This item has an entry for a custom particle effect, but uses the default effect." : "Этот предмет имеет строку для изменённого эффекта частиц, но используется стандартный эффект.",
+		"The weapon piece has an entry for custom particle effects, but uses the default effect." : "Оружие из этого набора имеет строку для изменённых эффектов частиц, но используется стандартный эффект.",
+		"This item has an entry for custom particle effects, but uses the default effect." : "Этот предмет имеет строку для изменённых эффектов частиц, но используется стандартный эффект.",
 		"== Contents ==" : "== Содержит ==",
 		"== Opened with ==" : "== Открывается ==",
 		"=== Regular ===" : "=== Обычная ===",
 		"=== Rare ===" : "=== Редкая ===",
 		"=== Very Rare ===" : "=== Очень редкая ===",
 		"=== Ultra Rare ===" : "=== Невероятно редкая ===",
+		"=== Cosmically Rare ===" : "=== Чрезвычайно редкая ===",
 		"[[Category:Treasures]]" : "[[Категория:Сокровищницы]]",
 		"[[Category:Active Treasures]]" : "[[Категория:Активные сокровищницы]]"
 	},
@@ -611,6 +665,54 @@
 		"Tornado (Wildwing Ripper)" : "Торнадо (Дикокрыл-потрошитель)",
 		"Wraith Pact Totem" : "Тотем от Wraith Pact",
 		"Courier" : "Курьер"
+	},
+	"Animations" : {
+		"Complex" : {
+			"| Attack Fast" : "| Быстрая атака",
+			"| Attack Faster" : "| Более быстрая атака",
+			"| Attack Fastest" : "| Самая быстрая атака",
+			"| Run Chase" : "| Погоня",
+			"| Run Haste" : "| Ускорение",
+			"| Teleport End" : "| Окончание телепортации",
+			"| Loadout Spawn" : "| Снаряжение, появление",
+			"| Run Aggressive" : "| Агрессивное передвижение",
+			"| Idle Aggressive" : "| Агрессивное бездействие",
+			"| Run Aggresive" : "| Агрессивное передвижение",
+			"| Idle Aggresive" : "| Агрессивное бездействие"
+		},
+		"Main" : {
+		"== Basic Animations ==" : "== Базовые анимации ==",
+		"== Hero Animations ==" : "== Анимации героя ==",
+		"| Customization" : "| Изменение",
+		"| Type" : "| Тип",
+		"|Customization" : "| Изменение",
+		"|Type" : "| Тип",
+		"| Preview" : "| Просмотр",
+		"|Preview" : "| Просмотр",
+		"| Animation" : "| Анимация",
+		"[[File:" : "[[Файл:",
+		"| Loadout" : "| Снаряжение",
+		"| Attack" : "| Атака",
+		"| Channel" : "| Произнесение заклинания",
+		"| Crit" : "| Критический удар",
+		"| Death" : "| Смерть",
+		"| Defeat" : "| Поражение",
+		"| Flail" : "| Потеря равновесия",
+		"| Idle" : "| Бездействие",
+		"| Run" : "| Передвижение",
+		"| Spawn" : "| Появление",
+		"| Stun" : "| Оглушение",
+		"| Teleport" : "| Телепортация",
+		"| Victory" : "| Победа",
+		"| Haste" : "| Ускорение",
+		"[[Category:Hero animations]]" : "[[Категория:Анимации героев]]"
+		},
+		"Tags" : {
+			"Injured" : "при ранении",
+			"Alternative" : "(альтернативная)",
+			"Spin" : "с разворота",
+			"Rare" : "(редко)"
+		}
 	},
 		"Heroes" : ["Abaddon",
 				"Alchemist",

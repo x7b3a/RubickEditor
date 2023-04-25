@@ -1,7 +1,7 @@
 QT          += core gui
 QT          += winextras
 QT          += network
-
+QT          +=
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -49,4 +49,3 @@ RESOURCES += \
     res.qrc
 win32:RC_FILE += resouces.rc
 
-DISTFILES +=

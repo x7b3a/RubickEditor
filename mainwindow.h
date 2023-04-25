@@ -36,6 +36,7 @@ private:
     bool output = 1;
     int autoz = 0;
     int theme = 0;
+    int section = 0;
     dwTheme maintheme;
     QJsonDocument read_json(QString filename);
     void button_switch(QString);
@@ -76,5 +77,6 @@ private slots:
     void on_excel_clicked();
     void on_discord_clicked();
     void on_autozamena_clicked();
+    void on_preview_clicked();
 };
 #endif // MAINWINDOW_H
