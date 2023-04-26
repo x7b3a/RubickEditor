@@ -5,8 +5,6 @@
 #include "macros.h"
 #include "dwjson.h"
 #include <QDesktopWidget>
-#include <QtWinExtras/QWinTaskbarProgress>
-#include <QtWinExtras/QWinTaskbarButton>
 #include <QWidget>
 #include <QObject>
 Macros::Macros()
@@ -108,6 +106,15 @@ void Macros::WikiAndFixes()
             QJsonValue value = WikiAndFixes.value(key);
             dict.insert(key,value.toString());
         }
+        QMap<QString,QString> Symbols = dwJ.map_parser(WikiAndFixes, "Symbols");
+        for (i=Symbols.begin();i!=Symbols.end();i++)
+        {
+            qDebug() << i.key();
+            QString temp  =QString("{{Symbol|" + i.key());
+            qDebug() << temp;
+                first.replace(temp,color(dict.value("{{Symbol|") + i.value()), Qt::CaseInsensitive);
+           // first.replace(i.key(),i.value());
+        }
     QJsonArray letter_with_for_medoke = WikiAndFixes["letter_with_for_medoke"].toArray();
     //send_progress(50);
     send_progress(40);
@@ -121,6 +128,9 @@ void Macros::WikiAndFixes()
     {
         first.replace(texp.cap(0),color(" " + letter_with_for_medoke[1].toString() + " 1" + texp.cap(1)));
     }
+
+
+
     texp = QRegExp("\\{\\{VersionTableElement\\|([0-9a-g\\.]{4,5})\\|\\{\\{");
     //texp.setPatternSyntax(QRegExp::FixedString);
     qDebug() <<texp;
@@ -128,6 +138,7 @@ void Macros::WikiAndFixes()
     {
         first.replace(texp.cap(0),"{{VersionTableElement|" + texp.cap(1) +  color("|\n{{"));
     }
+
    // send_progress(100);
     send_progress(90);
     counted = counter(first);

@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     set_progressbar();
 
-
+    ui->preview->setVisible(false);
 }
 
 MainWindow::~MainWindow()

@@ -5,7 +5,36 @@
 		"letter_with_for_medoke" : ["с", "со"],
 		"text = Hidden modifier" : "text = Скрытый модификатор",
 		"text = Missing tooltip" : "text = Нет описания",
-		"text = On hidden entity" : "text = На скрытом объекте"
+		"text = On hidden entity" : "text = На скрытом объекте",
+		"{{Symbol|" : "{{Значок|",
+		"Symbols" : {
+			"talent" : "Талант",
+			"daytime" : "днём",
+			"nighttime" : "ночью",
+			"gold" : "золото",
+			"experience" : "опыт",
+			"instant cast" : "мгновенное применение",
+			"incoming damage manipulation" : "манипуляция входящим уроном",
+			"outgoing damage manipulation" : "манипуляция исходящим уроном",
+			"armor" : "броня", 
+			"attack range" : "дальность атаки" ,
+			 "attack time" : "время атаки", 
+			"projectile speed" : "скорость снаряда", 
+			"damage" : "урон",
+			 "magic resistance" : "сопротивление магии", 
+			"vision" : "обзор",
+			 "turn rate" : "скорость поворота", 
+			"movement speed" : "скорость передвижения",
+			 "melee" : "ближний",
+			 "ranged" : "дальний",
+			"Small Camp" : "малый лагерь",
+			"Medium Camp" : "средний лагерь",
+			"Large Camp" : "крупный лагерь",
+			"Ancient Camp" : "лагерь древних",
+			"Fiend's Gate" : "Врата владыки",
+			"EnchantedTree" : "зачарованноедерево"
+		}
+
 	},
 	"Commafix": [ "[[en:Version ",
 				"[[zh:",
@@ -60,7 +89,8 @@
 				" cast time " : "Задержка перед применением ",
 				" cooldown " : "Перезарядка ",
 				" slow duration " : "Длительность замедления ",
-				" duration " : "Длительность "
+				" duration " : "Длительность ",
+				" stun duration " : "Длительность [[оглушение|оглушения]] "
 			},
 			"duration_n" : {
 				" charge replenish time " : "Время восстановления заряда "
@@ -154,6 +184,9 @@
 			"{{Symbol|Talent}} [[Talent]]s:" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"{{Symbol|Talent}} '''[[Talent]]s:'''" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"{{Symbol|Talent}} '''[[Talent]]s''':" : "{{Значок|Талант}} '''[[Таланты]]:'''",
+			"{{Значок|Талант}} [[Talent]]s:" : "{{Значок|Талант}} '''[[Таланты]]:'''",
+			"{{Значок|Талант}} '''[[Talent]]s:'''" : "{{Значок|Талант}} '''[[Таланты]]:'''",
+			"{{Значок|Талант}} '''[[Talent]]s''':" : "{{Значок|Талант}} '''[[Таланты]]:'''",
 			"** Левый" : ":: Левый",
 			"** Правый" : ":: Правый",
 			"'''Reworked talents'''" : "'''{{cf|Переработаны}} {{Значок|Талант}} [[таланты]]'''",
@@ -312,7 +345,8 @@
 			"'''Added {{I|Aghanim's Shard}} upgrade for " : "{{cf|Добавлено}} '''улучшение от {{I|Aghanim's Shard}} для ",
 			"{{Undocumented}}" : "{{cf|Н}}",
 			"{{cf|U}}" : "{{Cf|Н}}",
-			"{{cf|Changed}}" : "{{cf|Изменено}}"
+			"{{cf|Changed}}" : "{{cf|Изменено}}",
+			"[{{tooltip|?|General changes to spell immunity.}}]" : "[{{tooltip|?|Общие изменения невосприимчивости к магии.}}]"
 			
 		},
 		"New_Talent" : {
