@@ -37,7 +37,7 @@ void ui_settings::on_close_clicked()
     QTextStream stream( &file );
     stream << jsonString;
           file.close();
-          emit sendData("123");
+          emit sendData();
     qDebug() << "sended?";
     close();
 }
@@ -87,5 +87,10 @@ void ui_settings::add_items()
             comboboxes[i]->addItem(v.toString());
         }
     }
+
+}
+
+void ui_settings::recieveData()
+{
 
 }

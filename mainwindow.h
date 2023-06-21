@@ -28,9 +28,9 @@ public:
     Ui::MainWindow *ui;
     QVector<QString> cases;
 signals:
-    void sendData(QString);
+    void sendData();
 public slots:
-    void recieveData(QString);
+    void recieveData();
 private:
     bool input = 0;
     bool output = 1;
@@ -77,6 +77,5 @@ private slots:
     void on_excel_clicked();
     void on_discord_clicked();
     void on_autozamena_clicked();
-    void on_preview_clicked();
 };
 #endif // MAINWINDOW_H

@@ -27,6 +27,7 @@ public:
     void Patch_items();
     void Patch_Version(int a);
     void Parse_Animations();
+    void Parse_Cosmetic();
     void end();
 
     QString add_point(QString);
@@ -52,6 +53,7 @@ private slots:
     void replyFinishedVersion();
     void Do_Patch();
     void Do_Animations();
+    void Do_Cosmetic();
 };
 
 #endif // DWNETMACROS_H

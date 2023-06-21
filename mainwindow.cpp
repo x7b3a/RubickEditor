@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_settings.h"
 #include "qsswitch.h"
@@ -14,14 +14,10 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <QDesktopServices>
-#include <QMap>
-#include <QHash>
 #include <QSyntaxHighlighter>
 #include <QLabel>
-#include <string>
 #include <QRegExp>
 #include <QClipboard>
-#include <QStringList>
 #include <QThread>
 #include <QDesktopWidget>
 #include <QtWinExtras/QWinTaskbarProgress>
@@ -33,8 +29,8 @@
 #include <QPainter>
 #include <QColor>
 #include <QRgb>
-
-#define RVERSION "1.1.1"
+#define MCVC
+#define RVERSION "1.1.2"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -50,26 +46,27 @@ MainWindow::MainWindow(QWidget *parent)
     QJsonObject json = read_json("config2.json").object();
     QJsonValue value = json.value(QString("Theme"));
     maintheme.theme = value.toInt();
-
     this -> showMaximized();
     this -> setWindowTitle("Rubick Editor " + QString(RVERSION));
     this -> setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     set_buttons();
     append_cases();
+    ui->text1->setAcceptRichText(false);
+    ui->text2->setAcceptRichText(false);
     this->setStyleSheet("background-image:url()");
     maintheme.size =this->size();
     set_theme();
+
     from = new ui_settings();
 
-    connect(this, SIGNAL(sendData(QString)), from, SLOT(recieveData(QString)));  //�������� ������ �� Form1 � Form2
-    connect(from, SIGNAL(sendData(QString)), this, SLOT(recieveData(QString)));  //�������� ������ ������� �� Form2 � Form1
+    connect(this, &MainWindow::sendData, from, &ui_settings::recieveData);  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form1 пїЅ Form2
+    connect(from, &ui_settings::sendData, this, &MainWindow::recieveData);  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Form2 пїЅ Form1
 
     connect(&dwnetcase,&dwNetMacros::send_end,this,&MainWindow::receive_netmacros);
     connect(&dwnetcase,&dwNetMacros::new_progress,this,&MainWindow::receive_progress);
 
     set_progressbar();
 
-    ui->preview->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -87,7 +84,7 @@ MainWindow::~MainWindow()
      file.open(QIODevice::WriteOnly | QIODevice::Text);
      QTextStream stream( &file );
      stream << jsonString;
-           file.close();
+     file.close();
     delete ui;
 }
 
@@ -118,14 +115,14 @@ void MainWindow::receive_netmacros()
     put_text(dwnetcase.output);
     dwnetcase.cleaning();
 }
-void MainWindow::recieveData(QString q)
+void MainWindow::recieveData()
 {
     set_buttons();
 }
 
 void MainWindow::on_dota2wiki_clicked()
 {
-    QString wikiurl = "https://dota2.fandom.com/ru/wiki/\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a:X7b3a2j/Rubick_Editor";
+    QString wikiurl = QStringLiteral(u"https://dota2.fandom.com/ru/wiki/Участник:X7b3a2j/Rubick_Editor");
     QDesktopServices::openUrl(QUrl(wikiurl));
 }
 
@@ -149,7 +146,7 @@ void MainWindow::button_switch(QString switchStr)
     Macros dwcase(get_text(),maintheme.get_highlight());
     connect(&dwcase,&Macros::new_progress,this,&MainWindow::receive_progress);
     QSSWITCH(switchStr,
-                QSCASE(cases[0], //����������� � �����
+                QSCASE(cases[0], //замена точек на запятые
                 {
                     dwcase.Commafix();
                     put_text(dwcase.first);
@@ -157,11 +154,11 @@ void MainWindow::button_switch(QString switchStr)
                     if (!dwcase.errors.isEmpty())
                  {
                      ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                     ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                     ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                  }
                  dwcase.clearing();break;
                 })
-                QSCASE(cases[1], //������ ����� �� �������
+                QSCASE(cases[1], //викификатор
                 {
 
                     dwcase.WikiAndFixes();
@@ -170,13 +167,13 @@ void MainWindow::button_switch(QString switchStr)
                     if (!dwcase.errors.isEmpty())
                     {
                         ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                     }
                     dwcase.clearing();
                     break;
                     //WikiAndFixes(); break;
                 })
-                QSCASE(cases[2],//"������ "���������"
+                QSCASE(cases[2],//изменения
                 {
                     dwcase.Changelogs();
                     section = 2;
@@ -185,12 +182,28 @@ void MainWindow::button_switch(QString switchStr)
                     if (!dwcase.errors.isEmpty())
                     {
                         ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                     }
                     dwcase.clearing();
                    //Changelogs();break;
                 })
-                QSCASE(cases[3],//"������ "�������"
+                QSCASE(cases[3], //Изменения + Коммафикс + викификатор
+                {
+                    dwcase.Changelogs();
+                    dwcase.Commafix();
+                    dwcase.WikiAndFixes();
+                    section = 2;
+                    put_text(dwcase.first);
+                    label_settext(dwcase.counted);
+                    if (!dwcase.errors.isEmpty())
+                    {
+                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
+                    }
+                    dwcase.clearing();
+
+                })
+                QSCASE(cases[4],//"Реплики"
                 {
                     dwcase.Responses();
                     section = 3;
@@ -199,11 +212,11 @@ void MainWindow::button_switch(QString switchStr)
                     if (!dwcase.errors.isEmpty())
                     {
                         ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                     }
                     dwcase.clearing();
                 })
-                QSCASE(cases[4],// "������ "�����"
+                QSCASE(cases[5],// "Звуки"
                 {
                     dwcase.Sounds();
                     section = 4;
@@ -212,24 +225,36 @@ void MainWindow::button_switch(QString switchStr)
                     if (!dwcase.errors.isEmpty())
                     {
                         ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                     }
                     dwcase.clearing();
                 })
-                QSCASE(cases[5],//"������ "���������"
+                QSCASE(cases[6],//Косметика
                 {
-                   dwcase.Cosmetics();
-                   section = 5;
-                   put_text(dwcase.first);
-                   label_settext(dwcase.counted);
-                   if (!dwcase.errors.isEmpty())
-                   {
-                       ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                       ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
-                   }
-                   dwcase.clearing();
+
+                        qDebug() << "size" << get_text().size();
+
+                        section = 5;
+                        if (get_text().size()<100)
+                        {
+                            dwnetcase.version=get_text();
+                            dwnetcase.colour=maintheme.get_highlight();
+                            dwnetcase.Parse_Cosmetic();
+                        }
+                        else
+                            {
+                                dwcase.Cosmetics();
+                                put_text(dwcase.first);
+                                if (!dwcase.errors.isEmpty())
+                                {
+                                    ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+                                    ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
+                                }
+                                dwcase.clearing();
+                            }
+                        break;
                 })
-                QSCASE(cases[6],//"Units - ��������"
+                QSCASE(cases[7],//"Units - существа"
                 {
                    dwcase.Units();
                    put_text(dwcase.first);
@@ -237,11 +262,11 @@ void MainWindow::button_switch(QString switchStr)
                    if (!dwcase.errors.isEmpty())
                    {
                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                       ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                       ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                    }
                    dwcase.clearing();
                 })
-                QSCASE(cases[7],
+                QSCASE(cases[8],
                 {
 
                         dwnetcase.version=get_text();
@@ -250,7 +275,7 @@ void MainWindow::button_switch(QString switchStr)
 
 
                 })
-                QSCASE(cases[8],
+                QSCASE(cases[9],
                 {
                     dwnetcase.version=get_text();
                     dwnetcase.language=0;
@@ -258,14 +283,14 @@ void MainWindow::button_switch(QString switchStr)
                     break;
 
                 })
-                QSCASE(cases[9],
+                QSCASE(cases[10],
                 {
                     dwnetcase.version=get_text();
                     dwnetcase.language=1;
                     dwnetcase.Patch_Version(1);
                     break;
                 })
-                QSCASE(cases[10],
+                QSCASE(cases[11],
                 {
                     qDebug() << "size" << get_text().size();
 
@@ -283,7 +308,7 @@ void MainWindow::button_switch(QString switchStr)
                             if (!dwcase.errors.isEmpty())
                             {
                                 ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                                ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+dwcase.errors+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
+                                ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
                             }
                             dwcase.clearing();
                         }
@@ -293,7 +318,7 @@ void MainWindow::button_switch(QString switchStr)
                 QSDEFAULT(
                 {
                    ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
-                   ui -> text2->setText("dw error = \u043a\u043d\u043e\u043f\u043a\u0430 \u0441 \u0442\u0430\u043a\u0438\u043c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c\n \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430");break;
+                   ui -> debug->setText(QStringLiteral(u"dw error = кнопка с таким названием\n не найдена"));break;
                 })
                 )
 }
@@ -375,7 +400,6 @@ void MainWindow::set_theme()
          ui -> buttoncopy ->setStyleSheet(bobtext);
          ui -> buttoncopy_2->setStyleSheet(bobtext);
          ui -> buttochange ->setStyleSheet(bobtext);
-         ui->preview->setStyleSheet(bobtext);
          ui -> autozamena->setStyleSheet(maintheme.do_autoz(autoz));
 
 
@@ -407,6 +431,7 @@ void MainWindow::append_cases()
     {
         cases.push_back (v.toString());
     }
+
 }
 
 QString MainWindow::get_text()
@@ -424,7 +449,7 @@ QString MainWindow::get_text()
 QString MainWindow::color(QString arg,QString color)
 {
     color = maintheme.get_highlight();
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //изменения
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //РёР·РјРµРЅРµРЅРёСЏ
     return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
 }
 
@@ -462,7 +487,7 @@ void MainWindow::put_text(QString text)
 
 QJsonDocument MainWindow::read_json(QString filename)
 {
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //изменения
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //РёР·РјРµРЅРµРЅРёСЏ
     QString val;
     QFile file;
     file.setFileName(filename);
@@ -473,10 +498,9 @@ QJsonDocument MainWindow::read_json(QString filename)
         QJsonDocument Doc = QJsonDocument::fromJson(val.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError)
         {
-
             ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-            ui->debug->setText("dw error:\u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 <br>\u0447\u0442\u0435\u043d\u0438\u0438 \u0441\u043b\u043e\u0432\u0430\u0440\u044f "+filename+ "<br>\u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0444\u0430\u0439\u043b \u043d\u0430 \u0432\u0430\u043b\u0438\u0434\u043d\u043e\u0441\u0442\u044c!");
-          //  Doc = -1;
+            ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+filename+ QStringLiteral(u"<br>проверьте файл на валидность!"));
+
         }
         qDebug() << Doc.isNull();
         return Doc;
@@ -502,18 +526,19 @@ void MainWindow::set_buttons()
 void MainWindow::label_settext(int count)
 {
     int ends=0;
-    QString endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0439";
+    QString endstring;
+    //QString
     if (count%10==1&&count!=11)
         ends = 1;
     if (count%10>1&&count%10<5&&(count<11||count>15))
         ends = 2;
     switch (ends)
     {
-        case 1: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435";break;
-        case 2: endstring = "\u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f";break;
-        default: break;
+        case 1: endstring = QStringLiteral(u"изменение");break;
+        case 2: endstring = QStringLiteral(u"изменения");break;
+        default: endstring = QStringLiteral(u"изменений"); break;
     }
-    QString text = "\u0421 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u043c \u043c\u0430\u043a\u0440\u043e\u0441\u043e\u043c \u0441\u043e\u0432\u0435\u0440\u0448\u0435\u043d\u043e ";
+    QString text = QStringLiteral(u"С последним макросом совершено ");
     text +=  + "<font color=\"red\">" + QString::number(count) +"</font>" + " " + endstring;
     ui -> changes -> setText(text);
 }
@@ -555,7 +580,7 @@ void MainWindow::on_Input_win_clicked()
     int x = (ui -> Input_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Input_label->geometry().size().width();
     ui->Input_label ->setGeometry(input?x+width:x-width,-50*hide, 85*wide,111*hide);
-    ui->Input_win->setText(input?"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430":"\u0412\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430");
+    ui->Input_win->setText(input?QStringLiteral(u"Ввод: окно справа"):QStringLiteral(u"Ввод: окно слева"));
     qDebug() << input;
 
 }
@@ -570,7 +595,7 @@ void MainWindow::on_Output_win_clicked()
     int x = (ui -> Output_label->mapToGlobal(QPoint(0,0))).x();
     int width = ui->Output_label->geometry().size().width();
     ui->Output_label ->setGeometry(output?x+width:x-width,-50*hide, 85*wide,111*hide);
-    ui->Output_win->setText(!output?"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043b\u0435\u0432\u0430":"\u0412\u044b\u0432\u043e\u0434: \u043e\u043a\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0430");
+    ui->Output_win->setText(!output?QStringLiteral(u"Вывод: окно слева"):QStringLiteral(u"Вывод: окно справа"));
     qDebug() << output;
 }
 
@@ -616,7 +641,7 @@ void MainWindow::on_discord_clicked()
 }
  void MainWindow::adaptive_screen()
  {
-     //3840 � 2160
+     //3840 х 2160
      double normw = 1920;
      double normh = 1080;
      double wide = QApplication::desktop()->screenGeometry().width()/normw;
@@ -682,7 +707,7 @@ void MainWindow::set_progressbar()
 void MainWindow::on_autozamena_clicked()
 {
     autoz = autoz?0:1;
-    QString  str_autoz[2] = {"\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u044b\u043a\u043b)", "\u0410\u0432\u0442\u043e\u0437\u0430\u043c\u0435\u043d\u0430 (\u0432\u043a\u043b)"};
+    QString str_autoz[2]=  {QStringLiteral(u"Автозамена (выкл)"), QStringLiteral(u"Автозамена (вкл)")};
     ui->autozamena->setText(str_autoz[autoz]);
     ui->autozamena->setStyleSheet(maintheme.do_autoz(autoz));
 }
@@ -690,17 +715,4 @@ void MainWindow::on_autozamena_clicked()
 void MainWindow::end()
 {
 
-}
-
-void MainWindow::on_preview_clicked()
-{
-    switch (section)
-    {
-        case 2:break;
-        case 3:break;
-        case 4:break;
-        case 5:break;
-        case 10:break; //animations
-        default: break;
-    }
 }

@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QDateTime>
 #include <macros.h>
 
 dwNetMacros::dwNetMacros()
@@ -515,15 +516,15 @@ void  dwNetMacros::Do_Patch()
     QJsonArray neutral_items = VersionJsonObj["neutral_items"].toArray();
     QJsonArray items = VersionJsonObj["items"].toArray();
     QJsonArray heroes = VersionJsonObj["heroes"].toArray();
-
+    QJsonValue time = VersionJsonObj["patch_timestamp"];
     QString tempstring;
     //QString output = "";
     QRegExp texp;
-    output += "{{Version infobox\n| version = " + version +"\n| image = \n| highlights = \n| new = \n| significant = \n| buffed =\n| nerfed = \n| dota2 = \n}}\n&lt;onlyinclude&gt;\n\n";
+    output += "{{Version infobox\n| version = " + version +"\n| image = \n| highlights = \n| new = \n| significant = \n| buffed =\n| nerfed = \n| dota2 = " + QDateTime::fromTime_t(time.toInt()).toString("yyyy-MM-dd") +"\n}}\n&lt;onlyinclude&gt;\n\n";
     if (!language)
     {
         if (!generic.isEmpty())
-            output += "== \u041e\u0431\u0449\u0438\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f ==\n";
+            output += QStringLiteral(u"== Общие изменения ==\n");
         foreach (QJsonValue value, generic)
         {
             if (value.toObject().value("note").toString()!="<br>")
@@ -539,7 +540,7 @@ void  dwNetMacros::Do_Patch()
             output += "\n";
         }
         if (!neutral_creeps.isEmpty())
-            output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043a\u0440\u0438\u043f\u044b ==\n";
+            output += QStringLiteral(u"== Нейтральные крипы ==\n");
         foreach (QJsonValue value, neutral_creeps)
         {
             output += "{{Unit label|";
@@ -580,7 +581,7 @@ void  dwNetMacros::Do_Patch()
             //NEED TO ADD INFO ELEMENT OF JSON
         }
         if (!items.isEmpty())
-            output += "== \u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
+            output += QStringLiteral(u"== Предметы ==\n");
         foreach (QJsonValue value, items)
         {
             output += "{{Item label|";
@@ -618,7 +619,7 @@ void  dwNetMacros::Do_Patch()
             output += "\n";
         }
         if (!neutral_items.isEmpty())
-            output += "== \u041d\u0435\u0439\u0442\u0440\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u044b ==\n";
+            output += QStringLiteral(u"== Нейтральные предметы ==\n");
         foreach (QJsonValue value, neutral_items)
         {
             output += "{{Item label|";
@@ -653,7 +654,7 @@ void  dwNetMacros::Do_Patch()
             output += "\n";
         }
         if (!heroes.isEmpty())
-            output += "== \u0413\u0435\u0440\u043e\u0438 ==\n";
+            output += QStringLiteral(u"== Герои ==\n");
         QJsonArray heroes2;
         foreach (QJsonValue value, heroes)
         {
@@ -727,7 +728,7 @@ void  dwNetMacros::Do_Patch()
 
             temparray = value["talent_notes"].toArray();
             if (!temparray.isEmpty())
-                output += "* {{\u0417\u043d\u0430\u0447\u043e\u043a|\u0422\u0430\u043b\u0430\u043d\u0442}} '''[[\u0422\u0430\u043b\u0430\u043d\u0442\u044b]]:'''\n";
+                output += QStringLiteral(u"* {{Значок|Талант}} '''[[Таланты]]:'''\n");
             foreach (QJsonValue value2, temparray)
             {
                 if (value2.toObject().value("note").toString()!="<br>")
@@ -744,7 +745,7 @@ void  dwNetMacros::Do_Patch()
         }
         if (output.back()=='\n')
             output.chop(1);
-        output += "&lt;/onlyinclude&gt;\n\n== \u0421\u043c. \u0442\u0430\u043a\u0436\u0435 ==\n* [[\u0412\u0435\u0440\u0441\u0438\u0438]]\n* [[\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f]]\n\n{{\u0421\u0438\u0441\u0442\u0435\u043c\u0430}}\n\n[[en:Version " + version + "]]";
+        output += QStringLiteral(u"&lt;/onlyinclude&gt;\n\n== См. также ==\n* [[Версии]]\n* [[Обновления]]\n\n{{Система}}\n\n[[en:Version ") + version + "]]";
 
     }
     else //ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH ENGLISH
@@ -957,7 +958,7 @@ void  dwNetMacros::Do_Patch()
         }
         if (output.back()=='\n')
             output.chop(1);
-        output += "&lt;/onlyinclude&gt;\n\n== See also ==\n* [[Versions]]\n* [[Patches]]\n\n{{SystemNav}}\n\n[[ru:\u0412\u0435\u0440\u0441\u0438\u044f " + version + "]]";
+        output += QStringLiteral(u"&lt;/onlyinclude&gt;\n\n== See also ==\n* [[Versions]]\n* [[Patches]]\n\n{{SystemNav}}\n\n[[ru:Версия ") + version + "]]";
     }
     emit send_end();
 }
@@ -995,10 +996,60 @@ void dwNetMacros::Do_Animations()
     //ui->text2->setPlainText(codec->toUnicode(content.data()));
     QRegExp rxlen("<textarea (.*) name=\"wpTextbox1\">(.*)<.textarea>");
     rxlen.indexIn(undercontent);
-    output = "{{DISPLAYTITLE:Анимации " + version + "}}\n" + rxlen.cap(2) + "[[en:" + version + "/Animations]]";
+    output = QStringLiteral(u"{{DISPLAYTITLE:Анимации ") + version + "}}\n" + rxlen.cap(2) + "[[en:" + version + "/Animations]]";
     send_progress(50);
     Macros dwcase(output, colour);
     dwcase.Animations();
+    output = dwcase.first;
+    dwcase.clearing();
+    colour.clear();
+    send_end();
+  reply->deleteLater();
+}
+    else
+    {
+       send_progress(-1);
+       qDebug() << "bad end";
+     output = reply->errorString(); emit send_end();
+}
+}
+void dwNetMacros::Parse_Cosmetic()
+{
+    QString url  = version;
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+   // qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    QUrl patch_url("https://dota2.fandom.com/wiki/"+ version + "?action=edit");
+    QNetworkRequest patch_request(patch_url);
+
+    QNetworkReply* patch_reply= manager->get(patch_request);
+    send_progress(25);
+    connect(patch_reply, SIGNAL(finished()),this,  SLOT(Do_Cosmetic()));
+    patch_url.clear();
+   // patch_reply->close();
+   // patch_reply->deleteLater();
+    //manager->deleteResource(patch_request);
+}
+
+void dwNetMacros::Do_Cosmetic()
+{
+    qDebug() << "Do_Cosmetic called";
+  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+  if (reply->error() == QNetworkReply::NoError)
+
+  {
+    // Получаем содержимое ответа
+      QByteArray content= reply->readAll();
+      QString undercontent = QString(content);
+
+   qDebug () << "f";
+    //ui->text2->setPlainText(codec->toUnicode(content.data()));
+    QRegExp rxlen("<textarea (.*) name=\"wpTextbox1\">(.*)<.textarea>");
+    rxlen.indexIn(undercontent);
+    output = rxlen.cap(2);
+    send_progress(50);
+    Macros dwcase(output, colour);
+    dwcase.Cosmetics();
     output = dwcase.first;
     dwcase.clearing();
     colour.clear();

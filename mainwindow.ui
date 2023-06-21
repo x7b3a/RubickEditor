@@ -1118,41 +1118,6 @@ color: rgb(255, 191, 102);</string>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="preview">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>1660</x>
-      <y>640</y>
-      <width>211</width>
-      <height>60</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Reaver</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>Предпросмотр
- на вики</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>128</width>
-      <height>128</height>
-     </size>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources>

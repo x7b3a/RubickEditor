@@ -21,10 +21,10 @@ public:
     ~ui_settings();
 
 signals:
-    void sendData(QString);
+    void sendData();
 
 public slots:
-    void recieveData(QString);
+    void recieveData();
 
 private slots:
     //void on_comboBox_activated(const QString &arg1);
@@ -37,5 +37,6 @@ private:
     void add_items();
 
 };
+
 
 #endif // UI_SETTINGS_H

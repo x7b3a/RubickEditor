@@ -1,4 +1,4 @@
-#include "dwtheme.h"
+﻿#include "dwtheme.h"
 #include <QMainWindow>
 #include <QPainter>
 
@@ -22,9 +22,9 @@ QString dwTheme::get_themetext()
 {
     switch (theme)
     {
-        case 0: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
-        case 1: return "\u0422\u0451\u043c\u043d\u0430\u044f \u0442\u0435\u043c\u0430"; break;
-        default: return "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u0442\u0435\u043c\u0430";break;
+        case 0: return QStringLiteral(u"Светлая тема");break;
+        case 1: return QStringLiteral(u"Тёмная тема"); break;
+        default: return QStringLiteral(u"Светлая тема");break;
     }
 }
 QString dwTheme::get_border()
@@ -51,7 +51,7 @@ QString dwTheme::get_highlight()
 {
     switch (theme)
     {
-    case 0: return "#ff8f45"; break;
+    case 0: return "#FFFF55"; break;
     case 1: return "#b26430"; break;
     //case 1: return "#d05300"; break;
     default: return "#ff8f45"; break;
