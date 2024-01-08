@@ -1,8 +1,4 @@
-﻿#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "ui_settings.h"
-#include "qsswitch.h"
-#include <QString>
+﻿#include <QString>
 #include <QTextEdit>
 #include <QApplication>
 #include <QFile>
@@ -20,17 +16,27 @@
 #include <QClipboard>
 #include <QThread>
 #include <QDesktopWidget>
-#include <QtWinExtras/QWinTaskbarProgress>
-#include <QtWinExtras/QWinTaskbarButton>
-#include "dwjson.h"
-#include "macros.h"
-#include "dwnetmacros.h"
 #include <QTime>
 #include <QPainter>
 #include <QColor>
 #include <QRgb>
+#include <QScrollBar>
+
+#include <QtWinExtras/QWinTaskbarProgress>
+#include <QtWinExtras/QWinTaskbarButton>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "ui_settings.h"
+#include "qsswitch.h"
+#include "dwTextComparator.h"
+#include "dwjson.h"
+#include "macros.h"
+#include "dwnetmacros.h"
+#include <QTimer>
+
 #define MCVC
-#define RVERSION "1.1.2"
+#define RVERSION "1.2.0"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -66,7 +72,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&dwnetcase,&dwNetMacros::new_progress,this,&MainWindow::receive_progress);
 
     set_progressbar();
-
 }
 
 MainWindow::~MainWindow()
@@ -85,7 +90,7 @@ MainWindow::~MainWindow()
      QTextStream stream( &file );
      stream << jsonString;
      file.close();
-    delete ui;
+     delete ui;
 }
 
 
@@ -104,6 +109,7 @@ void MainWindow::on_settings_clicked()
 
 void MainWindow::receive_progress(int pr)
 {
+    qDebug() << "progress: " << pr;
     if (pr>-1)
         progress->setValue(pr);
     else
@@ -112,7 +118,7 @@ void MainWindow::receive_progress(int pr)
 void MainWindow::receive_netmacros()
 {
     qDebug() << "netmacros rececived";
-    put_text(dwnetcase.output);
+    put_text(&dwnetcase.output, true);
     dwnetcase.cleaning();
 }
 void MainWindow::recieveData()
@@ -140,100 +146,75 @@ void MainWindow::on_buttoncopy_clicked()
 
 void MainWindow::button_switch(QString switchStr)
 {
+    x =  QDateTime::currentMSecsSinceEpoch();
     ui->error->setStyleSheet("color: rgba(255,0,0,0);");
     ui->debug->clear();
     progress->resume();
-    Macros dwcase(get_text(),maintheme.get_highlight());
+    Macros dwcase(get_text());
     connect(&dwcase,&Macros::new_progress,this,&MainWindow::receive_progress);
     QSSWITCH(switchStr,
                 QSCASE(cases[0], //замена точек на запятые
                 {
                     dwcase.Commafix();
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                 {
-                     ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                     ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                 }
-                 dwcase.clearing();break;
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
+                    dwcase.clearing();
+                    break;
                 })
                 QSCASE(cases[1], //викификатор
                 {
-
                     dwcase.WikiAndFixes();
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                    {
-                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                    }
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
                     dwcase.clearing();
                     break;
-                    //WikiAndFixes(); break;
                 })
                 QSCASE(cases[2],//изменения
                 {
                     dwcase.Changelogs();
                     section = 2;
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                    {
-                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                    }
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
                     dwcase.clearing();
-                   //Changelogs();break;
+                    progress->setValue(0);
+                    qDebug() <<"progress value:  " <<  progress->value();
+                    break;
                 })
-                QSCASE(cases[3], //Изменения + Коммафикс + викификатор
+                QSCASE(cases[3], //Изменения + Коммафикс + викификатор + Units
                 {
                     dwcase.Changelogs();
                     dwcase.Commafix();
                     dwcase.WikiAndFixes();
+                    dwcase.Units();
                     section = 2;
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                    {
-                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                    }
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
                     dwcase.clearing();
+                    progress->setValue(0);
+                    qDebug() <<"progress value:  " <<  progress->value();
+                    break;
 
                 })
                 QSCASE(cases[4],//"Реплики"
                 {
                     dwcase.Responses();
                     section = 3;
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                    {
-                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                    }
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
                     dwcase.clearing();
+                    break;
                 })
                 QSCASE(cases[5],// "Звуки"
                 {
                     dwcase.Sounds();
                     section = 4;
-                    put_text(dwcase.first);
-                    label_settext(dwcase.counted);
-                    if (!dwcase.errors.isEmpty())
-                    {
-                        ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                        ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                    }
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
                     dwcase.clearing();
+                    break;
                 })
                 QSCASE(cases[6],//Косметика
                 {
-
-                        qDebug() << "size" << get_text().size();
-
                         section = 5;
                         if (get_text().size()<100)
                         {
@@ -244,12 +225,8 @@ void MainWindow::button_switch(QString switchStr)
                         else
                             {
                                 dwcase.Cosmetics();
-                                put_text(dwcase.first);
-                                if (!dwcase.errors.isEmpty())
-                                {
-                                    ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                                    ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                                }
+                                put_text(&dwcase.first);
+                                checkForDictionaryErrors(&dwcase.errors);
                                 dwcase.clearing();
                             }
                         break;
@@ -257,43 +234,46 @@ void MainWindow::button_switch(QString switchStr)
                 QSCASE(cases[7],//"Units - существа"
                 {
                    dwcase.Units();
-                   put_text(dwcase.first);
-                   label_settext(dwcase.counted);
-                   if (!dwcase.errors.isEmpty())
-                   {
-                       ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                       ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                   }
+                   put_text(&dwcase.first);
+                   checkForDictionaryErrors(&dwcase.errors);
                    dwcase.clearing();
+                   break;
                 })
-                QSCASE(cases[8],
+                QSCASE(cases[8], //List of Changed Heroes
                 {
-
-                        dwnetcase.version=get_text();
-                        dwnetcase.Patch_heroes();
+                    if (get_text().size()>100) {
+                        notLinkMessage();
                         break;
-
-
+                    }
+                    dwnetcase.version=get_text();
+                    dwnetcase.Patch_heroes();
+                    break;
                 })
-                QSCASE(cases[9],
+                QSCASE(cases[9], //Новая версия
                 {
+                    if (get_text().size()>100) {
+                        notLinkMessage();
+                        break;
+                    }
                     dwnetcase.version=get_text();
                     dwnetcase.language=0;
                     dwnetcase.Patch_Version(0);
                     break;
 
                 })
-                QSCASE(cases[10],
+                QSCASE(cases[10], //New Version
                 {
+                    if (get_text().size()>100) {
+                        notLinkMessage();
+                        break;
+                    }
                     dwnetcase.version=get_text();
                     dwnetcase.language=1;
                     dwnetcase.Patch_Version(1);
                     break;
                 })
-                QSCASE(cases[11],
+                QSCASE(cases[11], //Раздел "Анимации"
                 {
-                    qDebug() << "size" << get_text().size();
-
                     section = 10;
                     if (get_text().size()<100)
                     {
@@ -304,12 +284,8 @@ void MainWindow::button_switch(QString switchStr)
                     else
                         {
                             dwcase.Animations();
-                            put_text(dwcase.first);
-                            if (!dwcase.errors.isEmpty())
-                            {
-                                ui->error->setStyleSheet("color: rgba(255,0,0,255);");
-                                ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+dwcase.errors+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-                            }
+                            put_text(&dwcase.first);
+                            checkForDictionaryErrors(&dwcase.errors);
                             dwcase.clearing();
                         }
                     break;
@@ -318,7 +294,8 @@ void MainWindow::button_switch(QString switchStr)
                 QSDEFAULT(
                 {
                    ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
-                   ui -> debug->setText(QStringLiteral(u"dw error = кнопка с таким названием\n не найдена"));break;
+                   ui -> debug->setText(QStringLiteral(u"dw error: кнопка с таким названием\n не найдена"));
+                   break;
                 })
                 )
 }
@@ -354,13 +331,12 @@ void MainWindow::set_theme()
                 border-bottom-right-radius: 3px;";
                     qDebug() << maintheme.theme;
 
-
                 this->setPalette(palette);
 
                 this->show();
 
 
-                 for (int i = 0;i<buttons.size();i++)
+     for (int i = 0;i<buttons.size();i++)
         buttons[i] ->setStyleSheet("QPushButton {" + btext + "background-color: rgb" + button_back +";\
                 color: rgb" + text +";\
                  border-right-color: rgb" + details + ";} \
@@ -426,12 +402,10 @@ void MainWindow::append_cases()
 {
     QJsonObject json = read_json("params.json").object();
     QJsonArray Macros = json["Macros_list"].toArray();
-   // for (int i = 0;i<Macros.size();i++)
     foreach(const QJsonValue &v, Macros)
     {
         cases.push_back (v.toString());
     }
-
 }
 
 QString MainWindow::get_text()
@@ -446,42 +420,29 @@ QString MainWindow::get_text()
     return first;
 }
 
-QString MainWindow::color(QString arg,QString color)
+void MainWindow::put_text(QString* text, bool isNetMacros)
 {
-    color = maintheme.get_highlight();
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //РёР·РјРµРЅРµРЅРёСЏ
-    return QString("<span style= \"background:%1\">%2</span>").arg(color,arg);
-}
+    text->replace("\n","<br>");
+    *text =  "<html>" + *text + "</html>";
 
+    QString textBeforeEdits = get_text();
+    textBeforeEdits.replace("\n","<br>");
+    textBeforeEdits =  "<html>" + textBeforeEdits + "</html>";
 
-void MainWindow::put_text(QString text)
-{
-    //qDebug() << text;
-    text.replace("\n","<br>");
-    text = "<html>" + text + "</html>";
-    //qDebug() << text;
+    QTextEdit* inputTextEdit = input?ui->text2:ui->text1;
+    QTextEdit* outputTextEdit = output?ui->text2:ui->text1;
+
     if (output==input||!autoz)
     {
-        if (!output)
-            ui->text1 ->setText(text);
-        else
-            ui -> text2 -> setText(text);
+       dwTextComparator comparator(inputTextEdit, outputTextEdit, &textBeforeEdits, text);
+       label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
     }
     else if (output!=input&&autoz)
     {
-        if (!input)
-        {
-            ui->text2 ->setPlainText(get_text());
-            ui->text1 ->setText(text);
-        }
-
-        else
-        {
-            ui -> text1 ->setPlainText(get_text());
-            ui -> text2 -> setText(text);
-        }
-
+        dwTextComparator comparator(outputTextEdit, inputTextEdit, &textBeforeEdits, text);
+        label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
     }
+
     progress->setValue(0);
 }
 
@@ -500,7 +461,6 @@ QJsonDocument MainWindow::read_json(QString filename)
         {
             ui->error->setStyleSheet("color: rgba(255,0,0,255);");
             ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+filename+ QStringLiteral(u"<br>проверьте файл на валидность!"));
-
         }
         qDebug() << Doc.isNull();
         return Doc;
@@ -527,7 +487,6 @@ void MainWindow::label_settext(int count)
 {
     int ends=0;
     QString endstring;
-    //QString
     if (count%10==1&&count!=11)
         ends = 1;
     if (count%10>1&&count%10<5&&(count<11||count>15))
@@ -582,7 +541,6 @@ void MainWindow::on_Input_win_clicked()
     ui->Input_label ->setGeometry(input?x+width:x-width,-50*hide, 85*wide,111*hide);
     ui->Input_win->setText(input?QStringLiteral(u"Ввод: окно справа"):QStringLiteral(u"Ввод: окно слева"));
     qDebug() << input;
-
 }
 
 void MainWindow::on_Output_win_clicked()
@@ -702,6 +660,22 @@ void MainWindow::set_progressbar()
     tuskbar->setWindow(windowHandle());
     progress = tuskbar->progress();
     progress->show();
+}
+
+void MainWindow::notLinkMessage()
+{
+    ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+    ui->debug->setText(QStringLiteral(u"dw error:Слишком длинное<br>название "));
+}
+
+void MainWindow::checkForDictionaryErrors(QString *errors)
+{
+    QString validation =  QStringLiteral(u"<br>проверьте файл на валидность!");
+    if (!errors->isEmpty())
+         {
+             ui->error->setStyleSheet("color: rgba(255,0,0,255);");
+             ui->debug->setText(QStringLiteral(u"dw error:ошибка при <br>чтении словаря ")+errors+validation);
+         }
 }
 
 void MainWindow::on_autozamena_clicked()

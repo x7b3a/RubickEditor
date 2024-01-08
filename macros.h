@@ -10,20 +10,17 @@ class Macros : public QObject
 public:
     explicit Macros();
     ~Macros();
-    Macros(QString, QString);
+    Macros(QString);
     void clearing();
     dwJson dwJ;
     QString first;
-    QString colour;
     int counted=0;
     QString errors="";
-    QString color(QString arg,QString color="#ff8f45");
     void put_text(QString text);
     QString start_regular_replacer (QString);
     void end_regular_replacer (QString *);
     QString get_text();
 
-    int counter(QString);
     void label_settext(int);
     QString get_backtext();
 

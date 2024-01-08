@@ -1,4 +1,4 @@
-#include "ui_settings.h"
+﻿#include "ui_settings.h"
 #include "ui_ui_settings.h"
 #include <QtGui>
 #include <QComboBox>
@@ -9,7 +9,7 @@ ui_settings::ui_settings(QWidget *parent) :
     ui(new Ui::ui_settings)
 {
     ui->setupUi(this);
-    this->setWindowTitle("\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438\u0020\u043a\u043d\u043e\u043f\u043e\u043a");
+    this->setWindowTitle(QStringLiteral(u"Настройки кнопок"));
     this->setWindowIcon(QIcon(":/images/images/Rubick_icon.webp"));
     append_combobox();
     add_items();
@@ -87,7 +87,6 @@ void ui_settings::add_items()
             comboboxes[i]->addItem(v.toString());
         }
     }
-
 }
 
 void ui_settings::recieveData()

@@ -18,6 +18,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+
+    time_t x,y;
     QVector<QPushButton*> buttons;
     QWinTaskbarProgress *progress;
     ui_settings *from;
@@ -44,14 +46,14 @@ private:
     void append_buttons();
     void append_cases();
     void set_buttons();
-    void put_text(QString text);
+    void put_text(QString* text, bool isNetMacros = false);
     QString get_text();
-    QString color(QString arg,QString color="#ff8f45");
     void set_theme();
     void adaptive_screen();
     void set_fonts();
     void set_progressbar();
-    void error_checker(QString);
+    void notLinkMessage();
+    void checkForDictionaryErrors(QString* errors);
 
 private slots:
     void receive_netmacros();

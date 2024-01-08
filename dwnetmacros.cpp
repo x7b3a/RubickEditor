@@ -998,7 +998,7 @@ void dwNetMacros::Do_Animations()
     rxlen.indexIn(undercontent);
     output = QStringLiteral(u"{{DISPLAYTITLE:Анимации ") + version + "}}\n" + rxlen.cap(2) + "[[en:" + version + "/Animations]]";
     send_progress(50);
-    Macros dwcase(output, colour);
+    Macros dwcase(output);
     dwcase.Animations();
     output = dwcase.first;
     dwcase.clearing();
@@ -1048,7 +1048,7 @@ void dwNetMacros::Do_Cosmetic()
     rxlen.indexIn(undercontent);
     output = rxlen.cap(2);
     send_progress(50);
-    Macros dwcase(output, colour);
+    Macros dwcase(output);
     dwcase.Cosmetics();
     output = dwcase.first;
     dwcase.clearing();

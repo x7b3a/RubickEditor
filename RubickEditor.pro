@@ -17,6 +17,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    diff_match_patch.cpp \
+    dwTextComparator.cpp \
     dwjson.cpp \
     dwnetmacros.cpp \
     dwtheme.cpp \
@@ -26,6 +28,8 @@ SOURCES += \
     ui_settings.cpp
 
 HEADERS += \
+    diff_match_patch.h \
+    dwTextComparator.h \
     dwjson.h \
     dwnetmacros.h \
     dwtheme.h \
