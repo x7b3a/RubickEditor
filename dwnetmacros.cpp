@@ -34,6 +34,7 @@ void dwNetMacros::cleaning()
 {
     version.clear();
     output.clear();
+    isFromPatch = false;
 }
 void  dwNetMacros::Patch_heroes()
 {
@@ -566,7 +567,7 @@ void  dwNetMacros::Do_Patch()
                         while(texp.indexIn(tempstring)!=-1)
                         {
                             //qDebug() << texp.cap(0) << texp.cap(1);
-                            tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
+                            tempstring.replace(texp.cap(0), star + start   + value.toObject().value("localized_name").toString()+ mid+ texp.cap(1) + end + duo);
                             break;
                         }
                         output += add_point(tempstring);
@@ -608,7 +609,7 @@ void  dwNetMacros::Do_Patch()
                     while(texp.indexIn(tempstring)!=-1)
                     {
                         //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
+                        tempstring.replace(texp.cap(0), star + start + dict_items.value(value.toObject().value("ability_id").toInt()) + mid + texp.cap(1) + end + duo);
                         break;
                     }
                     output += add_point(tempstring);
@@ -643,7 +644,7 @@ void  dwNetMacros::Do_Patch()
                    // qDebug() << tempstring;
                     while(texp.indexIn(tempstring)!=-1)
                     {
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
+                        tempstring.replace(texp.cap(0), star + start   + dict_items.value(value.toObject().value("ability_id").toInt())+ mid+ texp.cap(1) + end + duo);
                         break;
                     }
                     output += add_point(tempstring);
@@ -689,9 +690,9 @@ void  dwNetMacros::Do_Patch()
             foreach (QJsonValue value2, temparray)
             {
                 output += "* {{A|";
-                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
-                output += "|";
                 output += value.toObject().value("hero_name").toString();
+                output += "|";
+                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
                 QJsonArray temparray2 = value2["ability_notes"].toArray();
                 if (temparray2.size()>1)
                 {
@@ -794,7 +795,7 @@ void  dwNetMacros::Do_Patch()
                         while(texp.indexIn(tempstring)!=-1)
                         {
                             //qDebug() << texp.cap(0) << texp.cap(1);
-                            tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + value.toObject().value("localized_name").toString() + end + duo);
+                            tempstring.replace(texp.cap(0), star + start + value.toObject().value("localized_name").toString() + mid  + texp.cap(1)+ end + duo);
                             break;
                         }
                         output += add_point(tempstring);
@@ -836,7 +837,7 @@ void  dwNetMacros::Do_Patch()
                     while(texp.indexIn(tempstring)!=-1)
                     {
                         //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
+                        tempstring.replace(texp.cap(0), star + start + dict_items.value(value.toObject().value("ability_id").toInt()) + mid + texp.cap(1) + end + duo);
                         break;
                     }
                     output += add_point(tempstring);
@@ -872,7 +873,7 @@ void  dwNetMacros::Do_Patch()
                     while(texp.indexIn(tempstring)!=-1)
                     {
                         //qDebug() << texp.cap(0) << texp.cap(1);
-                        tempstring.replace(texp.cap(0), star + start + texp.cap(1) + mid + dict_items.value(value.toObject().value("ability_id").toInt()) + end + duo);
+                        tempstring.replace(texp.cap(0), star + start + dict_items.value(value.toObject().value("ability_id").toInt()) + mid + texp.cap(1) + end + duo);
                         break;
                     }
                     output += add_point(tempstring);
@@ -918,9 +919,9 @@ void  dwNetMacros::Do_Patch()
             foreach (QJsonValue value2, temparray)
             {
                 output += "* {{A|";
-                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
-                output += "|";
                 output += value.toObject().value("hero_name").toString();
+                output += "|";
+                output += dict_abilities.value(value2.toObject().value("ability_id").toInt());
                 QJsonArray temparray2 = value2["ability_notes"].toArray();
                 if (temparray2.size())
                 {

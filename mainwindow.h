@@ -46,8 +46,9 @@ private:
     void append_buttons();
     void append_cases();
     void set_buttons();
-    void put_text(QString* text, bool isNetMacros = false);
+    void put_text(QString* text, bool isFromPatch = false, bool hasParametes = false);
     QString get_text();
+    QString getSecondaryText();
     void set_theme();
     void adaptive_screen();
     void set_fonts();

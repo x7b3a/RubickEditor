@@ -35,8 +35,8 @@
 #include "dwnetmacros.h"
 #include <QTimer>
 
-#define MCVC
-#define RVERSION "1.2.0"
+//#define MCVC
+#define RVERSION "1.2.1"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
@@ -128,7 +128,7 @@ void MainWindow::recieveData()
 
 void MainWindow::on_dota2wiki_clicked()
 {
-    QString wikiurl = QStringLiteral(u"https://dota2.fandom.com/ru/wiki/Участник:X7b3a2j/Rubick_Editor");
+    QString wikiurl = QStringLiteral(u"https://liquipedia.net/dota2gameru/Участник:X7b3a2j/Rubick_Editor");
     QDesktopServices::openUrl(QUrl(wikiurl));
 }
 
@@ -291,6 +291,37 @@ void MainWindow::button_switch(QString switchStr)
                     break;
 
                 })
+                QSCASE(cases[12],
+                {
+                    section = 11;
+
+                    QString a = QString("Axe\nArmorPhysical 0\nAttackDamageMin 40\nAttackDamageMax 54\nAttributeBaseStrength 25\nAttributeStrengthGain 2.8\nAttributeBaseIntelligence 18\nAttributeIntelligenceGain 1.6\nAttributeBaseAgility 20\nAttributeAgilityGain 1.7\nStatusHealthRegen 2.5\n");
+                    a += "\n" + QString("Bane\nArmorPhysical 0\nAttackDamageMin 40\nAttackDamageMax 50\nAttributeBaseStrength 22\nAttributeStrengthGain 2.2\nAttributeBaseIntelligence 22\nAttributeIntelligenceGain 2.2\nAttributeBaseAgility 22\nAttributeAgilityGain 2.2\nStatusHealthRegen 2.2\n");
+                    a += "\n" + QString("Bloodseeker\nArmorPhysical 3\nAttackDamageMin 44\nAttackDamageMax 67\nAttributeBaseStrength 23\nAttributeStrengthGain 3.8\nAttributeBaseIntelligence 48\nAttributeIntelligenceGain 5.6\nAttributeBaseAgility 10\nAttributeAgilityGain 3.7\nStatusHealthRegen 3.5\n");
+                    put_text(&a);
+
+                    dwcase.clearing();
+
+                })
+                QSCASE(cases[13],
+                {
+                    section = 12;
+                    dwcase.AbilitySwapper();
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
+                    dwcase.clearing();
+                    break;
+                })
+                QSCASE(cases[14],
+                {
+                    section = 13;
+                    dwcase.ValueNumberChanger(getSecondaryText());
+                    put_text(&dwcase.first);
+                    checkForDictionaryErrors(&dwcase.errors);
+                    dwcase.clearing();
+                    break;
+
+                })
                 QSDEFAULT(
                 {
                    ui -> error->setStyleSheet("color: rgba(255,0,0,255);");
@@ -420,7 +451,19 @@ QString MainWindow::get_text()
     return first;
 }
 
-void MainWindow::put_text(QString* text, bool isNetMacros)
+QString MainWindow::getSecondaryText()
+{
+    QString first;
+    if (input)
+        first = ui -> text1-> toPlainText();
+    else
+        first = ui -> text2-> toPlainText();
+    first.replace("<", "&lt;");
+    first.replace(">", "&gt;");
+    return first;
+}
+
+void MainWindow::put_text(QString* text, bool isNetMacros, bool hasParameters)
 {
     text->replace("\n","<br>");
     *text =  "<html>" + *text + "</html>";
@@ -431,16 +474,18 @@ void MainWindow::put_text(QString* text, bool isNetMacros)
 
     QTextEdit* inputTextEdit = input?ui->text2:ui->text1;
     QTextEdit* outputTextEdit = output?ui->text2:ui->text1;
-
-    if (output==input||!autoz)
+    if (!hasParameters)
     {
-       dwTextComparator comparator(inputTextEdit, outputTextEdit, &textBeforeEdits, text);
-       label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
-    }
-    else if (output!=input&&autoz)
-    {
-        dwTextComparator comparator(outputTextEdit, inputTextEdit, &textBeforeEdits, text);
-        label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
+        if (output==input||!autoz)
+        {
+           dwTextComparator comparator(inputTextEdit, outputTextEdit, &textBeforeEdits, text);
+           label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
+        }
+        else if (output!=input&&autoz)
+        {
+            dwTextComparator comparator(outputTextEdit, inputTextEdit, &textBeforeEdits, text);
+            label_settext(comparator.compareText(isNetMacros?-1:maintheme.theme));
+        }
     }
 
     progress->setValue(0);

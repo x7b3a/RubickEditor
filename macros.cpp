@@ -31,7 +31,7 @@ void Macros::clearing()
 void Macros::Commafix()
 {
     qDebug() << "Commafix called";
-    QString comma = (",");
+    QString comma = ",";
     QString point = ".";
     send_progress(10);
     for (int j = 0;j<10;j++)
@@ -88,7 +88,7 @@ void Macros::Commafix()
 void Macros::WikiAndFixes()
 {
     qDebug() << "WikiAndFixes called";
-   // send_progress(1);
+
     send_progress(1);
     QMap<QString, QString> dict;
     QMap<QString, QString>::iterator i;
@@ -201,7 +201,6 @@ void Macros::Changelogs()
     QMap<QString,QString> Other_last = dwJ.map_parser(item,"Other_last");
     QMap<QString,QString> unihero = dwJ.map_parser(item,"unihero");
 
-   // send_progress(1);
     send_progress(1);
     first = start_regular_replacer(first);
 
@@ -222,9 +221,8 @@ void Macros::Changelogs()
     {
         first.replace(start_regular_replacer(i.key()),(i.value()));
     }
-    //send_progress(10);
     int pr=10;
-    send_progress(10);
+    send_progress(pr);
     QString temp1;
     QString temp2;
     QRegExp texp;
@@ -456,7 +454,6 @@ void Macros::Changelogs()
         {
             temp1 = i.key() + space + ability + j.key() + from;
             texp = QRegExp(temp1);
-            //qDebug() << "abil" << temp1;
 
             while(texp.indexIn(first)!=-1 )
             {
@@ -746,6 +743,102 @@ void Macros::Animations()
 
     send_progress(80);
     send_progress(100);
+}
+
+void Macros::AbilitySwapper()
+{
+    qDebug() <<  "Ability Swapper called";
+
+    send_progress(1);
+    QJsonObject json = dwJ.read_json("dict.json").object();
+    QJsonValue value = json.value(QString("Changelogs"));
+    QJsonObject item = value.toObject();
+    QString ability = QJsonValue(item["Ability"]).toString();
+
+    QJsonArray heroList = json["Heroes"].toArray();
+    QMap<QString,QString> creepList = dwJ.map_parser(json,"Units");
+    for (auto j = creepList.begin();j!=creepList.end();j++)
+    {
+        heroList.append(j.key());
+        heroList.append(j.value());
+    }
+    send_progress(25);
+
+    first = start_regular_replacer(first);
+    send_progress(50);
+    QRegExp texp = QRegExp(ability);
+    int pos = 0;
+    while((pos=texp.indexIn(first, pos))!=-1 )
+    {
+        if (heroList.contains(texp.cap(2)))
+        {
+            first.replace(texp.cap(0),("{{A|"+ texp.cap(2)+ "|"+texp.cap(1)+"}}"));
+        }
+        pos+=1;
+    }
+    send_progress(100);
+    end_regular_replacer (&first);
+
+}
+
+void Macros::ValueNumberChanger(QString parameters)
+{
+    qDebug() << "ValueNumberChanger called";
+    send_progress(1);
+
+    int changeStep = -1;
+    int startValue = 2;
+    bool hadCastRange = false;
+    QStringList words = {"trait", "value"};
+    int pos = 0;
+
+    if (parameters.split(" ").count()==2)
+    {
+          changeStep = parameters.split(" ")[0].toInt();
+          startValue = parameters.split(" ")[1].toInt();
+    }
+    QRegExp texp = QRegExp(QStringLiteral(u"trait1 = Дальность применения"));
+    if ((pos=texp.indexIn(first,pos))!=-1)
+        hadCastRange = true;
+
+    if (hadCastRange)
+    {
+        for (int j=0; j<2;j++)
+        {
+            texp = QRegExp(words[j] + QString::number(1));
+            while(texp.indexIn(first)!=-1)
+            {
+                first.replace(texp.cap(0), "cast range");
+            }
+        }
+    }
+    if (changeStep<0)
+    {
+        for (int  i = startValue; i < 20; i++)
+        {
+            for (int j=0; j<2;j++)
+            {
+                texp = QRegExp(words[j] + QString::number(i));
+                while(texp.indexIn(first)!=-1 )
+                {
+                    first.replace(texp.cap(0), words[j] + QString::number(i + changeStep));
+                }
+            }
+        }
+    } else
+    {
+        for (int  i = 20; i > startValue; i++)
+        {
+            for (int j=0; j<2;j++)
+            {
+                texp = QRegExp(words[j] + QString::number(i));
+                while(texp.indexIn(first)!=-1)
+                {
+                    first.replace(texp.cap(0), words[j] + QString::number(i + changeStep));
+                }
+            }
+        }
+    }
 }
 QString Macros::get_backtext()
 {

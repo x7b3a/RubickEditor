@@ -14,6 +14,7 @@ public:
     void clearing();
     dwJson dwJ;
     QString first;
+    QString second; //parameters for first
     int counted=0;
     QString errors="";
     void put_text(QString text);
@@ -33,6 +34,8 @@ public:
     void Cosmetics();
     void Units();
     void Animations();
+    void AbilitySwapper();
+    void ValueNumberChanger(QString parameters);
 signals:
     void new_progress(int);
 

@@ -19,6 +19,7 @@ public:
     QString colour;
 
     int language = 0;
+    bool isFromPatch = false;
     QString version = "";
     QSet <int> hero_list;
 
