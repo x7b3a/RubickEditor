@@ -688,6 +688,8 @@ void Macros::Units()
     {
         first.replace ("{{Show|A|" + i.key()+"|", ("{{Show|A|" + i.value()+"|"));
         first.replace ("{{Show|U|" + i.key()+"|", ("{{Show|U|" + i.value()+"|"));
+        first.replace("{{U|" + i.key() + "}}",("{{U|" + i.value()+"}}"));
+        first.replace("{{A|" + i.key() + "}}",("{{A|" + i.value()+"}}"));
         first.replace("{{U|" + i.key() + "|",("{{U|" + i.value()+"|"));
         first.replace("{{A|" + i.key() + "|",("{{A|" + i.value()+"|"));
     }
