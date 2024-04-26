@@ -18,21 +18,36 @@
 			"outgoing damage manipulation" : "манипуляция исходящим уроном",
 			"armor" : "броня", 
 			"attack range" : "дальность атаки" ,
-			 "attack time" : "время атаки", 
+			"attack time" : "время атаки", 
 			"projectile speed" : "скорость снаряда", 
 			"damage" : "урон",
-			 "magic resistance" : "сопротивление магии", 
+			"magic resistance" : "сопротивление магии", 
 			"vision" : "обзор",
-			 "turn rate" : "скорость поворота", 
+			"turn rate" : "скорость поворота", 
 			"movement speed" : "скорость передвижения",
-			 "melee" : "ближний",
-			 "ranged" : "дальний",
+			"melee" : "ближний",
+			"ranged" : "дальний",
 			"Small Camp" : "малый лагерь",
 			"Medium Camp" : "средний лагерь",
 			"Large Camp" : "крупный лагерь",
 			"Ancient Camp" : "лагерь древних",
 			"Fiend's Gate" : "Врата владыки",
-			"EnchantedTree" : "зачарованноедерево"
+			"EnchantedTree" : "зачарованноедерево",
+			"strength" : "Сила",
+			"agility" : "Ловкость",
+			"intelligence" : "Интеллект",
+			"universal" : "Универсальный",
+			"universal barrier" : "универсальный барьер",
+			"physical barrier" : "физический барьер",
+			"magic barrier" : "магический барьер",
+			"outgoing heal manipulation" : "манипуляция исходящим лечением",
+			"incoming heal manipulation" : "манипуляция входящим лечением",
+			"enemy outgoing damage manipulation" : "манипуляция уроном исходящим от врага",
+			"enemy incoming damage manipulation" : "манипуляция уроном входящим по врагу",
+			"instant cast" : "мгновенное применение",
+			"instant cast" : "мгновенное применение",
+			"building" : "постройка"
+			
 		}
 
 	},
@@ -241,7 +256,7 @@
 			"reduced" : "ослаблено",
 			"increased" : "усилено"
 		},
-		"Ability" : "&dw01c&dw01cA&dw00c([^>]{1,25})&dw00c([^>]{1,25})&dw02c&dw02c",
+	"Ability" : "&dw01c&dw01cA&dw00c([^>\}\{&]{1,35})&dw00c([^>\}\{&]{1,35}|[^>\}\{&]{1,35}&dw00c[^>\}\{&]{1,35})&dw02c&dw02c",
 		"Float" : "(?=.)([+-]?(?=[\\d.])(\\d*)(.(\\d+))?)",
 		"Level_numbers" : "([0-9/\\.,%]{1,20})( on each level |.)to ([0-9/\\.,%]{1,20})( on each level.|\\.)",
 		"Cooldown" : {
@@ -346,7 +361,8 @@
 			"{{Undocumented}}" : "{{cf|Н}}",
 			"{{cf|U}}" : "{{Cf|Н}}",
 			"{{cf|Changed}}" : "{{cf|Изменено}}",
-			"[{{tooltip|?|General changes to spell immunity.}}]" : "[{{tooltip|?|Общие изменения невосприимчивости к магии.}}]"
+			"[{{tooltip|?|General changes to spell immunity.}}]" : "[{{tooltip|?|Общие изменения невосприимчивости к магии.}}]",
+			"[{{tooltip|?|General changes to active attack modifiers.}}]" : "[{{tooltip|?|Общие изменения для активных модификаторов атаки.}}]"
 			
 		},
 		"New_Talent" : {
@@ -357,7 +373,7 @@
 			"armor" : "к [[броня|броне]]",
 			"movement speed" : "к [[скорость передвижения|скорости передвижения]]",
 			"mana" : "к [[мана|мане]]",
-			"[[attack damage" : "к [[урон от атаки|урону от атаки]]",
+			"attack damage" : "к [[урон от атаки|урону от атаки]]",
 			"{{Attribute ID|strength}}" : "к {{Attribute ID|Сила|text=силе}}",
 			"{{Attribute ID|agility}}" : "к {{Attribute ID|Ловкость|text=ловкости}}",
 			"{{Attribute ID|intelligence}}" : "к {{Attribute ID|Интеллект|text=интеллекту}}",
@@ -493,8 +509,8 @@
 		"[[Nemestice 2021 Themed Treasure]]" : "[[Враждостояние 2021: тематическая сокровищница]]",
 		"The textures on the claws and mandibles" : "Текстуры когтей и нижней челюсти",
 		"The textures on the rifle" : "Текстуры на винтовке",
-		"|Bound To" : "|Связан с",
-		"|Bound to" : "|Связан с",
+		"|Bound To" : "|Связано с",
+		"|Bound to" : "|Связано с",
 		"* This set's internal name is " : "* Внутреннее название набора — ",
 		"== Styles ==" : "== Стили ==",
 		"== Style Unlock Items ==" : "== Предметы, разблокирующие стили ==",
@@ -520,6 +536,11 @@
 			
 		"Unearthed from a Dead Reckoning Chest in recognition of The Revenant Muerta's arrival" : "Возвращение призрака Муэрты привело к началу смертной расплаты",
 		
+			"ДЕСЯТИЛЕТНИЙ ЮБИЛЕЙ" : "ДЕСЯТИЛЕТНИЙ ЮБИЛЕЙ",
+		"This item can only be obtained during the [[10-Year Anniversary]] celebration from [[Treasure of the 10-Year Anniversary]]." : "Этот предмет мог быть получен только во время празднования [[10-летний юбилей|10-летнего юбилея]] из [[10-летний юбилей: сокровищница|юбилейной сокровищницы]].",
+		"[[Treasure of the 10-Year Anniversary]]" : "[[10-летний юбилей: сокровищница]]",
+		
+		"[[Category:Custom Couriers]]" : "[[Категория:Пользовательские курьеры]]",
 		">Top<" : ">Сверху<",
 		">Front<" : ">Спереди<",
 		">Back<" : ">Сзади<",
@@ -547,7 +568,12 @@
 		"=== Ultra Rare ===" : "=== Невероятно редкая ===",
 		"=== Cosmically Rare ===" : "=== Чрезвычайно редкая ===",
 		"[[Category:Treasures]]" : "[[Категория:Сокровищницы]]",
-		"[[Category:Active Treasures]]" : "[[Категория:Активные сокровищницы]]"
+		"[[Category:Active Treasures]]" : "[[Категория:Активные сокровищницы]]",
+		"This set's internal name for images of its pieces is" : "Внутреннее название набора для изображений его частей —",
+		
+			"ПАВШАЯ КОРОНА" : "ПАВШАЯ КОРОНА",
+		"[[Crownfall Treasure I]]" : "[[Павшая корона: сокровищница I‎‎]]",
+		"[[Crownfall Treasure II]]" : "[[Павшая корона: сокровищница I‎‎I]]"
 	},
 	"Sounds" : {
 		"==Attacks==" : "== Атака ==",
@@ -811,6 +837,7 @@
 				"Mirana",
 				"Monkey King",
 				"Morphling",
+				"Muerta",
 				"Naga Siren",
 				"Nature's Prophet",
 				"Necrophos",
@@ -870,7 +897,9 @@
 				"Winter Wyvern",
 				"Witch Doctor",
 				"Wraith King",
-				"Zeus"
+				"Zeus",
+				"Skeleton King",
+				"Ringmaster"
 			]
 }
 

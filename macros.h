@@ -35,6 +35,7 @@ public:
     void Units();
     void Animations();
     void AbilitySwapper();
+    void IconChanger(QString parameters);
     void ValueNumberChanger(QString parameters);
 signals:
     void new_progress(int);

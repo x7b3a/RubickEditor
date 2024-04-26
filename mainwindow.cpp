@@ -36,7 +36,7 @@
 #include <QTimer>
 
 //#define MCVC
-#define RVERSION "1.2.1"
+#define RVERSION "1.2.2"
 
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
 QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)

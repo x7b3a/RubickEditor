@@ -639,7 +639,7 @@ void Macros::Cosmetics()
         QString name;
         if (pos > -1)
             name = rxlen.cap(1);
-        first += ("\n[[en:" + name + "]]");
+        first += ("\r\n[[en:" + name + "]]");
     }
     int isBundle = first.indexOf("| prefab = Bundle");
     if (isBundle>=0)
@@ -688,8 +688,8 @@ void Macros::Units()
     {
         first.replace ("{{Show|A|" + i.key()+"|", ("{{Show|A|" + i.value()+"|"));
         first.replace ("{{Show|U|" + i.key()+"|", ("{{Show|U|" + i.value()+"|"));
-        first.replace("|" + i.key()+"}}",("|" + i.value()+"}}"));
-        first.replace("|" + i.key()+"|text",("|" + i.value())+"|text");
+        first.replace("{{U|" + i.key() + "|",("{{U|" + i.value()+"|"));
+        first.replace("{{A|" + i.key() + "|",("{{A|" + i.value()+"|"));
     }
     send_progress(100);
 }
@@ -718,7 +718,7 @@ void Macros::Animations()
         QRegExp texp;
         QString texr;
        for (i=Extra.begin();i!=Extra.end();i++)
-        {    
+        {
             first.replace(i.key(),i.value());
         }
         for (i=Complex.begin();i!=Complex.end();i++)
@@ -779,6 +779,22 @@ void Macros::AbilitySwapper()
     send_progress(100);
     end_regular_replacer (&first);
 
+}
+
+void Macros::IconChanger(QString parameters) //DISABLED
+{
+    qDebug() << "Icon changer";
+    for (int i = 0; i<6;i++)
+    {
+        QRegExp texp("icon" + QString::number(i) + " = ");
+        int pos = 0;
+        while ((pos = texp.indexIn(first, pos)) != -1)
+        {
+            qDebug() << texp;
+            first.replace(pos, texp.matchedLength(), "icon" + QString::number(i) + " = " + parameters + " ");
+            pos += texp.matchedLength();
+        }
+    }
 }
 
 void Macros::ValueNumberChanger(QString parameters)
